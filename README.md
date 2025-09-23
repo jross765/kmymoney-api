@@ -1,8 +1,20 @@
 # Notes on the Module "API"
 
+## What Does It Do?
+
 This is the core module of the project, providing all low-level read-/write access functions to a 
 KMyMoney 
 file.
+
+## What is This Repo's Relationship with the Other Repos?
+
+* This is a module-level repository which is part of a multi-module project, i.e. it has a parent and several siblings. 
+
+  [Parent](https://github.com/jross765/JKMyMoneyLibNTools.git)
+
+* Under normal circumstances, you cannot compile it on its own (at least not without further preparation), but instead, you should clone it together with the other repos and use the parent repo's build-script.
+
+* This repository contains no history before V. 1.7 (cf. notes in parent repo).
 
 ## Major Changes 
 ### V. 0.7 &rarr; 0.8
