@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- Top-Level Structure -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  
+  <xs:element name="KMYMONEY-FILE">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="FILEINFO"/>
+        <xs:element ref="USER"/>
+        <xs:element ref="INSTITUTIONS"/>
+        <xs:element ref="PAYEES"/>
+        <xs:element ref="COSTCENTERS"/>
+        <xs:element ref="TAGS"/>
+        <xs:element ref="ACCOUNTS"/>
+        <xs:element ref="TRANSACTIONS"/>
+        <xs:element ref="KEYVALUEPAIRS"/>
+        <xs:element ref="SCHEDULES"/>
+        <xs:element ref="SECURITIES"/>
+        <xs:element ref="CURRENCIES"/>
+        <xs:element ref="PRICES"/>
+        <xs:element ref="REPORTS"/>
+        <xs:element ref="BUDGETS"/>
+        <xs:element ref="ONLINEJOBS"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- Main Blocks that Define Top-Level Structure -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  
+  <xs:element name="FILEINFO">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CREATION_DATE"/>
+        <xs:element ref="LAST_MODIFIED_DATE"/>
+        <xs:element ref="VERSION"/>
+        <xs:element ref="FIXVERSION"/>
+        <xs:element ref="APPVERSION"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="CREATION_DATE">
+    <xs:complexType>
+      <xs:attribute name="date" use="required" type="xs:date"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="LAST_MODIFIED_DATE">
+    <xs:complexType>
+      <xs:attribute name="date" use="required" type="xs:date"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="VERSION">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="FIXVERSION">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="APPVERSION">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="USER">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BASEADDRESS">
+          <xs:attribute name="email" use="required"/>
+          <xs:attribute name="name" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="INSTITUTIONS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="INSTITUTION"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="INSTITUTION">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BASEADDRESS">
+          <xs:sequence>
+            <xs:element minOccurs="0" ref="ACCOUNTIDS"/>
+            <xs:element minOccurs="0" ref="KEYVALUEPAIRS"/>
+          </xs:sequence>
+          <xs:attribute name="id" use="required" type="xs:NCName"/>
+          <xs:attribute name="manager" use="required"/>
+          <xs:attribute name="name" use="required"/>
+          <xs:attribute name="sortcode" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ACCOUNTIDS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ACCOUNTID"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ACCOUNTID">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="PAYEES">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="PAYEE"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PAYEE">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BASEADDRESS">
+          <xs:attribute name="defaultaccountid" type="xs:NCName"/>
+          <xs:attribute name="email" use="required"/>
+          <xs:attribute name="id" use="required" type="xs:NCName"/>
+          <xs:attribute name="matchignorecase" type="xs:integer"/>
+          <xs:attribute name="matchingenabled" use="required" type="xs:integer"/>
+          <xs:attribute name="matchkey"/>
+          <xs:attribute name="name" use="required"/>
+          <xs:attribute name="reference" use="required"/>
+          <xs:attribute name="usingmatchkey" type="xs:integer"/>
+          <xs:attribute name="notes" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="COSTCENTERS">
+    <xs:complexType>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ::TODO -->
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="TAGS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="TAG"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="TAG">
+    <xs:complexType>
+      <xs:attribute name="closed" type="xs:integer"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name"/>
+      <xs:attribute name="notes"/>
+      <xs:attribute name="tagcolor"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="ACCOUNTS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ACCOUNT"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- Cf. general-block at the end for the rest -->
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="TRANSACTIONS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="TRANSACTION"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="TRANSACTION">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="SPLITS"/>
+        <xs:element minOccurs="0" ref="KEYVALUEPAIRS"/>
+      </xs:sequence>
+      <xs:attribute name="commodity" use="required" type="xs:NCName"/>
+      <xs:attribute name="entrydate" use="required"/>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="memo" use="required"/>
+      <xs:attribute name="postdate" use="required" type="xs:date"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SPLITS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="SPLIT"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SPLIT">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element name="TAG" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:NCName" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="account" use="required" type="xs:NCName"/>
+      <xs:attribute name="action" use="required"/>
+      <xs:attribute name="bankid" use="required"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="memo" use="required"/>
+      <xs:attribute name="number" use="required"/>
+      <xs:attribute name="payee" use="required"/>
+      <xs:attribute name="price" use="required"/>
+      <xs:attribute name="reconciledate" use="required"/>
+      <xs:attribute name="reconcileflag" use="required" type="xs:integer"/>
+      <xs:attribute name="shares" use="required"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================================== -->
+  
+  <xs:element name="SCHEDULES">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="SCHEDULED_TX"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SCHEDULED_TX">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="PAYMENTS"/>
+        <xs:element ref="TRANSACTION"/>
+      </xs:sequence>
+      <xs:attribute name="autoEnter" use="required" type="xs:integer"/>
+      <xs:attribute name="endDate" use="required"/>
+      <xs:attribute name="fixed" use="required" type="xs:integer"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="lastDayInMonth" use="required" type="xs:integer"/>
+      <xs:attribute name="lastPayment" use="required" type="xs:date"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="occurence" use="required" type="xs:integer"/>
+      <xs:attribute name="occurenceMultiplier" use="required" type="xs:integer"/>
+      <xs:attribute name="paymentType" use="required" type="xs:integer"/>
+      <xs:attribute name="startDate" use="required" type="xs:date"/>
+      <xs:attribute name="type" use="required" type="xs:integer"/>
+      <xs:attribute name="weekendOption" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PAYMENTS">
+    <xs:complexType/>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="SECURITIES">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="SECURITY"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SECURITY">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="KEYVALUEPAIRS"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="pp" use="required" type="xs:integer"/>
+      <xs:attribute name="rounding-method" use="required" type="xs:integer"/>
+      <xs:attribute name="saf" use="required" type="xs:integer"/>
+      <xs:attribute name="symbol" use="required" type="xs:NCName"/>
+      <xs:attribute name="trading-currency" use="required" type="xs:NCName"/>
+      <xs:attribute name="trading-market" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="CURRENCIES">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="CURRENCY"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="CURRENCY">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="pp" use="required" type="xs:integer"/>
+      <xs:attribute name="rounding-method" use="required" type="xs:integer"/>
+      <xs:attribute name="saf" use="required" type="xs:integer"/>
+      <xs:attribute name="scf" use="required" type="xs:integer"/>
+      <xs:attribute name="symbol" use="required"/>
+      <xs:attribute name="type" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="PRICES">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="PRICEPAIR"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PRICEPAIR">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="PRICE"/>
+      </xs:sequence>
+      <xs:attribute name="from" use="required" type="xs:NCName"/>
+      <xs:attribute name="to" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PRICE">
+    <xs:complexType>
+      <xs:attribute name="date" use="required" type="xs:date"/>
+      <xs:attribute name="price" use="required"/>
+      <xs:attribute name="source" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="REPORTS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="REPORT"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="REPORT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ACCOUNTGROUP"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ACCOUNT"/>
+        <xs:element minOccurs="0" ref="DATES"/>
+      </xs:sequence>
+      <xs:attribute name="chartbydefault" type="xs:integer"/>
+      <xs:attribute name="chartchgridlines" type="xs:integer"/>
+      <xs:attribute name="chartdatalabels" type="xs:integer"/>
+      <xs:attribute name="chartlinewidth" type="xs:integer"/>
+      <xs:attribute name="chartpalette" type="xs:NCName"/>
+      <xs:attribute name="chartsvgridlines" type="xs:integer"/>
+      <xs:attribute name="charttype" type="xs:NCName"/>
+      <xs:attribute name="columnsaredays" type="xs:integer"/>
+      <xs:attribute name="columntype" type="xs:NCName"/>
+      <xs:attribute name="comment" use="required"/>
+      <xs:attribute name="convertcurrency" use="required" type="xs:integer"/>
+      <xs:attribute name="dataMajorTick" type="xs:integer"/>
+      <xs:attribute name="dataMinorTick" type="xs:integer"/>
+      <xs:attribute name="dataRangeEnd" type="xs:integer"/>
+      <xs:attribute name="dataRangeStart" type="xs:integer"/>
+      <xs:attribute name="datalock" type="xs:NCName"/>
+      <xs:attribute name="datelock" use="required" type="xs:NCName"/>
+      <xs:attribute name="detail" use="required" type="xs:NCName"/>
+      <xs:attribute name="favorite" use="required" type="xs:integer"/>
+      <xs:attribute name="group" use="required"/>
+      <xs:attribute name="hidetransactions" type="xs:integer"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="includesactuals" type="xs:integer"/>
+      <xs:attribute name="includesaverageprice" type="xs:integer"/>
+      <xs:attribute name="includeschedules" type="xs:integer"/>
+      <xs:attribute name="includesforecast" type="xs:integer"/>
+      <xs:attribute name="includesmovingaverage" type="xs:integer"/>
+      <xs:attribute name="includesprice" type="xs:integer"/>
+      <xs:attribute name="includestransfers" use="required" type="xs:integer"/>
+      <xs:attribute name="includeunused" type="xs:integer"/>
+      <xs:attribute name="investments" use="required" type="xs:integer"/>
+      <xs:attribute name="investmentsum" type="xs:integer"/>
+      <xs:attribute name="loans" type="xs:integer"/>
+      <xs:attribute name="logYaxis" type="xs:integer"/>
+      <xs:attribute name="mixedtime" type="xs:integer"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="negexpenses" type="xs:integer"/>
+      <xs:attribute name="querycolumns"/>
+      <xs:attribute name="rowtype" use="required" type="xs:NCName"/>
+      <xs:attribute name="showcolumntotals" use="required" type="xs:integer"/>
+      <xs:attribute name="showrowtotals" type="xs:integer"/>
+      <xs:attribute name="skipZero" use="required" type="xs:integer"/>
+      <xs:attribute name="tax" type="xs:integer"/>
+      <xs:attribute name="type" use="required"/>
+      <xs:attribute name="yLabelsPrecision" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ACCOUNTGROUP">
+    <xs:complexType>
+      <xs:attribute name="group" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DATES">
+    <xs:complexType>
+      <xs:attribute name="from" use="required" type="xs:date"/>
+      <xs:attribute name="to" use="required" type="xs:date"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="BUDGETS">
+    <xs:complexType>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ::TODO -->
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="ONLINEJOBS">
+    <xs:complexType>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ::TODO -->
+  
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- General Elements 
+       (i.e., elements that are referenced severaö times) -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  
+  <xs:complexType name="BASEADDRESS">
+    <xs:sequence>
+      <xs:element ref="ADDRESS"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="ADDRESS">
+    <xs:complexType>
+      <xs:attribute name="city" use="required"/>
+      <xs:attribute name="county"/>
+      <xs:attribute name="country"/>
+      <xs:attribute name="postcode"/>
+      <xs:attribute name="state"/>
+      <xs:attribute name="street" use="required"/>
+      <xs:attribute name="telephone" use="required"/>
+      <xs:attribute name="zip"/>
+      <xs:attribute name="zipcode"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="KEYVALUEPAIRS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="PAIR"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PAIR">
+    <xs:complexType>
+      <xs:attribute name="key" use="required" type="xs:NCName"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================================================== -->
+  
+  <xs:element name="ACCOUNT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="SUBACCOUNTS"/>
+        <xs:element minOccurs="0" ref="ONLINEBANKING"/>
+        <xs:element minOccurs="0" ref="RECONCILIATIONS"/>
+        <xs:element minOccurs="0" ref="KEYVALUEPAIRS"/>
+      </xs:sequence>
+      <xs:attribute name="currency" type="xs:NCName"/>
+      <xs:attribute name="description"/>
+      <xs:attribute name="id" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="institution"/>
+      <xs:attribute name="lastmodified"/>
+      <xs:attribute name="lastreconciled"/>
+      <xs:attribute name="name"/>
+      <xs:attribute name="number"/>
+      <xs:attribute name="opened"/>
+      <xs:attribute name="parentaccount" type="xs:anyURI"/>
+      <xs:attribute name="type" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================ -->
+  
+  <xs:element name="SUBACCOUNTS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="SUBACCOUNT"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SUBACCOUNT">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- ============================ -->
+  
+  <xs:element name="ONLINEBANKING">
+    <xs:complexType>
+      <xs:attribute name="kbanking-acc-ref" type="xs:NMTOKEN"/>
+      <xs:attribute name="kbanking-statementDate" use="required" type="xs:integer"/>
+      <xs:attribute name="provider" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RECONCILIATIONS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="RECONCILIATION"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RECONCILIATION">
+    <xs:complexType>
+      <xs:attribute name="date" use="required" type="xs:date"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

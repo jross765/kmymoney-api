@@ -1,0 +1,199 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.kmymoney</groupId>
+		<artifactId>kmymoney</artifactId>
+		<version>0.8.0</version>
+	</parent>
+
+	<artifactId>kmymoney-api</artifactId>
+
+	<name>${project.title} : API</name>
+
+	<properties>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<schnorxolib-base-systemPath>/home/xxx/Programme-ProdReady/schnorxoborx/schnorxolib-base-0.1.1.jar</schnorxolib-base-systemPath>
+
+	</properties>
+
+	<repositories>
+
+		<repository>
+			<id>central</id>
+			<url>http://repo.maven.apache.org/maven2/</url>
+		</repository>
+
+	</repositories>
+
+	<dependencyManagement>
+	
+		<dependencies>
+
+			<dependency>
+				<groupId>org.kmymoney</groupId>
+				<artifactId>kmymoney-base</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+		
+	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.29.2-GA</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.xmlunit/xmlunit-core -->
+		<!--
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>2.9.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-matchers</artifactId>
+			<version>2.9.1</version>
+			<scope>test</scope>
+		</dependency>
+		-->
+
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>2.1.2</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.13.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.istack</groupId>
+			<artifactId>istack-commons-runtime</artifactId>
+			<version>4.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- *********************************************************  -->
+		
+		<dependency>
+			<groupId>xyz.schnorxoborx.schnorxolib</groupId>
+			<artifactId>schnorxolib-base</artifactId>
+			<version>0.1.1</version>
+			<scope>system</scope>
+			<systemPath>${schnorxolib-base-systemPath}</systemPath>
+		</dependency>
+
+		<!-- *********************************************************  -->
+
+		<!-- KMyMoney Base -->
+		<dependency>
+			<groupId>org.kmymoney</groupId>
+			<artifactId>kmymoney-base</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+
+
+	<build>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- The package of your generated sources -->
+					<packageName>org.kmymoney.api.generated</packageName>
+					<sources>
+						<source>src/main/resources/xsd</source>
+					</sources>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.6.3</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+					<!-- <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable> -->
+					<javadocExecutable>/usr/bin/javadoc</javadocExecutable>
+					<excludePackageNames>org.kmymoney.api.generated:org.kmymoney.api.read.hlp:org.kmymoney.api.read.impl.hlp:org.kmymoney.api.write.hlp:org.kmymoney.api.write.impl.hlp</excludePackageNames>
+					<additionalJOptions>
+						<!-- https://www.locked.de/how-to-ignore-maven-javadoc-errors-in-java-8/ -->
+						<additionalparam>-Xdoclint:none</additionalparam>
+					</additionalJOptions>
+				</configuration>
+			</plugin>
+      
+		</plugins>
+
+	</build>
+
+</project>
