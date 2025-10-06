@@ -88,18 +88,33 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
     /**
      *
      * @return the date the transaction was entered into the system
+     * 
+     * @see #getDateEnteredFormatted()
+     * @see #getDatePosted()
      */
     LocalDate getDateEntered();
 
     /**
+     * @return the date the transaction was entered into the system
+     * 
+     * @see #getDateEntered()
+    */
+    String getDateEnteredFormatted();
+    
+    /**
      *
      * @return the date the transaction happened
+     * 
+     * @see #getDatePostedFormatted()
+     * @see #getDateEntered()
      */
     LocalDate getDatePosted();
 
     /**
      *
      * @return date the transaction happened
+     * 
+     * @see #getDatePosted()
      */
     String getDatePostedFormatted();
 

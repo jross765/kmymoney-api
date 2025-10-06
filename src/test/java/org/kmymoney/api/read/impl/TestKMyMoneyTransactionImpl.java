@@ -8,9 +8,9 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
-import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransaction;
+import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -66,7 +66,9 @@ public class TestKMyMoneyTransactionImpl {
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals("", trx.getMemo());
 		assertEquals("2023-01-01", trx.getDatePosted().toString());
+		assertEquals("2023-01-01", trx.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx.getDateEntered().toString());
+		assertEquals("2023-11-03", trx.getDateEnteredFormatted());
 
 		assertEquals(2, trx.getSplitsCount());
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString());
@@ -82,7 +84,9 @@ public class TestKMyMoneyTransactionImpl {
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals("", trx.getMemo());
 		assertEquals("2023-01-03", trx.getDatePosted().toString());
+		assertEquals("2023-01-03", trx.getDatePostedFormatted());
 		assertEquals("2023-10-14", trx.getDateEntered().toString());
+		assertEquals("2023-10-14", trx.getDateEnteredFormatted());
 
 		assertEquals(2, trx.getSplitsCount());
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString());

@@ -1,6 +1,5 @@
 package org.kmymoney.api.read.impl;
 
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +15,6 @@ import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.PAIR;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.generated.TRANSACTION;
-import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
@@ -94,16 +92,14 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     // ---------------------------------------------------------------
 
     /**
-     * @see KMyMoneyTransaction#isBalanced()
+     * {@inheritDoc}
      */
     public boolean isBalanced() {
-
-	return getBalance().equals(new FixedPointNumber());
-
+    	return getBalance().equals(new FixedPointNumber());
     }
 
     /**
-     * @see KMyMoneyAccount#getQualifSecCurrID()
+     * {@inheritDoc}
      */
     public KMMQualifSecCurrID getQualifSecCurrID() {
     	if ( jwsdpPeer.getCommodity() == null )
@@ -122,104 +118,108 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     }
 
     /**
-     * The result is in the currency of the transaction.
-     *
-     * @return the balance of the sum of all splits
-     * @see KMyMoneyTransaction#getBalance()
-     */
-    public FixedPointNumber getBalance() {
-
-	FixedPointNumber fp = new FixedPointNumber();
-
-	for (KMyMoneyTransactionSplit split : getSplits()) {
-	    fp.add(split.getValue());
+	 * The Currency-Format to use if no locale is given.
+	 *
+	 * @return default currency-format with the transaction's currency set
+	 */
+	protected NumberFormat getCurrencyFormat() {
+		if (currencyFormat == null) {
+			currencyFormat = NumberFormat.getCurrencyInstance();
+			if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) { 
+				currencyFormat.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
+			} else {
+				currencyFormat = NumberFormat.getInstance();
+			}
+		}
+		
+		return currencyFormat;
 	}
 
-	return fp;
+    /**
+     * {@inheritDoc}
+     */
+    public FixedPointNumber getBalance() {
+    	FixedPointNumber fp = new FixedPointNumber();
+
+    	for (KMyMoneyTransactionSplit split : getSplits()) {
+    		fp.add(split.getValue());
+    	}
+
+    	return fp;
     }
 
     /**
-     * The result is in the currency of the transaction.
-     *
-     * @see KMyMoneyTransaction#getBalanceFormatted()
+     * {@inheritDoc}
      */
     public String getBalanceFormatted() {
     	return getCurrencyFormat().format(getBalance());
     }
 
     /**
-     * The result is in the currency of the transaction.
-     *
-     * @see KMyMoneyTransaction#getBalanceFormatted(java.util.Locale)
+     * {@inheritDoc}
      */
     public String getBalanceFormatted(final Locale loc) {
 
 	NumberFormat cf = NumberFormat.getInstance(loc);
-	if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-	    cf.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
-	} else {
-	    cf.setCurrency(null);
-	}
+		if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			cf.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
+		} else {
+			cf.setCurrency(null);
+		}
 
-	return cf.format(getBalance());
+		return cf.format(getBalance());
     }
 
     /**
-     * The result is in the currency of the transaction.
-     *
-     * @see KMyMoneyTransaction#getNegatedBalance()
+     * {@inheritDoc}
      */
     public FixedPointNumber getNegatedBalance() {
-	return getBalance().multiply(new FixedPointNumber("-100/100"));
+    	return getBalance().multiply(new FixedPointNumber("-100/100"));
     }
 
     /**
-     * The result is in the currency of the transaction.
-     *
-     * @see KMyMoneyTransaction#getNegatedBalanceFormatted()
+     * {@inheritDoc}
      */
     public String getNegatedBalanceFormatted() {
-	return getCurrencyFormat().format(getNegatedBalance());
+    	return getCurrencyFormat().format(getNegatedBalance());
     }
 
     /**
-     * The result is in the currency of the transaction.
-     *
-     * @see KMyMoneyTransaction#getNegatedBalanceFormatted(java.util.Locale)
+     * {@inheritDoc}
      */
     public String getNegatedBalanceFormatted(final Locale loc) {
-	NumberFormat nf = NumberFormat.getInstance(loc);
-	if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-	    nf.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
-	} else {
-	    nf.setCurrency(null);
-	}
+    	NumberFormat nf = NumberFormat.getInstance(loc);
+    	if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+    		nf.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
+    	} else {
+    		nf.setCurrency(null);
+    	}
 
-	return nf.format(getNegatedBalance());
+    	return nf.format(getNegatedBalance());
     }
 
     /**
-     * @see KMyMoneyTransaction#getID()
+     * {@inheritDoc}
      */
     public KMMTrxID getID() {
-	return new KMMTrxID(jwsdpPeer.getId());
+    	return new KMMTrxID(jwsdpPeer.getId());
     }
 
     /**
-     * @see KMyMoneyTransaction#getMemo()
+     * {@inheritDoc}
      */
     public String getMemo() {
-	return jwsdpPeer.getMemo();
+    	return jwsdpPeer.getMemo();
     }
 
     // ----------------------------
 
     /**
-     * @return the JWSDP-object we are facading.
+     * {@inheritDoc}
      */
     @SuppressWarnings("exports")
     public TRANSACTION getJwsdpPeer() {
-	return jwsdpPeer;
+    	return jwsdpPeer;
     }
 
     // ----------------------------
@@ -233,26 +233,25 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * @param impl the split to add to mySplits
      */
     protected void addSplit(final KMyMoneyTransactionSplitImpl impl) {
-	if (!jwsdpPeer.getSPLITS().getSPLIT().contains(impl.getJwsdpPeer())) {
-	    jwsdpPeer.getSPLITS().getSPLIT().add(impl.getJwsdpPeer());
-	}
+    	if (!jwsdpPeer.getSPLITS().getSPLIT().contains(impl.getJwsdpPeer())) {
+    		jwsdpPeer.getSPLITS().getSPLIT().add(impl.getJwsdpPeer());
+    	}
 
-	Collection<KMyMoneyTransactionSplit> splits = getSplits();
-	if (!splits.contains(impl)) {
-	    splits.add(impl);
-	}
-
+    	Collection<KMyMoneyTransactionSplit> splits = getSplits();
+    	if (!splits.contains(impl)) {
+    		splits.add(impl);
+    	}
     }
 
     /**
-     * @see KMyMoneyTransaction#getSplitsCount()
+     * {@inheritDoc}
      */
     public int getSplitsCount() {
-	return getSplits().size();
+    	return getSplits().size();
     }
 
     /**
-     * 
+     * {@inheritDoc}
      */
     public KMyMoneyTransactionSplit getSplitByID(final KMMSpltID spltID) {
 		if ( spltID == null ) {
@@ -277,24 +276,24 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public KMyMoneyTransactionSplit getFirstSplit() throws TransactionSplitNotFoundException {
-	if ( getSplits().size() == 0 )
-	    throw new TransactionSplitNotFoundException();
+    	if ( getSplits().size() == 0 )
+    		throw new TransactionSplitNotFoundException();
 	
-	return getSplits().get(0);
+    	return getSplits().get(0);
     }
 
     /**
      * {@inheritDoc}
      */
     public KMyMoneyTransactionSplit getSecondSplit() throws TransactionSplitNotFoundException {
-	if ( getSplits().size() <= 1 )
-	    throw new TransactionSplitNotFoundException();
+    	if ( getSplits().size() <= 1 )
+    		throw new TransactionSplitNotFoundException();
 	
-	return getSplits().get(1);
+    	return getSplits().get(1);
     }
 
     /**
-     * @see KMyMoneyTransaction#getSplits()
+     * {@inheritDoc}
      */
     public List<KMyMoneyTransactionSplit> getSplits() {
     	return getSplits(false, false, false);
@@ -304,10 +303,11 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     		final boolean addToAcct, 
     		final boolean addToPye,
     		final boolean addToTags) {
-	if (mySplits == null) {
-	    initSplits(addToAcct, addToPye, addToTags);
-	}
-	return mySplits;
+    	if (mySplits == null) {
+    		initSplits(addToAcct, addToPye, addToTags);
+    	}
+    	
+    	return mySplits;
     }
 
     private void initSplits(
@@ -334,65 +334,63 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     		final boolean addToAcct,
     		final boolean addToPye,
     		final boolean addToTags) {
-	return new KMyMoneyTransactionSplitImpl(jwsdpSplt, this, 
-											addToAcct, addToPye, addToTags);
+    	return new KMyMoneyTransactionSplitImpl(jwsdpSplt, this, 
+												addToAcct, addToPye, addToTags);
     }
 
     /**
-     * @see KMyMoneyTransaction#getDateEntered()
+     * {@inheritDoc}
      */
     public LocalDate getDateEntered() {
-	if (entryDate == null) {
-	    String dateStr = jwsdpPeer.getEntrydate();
-	    entryDate = LocalDate.parse(dateStr);
-	}
+    	if (entryDate == null) {
+    		String dateStr = jwsdpPeer.getEntrydate();
+    		entryDate = LocalDate.parse(dateStr);
+    	}
 
-	return entryDate;
+    	return entryDate;
     }
 
     /**
-     * The Currency-Format to use if no locale is given.
-     *
-     * @return default currency-format with the transaction's currency set
+     * {@inheritDoc}
      */
-    protected NumberFormat getCurrencyFormat() {
-	if (currencyFormat == null) {
-	    currencyFormat = NumberFormat.getCurrencyInstance();
-	    if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) { 
-	    	currencyFormat.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
-	    } else {
-			currencyFormat = NumberFormat.getInstance();
-	    }
-
-	}
-	return currencyFormat;
+    public String getDateEnteredFormatted() {
+		try {
+	    	DateTimeFormatter fmt = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
+			return getDateEntered().format(fmt);
+		} catch (Exception e) {
+			return getDateEntered().toString();
+		}
     }
 
     /**
-     * @see KMyMoneyTransaction#getDatePostedFormatted()
+     * {@inheritDoc}
      */
     public String getDatePostedFormatted() {
-	return DateFormat.getDateInstance().format(getDatePosted());
+		try {
+	    	DateTimeFormatter fmt = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
+			return getDatePosted().format(fmt);
+		} catch (Exception e) {
+			return getDatePosted().toString();
+		}
     }
 
     /**
-     * @see KMyMoneyTransaction#getDatePosted()
+     * {@inheritDoc}
      */
     public LocalDate getDatePosted() {
-	if (postDate == null) {
-	    XMLGregorianCalendar cal = jwsdpPeer.getPostdate();
-	    postDate = LocalDate.of(cal.getYear(), cal.getMonth(), cal.getDay());
-	}
+    	if (postDate == null) {
+    		XMLGregorianCalendar cal = jwsdpPeer.getPostdate();
+    		postDate = LocalDate.of(cal.getYear(), cal.getMonth(), cal.getDay());
+    	}
 
-	return postDate;
+    	return postDate;
     }
 
     // ---------------------------------------------------------------
 
-	/**
-	 * @param name the name of the user-defined attribute
-	 * @return the value or null if not set
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
 			throw new IllegalArgumentException("null name given");
@@ -411,8 +409,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 	}
 
     /**
-     * @return all keys that can be used with
-     *         ${@link #getUserDefinedAttribute(String)}}.
+     * {@inheritDoc}
      */
 	public List<String> getUserDefinedAttributeKeys() {
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {
@@ -427,38 +424,38 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 
     @Override
     public String toString() {
-	StringBuffer buffer = new StringBuffer();
-	buffer.append("KMyMoneyTransactionImpl [");
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("KMyMoneyTransactionImpl [");
 
-	buffer.append("id=");
-	buffer.append(getID());
+		buffer.append("id=");
+		buffer.append(getID());
 
-	buffer.append(", balance=");
-	buffer.append(getBalanceFormatted());
+		buffer.append(", balance=");
+		buffer.append(getBalanceFormatted());
 
-	buffer.append(", description='");
-	buffer.append(getMemo() + "'");
+		buffer.append(", description='");
+		buffer.append(getMemo() + "'");
 
-	buffer.append(", #splits=");
-	buffer.append(getSplitsCount());
+		buffer.append(", #splits=");
+		buffer.append(getSplitsCount());
 
-	buffer.append(", post-date=");
-	try {
-	    buffer.append(getDatePosted().format(DATE_POSTED_FORMAT));
-	} catch (Exception e) {
-	    buffer.append(getDatePosted().toString());
-	}
+		buffer.append(", post-date=");
+		try {
+			buffer.append(getDatePosted().format(DATE_POSTED_FORMAT));
+		} catch (Exception e) {
+			buffer.append(getDatePosted().toString());
+		}
 
-	buffer.append(", entry-date=");
-	try {
-	    buffer.append(getDateEntered().format(DATE_ENTERED_FORMAT));
-	} catch (Exception e) {
-	    buffer.append(getDateEntered().toString());
-	}
+		buffer.append(", entry-date=");
+		try {
+			buffer.append(getDateEntered().format(DATE_ENTERED_FORMAT));
+		} catch (Exception e) {
+			buffer.append(getDateEntered().toString());
+		}
 
-	buffer.append("]");
+		buffer.append("]");
 
-	return buffer.toString();
+		return buffer.toString();
     }
 
     /**
@@ -468,17 +465,17 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(final KMyMoneyTransaction otherTrx) {
-	try {
-	    int compare = otherTrx.getDatePosted().compareTo(getDatePosted());
-	    if (compare != 0) {
-		return compare;
-	    }
+    	try {
+    		int compare = otherTrx.getDatePosted().compareTo(getDatePosted());
+    		if (compare != 0) {
+    			return compare;
+    		}
 
-	    return otherTrx.getDateEntered().compareTo(getDateEntered());
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return 0;
-	}
+    		return otherTrx.getDateEntered().compareTo(getDateEntered());
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		return 0;
+    	}
     }
 
 }

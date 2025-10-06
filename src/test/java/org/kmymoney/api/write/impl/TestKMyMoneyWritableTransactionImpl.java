@@ -102,7 +102,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals("", trx.getMemo());
 		assertEquals("2023-01-01", trx.getDatePosted().toString());
+		assertEquals("2023-01-01", trx.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx.getDateEntered().toString());
+		assertEquals("2023-11-03", trx.getDateEnteredFormatted());
 
 		assertEquals(2, trx.getSplitsCount());
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString());
@@ -118,7 +120,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals("", trx.getMemo());
 		assertEquals("2023-01-03", trx.getDatePosted().toString());
+		assertEquals("2023-01-03", trx.getDatePostedFormatted());
 		assertEquals("2023-10-14", trx.getDateEntered().toString());
+		assertEquals("2023-10-14", trx.getDateEnteredFormatted());
 
 		assertEquals(2, trx.getSplitsCount());
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString());
@@ -188,7 +192,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
 		assertEquals("Super dividend", trx.getMemo()); // changed
 		assertEquals("1970-01-01", trx.getDatePosted().toString()); // changed
+		assertEquals("1970-01-01", trx.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx.getDateEntered().toString()); // unchanged
+		assertEquals("2023-11-03", trx.getDateEnteredFormatted());
 
 		assertEquals(2, trx.getSplitsCount()); // unchanged
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString()); // unchanged
@@ -209,7 +215,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
 		assertEquals("Super dividend", trx.getMemo()); // changed
 		assertEquals("1970-01-01", trx.getDatePosted().toString()); // changed
+		assertEquals("1970-01-01", trx.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx.getDateEntered().toString()); // unchanged
+		assertEquals("2023-11-03", trx.getDateEnteredFormatted());
 
 		assertEquals(2, trx.getSplitsCount()); // unchanged
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString()); // unchanged
@@ -298,8 +306,10 @@ public class TestKMyMoneyWritableTransactionImpl {
 		// assertEquals(KMyMoneyTransaction.Type.PAYMENT, trx.getType());
 		assertEquals("Chattanooga Choo-Choo", trx.getMemo());
 		assertEquals("CURRENCY:EUR", trx.getQualifSecCurrID().toString());
-		assertEquals("2023-12-11", trx.getDateEntered().toString());
 		assertEquals("2023-05-20", trx.getDatePosted().toString());
+		assertEquals("2023-05-20", trx.getDatePostedFormatted());
+		assertEquals("2023-12-11", trx.getDateEntered().toString());
+		assertEquals("2023-12-11", trx.getDateEnteredFormatted());
 
 		// ---
 
@@ -340,8 +350,10 @@ public class TestKMyMoneyWritableTransactionImpl {
 		// assertEquals(KMyMoneyTransaction.Type.PAYMENT, trx.getType());
 		assertEquals("Chattanooga Choo-Choo", trx.getMemo());
 		assertEquals("CURRENCY:EUR", trx.getQualifSecCurrID().toString());
-		assertEquals("2023-12-11", trx.getDateEntered().toString());
 		assertEquals("2023-05-20", trx.getDatePosted().toString());
+		assertEquals("2023-05-20", trx.getDatePostedFormatted());
+		assertEquals("2023-12-11", trx.getDateEntered().toString());
+		assertEquals("2023-12-11", trx.getDateEnteredFormatted());
 
 		// ---
 
@@ -441,7 +453,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0.0, trx1.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
 		assertEquals("", trx1.getMemo()); // unchanged
 		assertEquals("2023-01-01", trx1.getDatePosted().toString()); // unchanged
+		assertEquals("2023-01-01", trx1.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx1.getDateEntered().toString()); // unchanged
+		assertEquals("2023-11-03", trx1.getDateEnteredFormatted());
 		assertEquals(0, trx1.getSplitsCount()); // changed
 		
 		// However, the transaction cannot newly be instantiated any more,
@@ -462,7 +476,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0.0, trx2.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
 		assertEquals("", trx2.getMemo()); // unchanged
 		assertEquals("2023-01-03", trx2.getDatePosted().toString()); // unchanged
+		assertEquals("2023-01-03", trx2.getDatePostedFormatted());
 		assertEquals("2023-10-14", trx2.getDateEntered().toString()); // unchanged
+		assertEquals("2023-10-14", trx2.getDateEnteredFormatted());
 		assertEquals(0, trx2.getSplitsCount()); // changed
 		
 		// Cf. above.
