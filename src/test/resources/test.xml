@@ -3,7 +3,7 @@
 <KMYMONEY-FILE>
   <FILEINFO>
     <CREATION_DATE date="2023-10-14"/>
-    <LAST_MODIFIED_DATE date="2025-08-27T10:02:20+02:00"/>
+    <LAST_MODIFIED_DATE date="2025-10-03T11:25:34+02:00"/>
     <VERSION id="1"/>
     <FIXVERSION id="9"/>
     <APPVERSION id="5.2.1-c9bd024"/>
@@ -33,7 +33,7 @@
     <PAYEE id="P000001" name="Eingang" reference="" email="" matchingenabled="0">
       <ADDRESS street="" city="" state="" zip="" telephone="" country="" county="" zipcode="" postcode=""/>
     </PAYEE>
-    <PAYEE id="P000002" name="Gehalt" reference="" email="" matchingenabled="0">
+    <PAYEE id="P000002" name="Gehalt" reference="" email="" matchingenabled="0" idpattern="asdf" urltemplate="sdfg">
       <ADDRESS street="" city="" state="" zip="" telephone="" country="" county="" zipcode="" postcode=""/>
     </PAYEE>
     <PAYEE id="P000003" name="Geldautomat" reference="" email="" matchingenabled="0">
@@ -54,7 +54,7 @@
     <PAYEE id="P000008" name="Haushaltsgeld" reference="" email="" matchingenabled="0">
       <ADDRESS street="" city="" state="" zip="" telephone="" country="" county="" zipcode="" postcode=""/>
     </PAYEE>
-    <PAYEE id="P000009" name="Hubers Laden" reference="" email="" matchingenabled="1" usingmatchkey="1" matchignorecase="1" matchkey="Kiosk Sesamstrasse">
+    <PAYEE id="P000009" name="Hubers Laden" reference="" email="" matchingenabled="1" usingmatchkey="1" matchignorecase="1" matchkey="Läden in der Gegend&#10;Kiosk Sesamstrasse">
       <ADDRESS street="" city="" state="" zip="" telephone="" country="" county="" zipcode="" postcode=""/>
     </PAYEE>
   </PAYEES>
@@ -416,7 +416,7 @@
     </TRANSACTION>
   </TRANSACTIONS>
   <KEYVALUEPAIRS>
-    <PAIR key="LastModificationDate" value="2025-08-27T10:02:20+02:00"/>
+    <PAIR key="LastModificationDate" value="2025-10-03T11:25:34+02:00"/>
     <PAIR key="kmm-baseCurrency" value="EUR"/>
     <PAIR key="kmm-id" value="{1f7ec5d2-f982-48eb-9ae3-22095e2362ee}"/>
   </KEYVALUEPAIRS>

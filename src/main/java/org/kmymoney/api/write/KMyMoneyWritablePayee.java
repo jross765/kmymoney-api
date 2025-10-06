@@ -1,6 +1,6 @@
 package org.kmymoney.api.write;
 
-import java.math.BigInteger;
+import java.util.List;
 
 import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.write.hlp.HasWritableAddress;
@@ -69,15 +69,17 @@ public interface KMyMoneyWritablePayee extends KMyMoneyPayee,
      * 
      * @see #getMatchingEnabled()
      */
-    void setMatchingEnabled(BigInteger enbl);
+    void setMatchingEnabled(boolean enbl);
 
     /**
      * 
      * @param key
      * 
-     * @see #getMatchKey()
+     * @see #getMatchKeys()
      */
-    void setMatchKey(String key);
+    void setMatchKeys(List<String> key);
+
+    void addMatchKey(String key);
 
     /**
      * 
@@ -85,7 +87,7 @@ public interface KMyMoneyWritablePayee extends KMyMoneyPayee,
      * 
      * @see #getUsingMatchKey()
      */
-    void setUsingMatchKey(BigInteger key);
+    void setUsingMatchKey(boolean key);
 
     /**
      * 
@@ -93,6 +95,6 @@ public interface KMyMoneyWritablePayee extends KMyMoneyPayee,
      * 
      * @see #getMatchIgnoreCase()
      */
-    void setMatchIgnoreCase(BigInteger val);
+    void setMatchIgnoreCase(boolean val);
 
 }

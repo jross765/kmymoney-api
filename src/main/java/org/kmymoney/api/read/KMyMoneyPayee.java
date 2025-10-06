@@ -1,6 +1,6 @@
 package org.kmymoney.api.read;
 
-import java.math.BigInteger;
+import java.util.List;
 
 import org.kmymoney.api.read.hlp.HasAddress;
 import org.kmymoney.api.read.hlp.HasTransactions;
@@ -53,21 +53,21 @@ public interface KMyMoneyPayee extends KMyMoneyObject,
     /**
      * @return
      */
-    BigInteger getMatchingEnabled();
+    boolean getMatchingEnabled();
+
+    /**
+     * @return a list of match keys
+     */
+    List<String> getMatchKeys();
 
     /**
      * @return
      */
-    String getMatchKey();
+    boolean getUsingMatchKey();
 
     /**
      * @return
      */
-    BigInteger getUsingMatchKey();
-
-    /**
-     * @return
-     */
-    BigInteger getMatchIgnoreCase();
+    boolean getMatchIgnoreCase();
 
 }

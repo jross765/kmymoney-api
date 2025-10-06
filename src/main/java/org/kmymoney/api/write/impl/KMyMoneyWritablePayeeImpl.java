@@ -2,6 +2,7 @@ package org.kmymoney.api.write.impl;
 
 import java.beans.PropertyChangeSupport;
 import java.math.BigInteger;
+import java.util.List;
 
 import org.kmymoney.api.generated.ADDRESS;
 import org.kmymoney.api.generated.ObjectFactory;
@@ -262,7 +263,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     }
 
 	@Override
-	public void setDefaultAccountID(KMMComplAcctID acctID) {
+	public void setDefaultAccountID(final KMMComplAcctID acctID) {
     	if ( acctID == null ) {
     		throw new IllegalArgumentException("argument <acctID> is null");
     	}
@@ -289,7 +290,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 	}
 
 	@Override
-	public void setEmail(String eml) {
+	public void setEmail(final String eml) {
     	if ( eml == null ) {
     		throw new IllegalArgumentException("argument <eml> is null");
     	}
@@ -309,7 +310,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 	}
 
 	@Override
-	public void setReference(String ref) {
+	public void setReference(final String ref) {
     	if ( ref == null ) {
     		throw new IllegalArgumentException("argument <ref> is null");
     	}
@@ -329,17 +330,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 	}
 
 	@Override
-	public void setMatchingEnabled(BigInteger enbl) {
-    	if ( enbl == null ) {
-    		throw new IllegalArgumentException("argument <enbl> is null");
-    	}
-
-    	if ( enbl.intValue() < 0 ) {
-    		throw new IllegalArgumentException("argument <enbl> is < 0");
-    	}
-
-    	BigInteger oldEnbl = getMatchingEnabled();
-    	jwsdpPeer.setMatchingenabled(enbl);
+	public void setMatchingEnabled(final boolean enbl) {
+    	boolean oldEnbl = getMatchingEnabled();
+    	BigInteger enblRaw = ( enbl == true ? BigInteger.ONE : BigInteger.ZERO );
+    	jwsdpPeer.setMatchingenabled(enblRaw);
     	getKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
@@ -349,7 +343,17 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 	}
 
 	@Override
-	public void setMatchKey(String key) {
+	public void setMatchKeys(final List<String> keyList) {
+    	if ( keyList == null ) {
+    		throw new IllegalArgumentException("argument <keyList> is null");
+    	}
+
+    	for ( String key : keyList ) {
+    		addMatchKey(key);
+    	}
+	}
+
+	public void addMatchKey(final String key) {
     	if ( key == null ) {
     		throw new IllegalArgumentException("argument <key> is null");
     	}
@@ -357,29 +361,49 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	if ( key.trim().length() == 0 ) {
     		throw new IllegalArgumentException("argument <key> is empty");
     	}
+    	
+    	String secureKey = key;
+    	if ( secureKey.endsWith(MATCHKEYS_SEP) )
+    		secureKey = secureKey.substring(0, secureKey.length() - MATCHKEYS_SEP.length());
 
-    	String oldKey = getMatchKey();
-    	jwsdpPeer.setReference(key);
+    	String keysRaw = getMatchKeysRaw();
+    	if ( keysRaw == null )
+    		keysRaw = "";
+    	
+    	if ( keysRaw.endsWith(MATCHKEYS_SEP) ) // yes, that does happen with the standard GUI
+    		keysRaw += secureKey;
+    	else
+    		keysRaw += MATCHKEYS_SEP + secureKey;
+
+    	setMatchKeysRaw(keysRaw);
+	}
+
+	// internal helper
+	private void setMatchKeysRaw(final String keysRaw) {
+    	if ( keysRaw == null ) {
+    		throw new IllegalArgumentException("argument <keysRaw> is null");
+    	}
+
+    	// sic, empty is allowed
+//    	if ( keysRaw.trim().length() == 0 ) {
+//    		throw new IllegalArgumentException("argument <keysRaw> is empty");
+//    	}
+
+    	String oldKeysRaw = getMatchKeysRaw();
+    	jwsdpPeer.setReference(keysRaw);
     	getKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
-    		propertyChangeSupport.firePropertyChange("matching-key", oldKey, key);
+    		propertyChangeSupport.firePropertyChange("match-key", oldKeysRaw, keysRaw);
     	}
 	}
 
 	@Override
-	public void setUsingMatchKey(BigInteger val) {
-    	if ( val == null ) {
-    		throw new IllegalArgumentException("argument <val> is null");
-    	}
-
-    	if ( val.intValue() == 0 ) {
-    		throw new IllegalArgumentException("argument <val> is < 0");
-    	}
-
-    	BigInteger oldVal = getUsingMatchKey();
-    	jwsdpPeer.setUsingmatchkey(val);
+	public void setUsingMatchKey(final boolean val) {
+    	boolean oldVal = getUsingMatchKey();
+    	BigInteger valRaw = ( val == true ? BigInteger.ONE : BigInteger.ZERO );
+    	jwsdpPeer.setUsingmatchkey(valRaw);
     	getKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
@@ -389,17 +413,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 	}
 
 	@Override
-	public void setMatchIgnoreCase(BigInteger val) {
-    	if ( val == null ) {
-    		throw new IllegalArgumentException("argument <val> is null");
-    	}
-
-    	if ( val.intValue() == 0 ) {
-    		throw new IllegalArgumentException("argument <val> is < 0");
-    	}
-
-    	BigInteger oldVal = getUsingMatchKey();
-    	jwsdpPeer.setMatchignorecase(val);
+	public void setMatchIgnoreCase(final boolean val) {
+    	boolean oldVal = getUsingMatchKey();
+    	BigInteger valRaw = ( val == true ? BigInteger.ONE : BigInteger.ZERO );
+    	jwsdpPeer.setMatchignorecase(valRaw);
     	getKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
@@ -436,8 +453,13 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 		buffer.append(", matching-enabled=");
 		buffer.append(getMatchingEnabled());
 
-		buffer.append(", match-key='");
-		buffer.append(getMatchKey() + "'");
+		// ::TODO: some weird behavior here
+		// Cf. TestKMyMoneyWritableFileImpl.test04_1_check_3
+//		buffer.append(", match-keys='");
+//		for ( String key : getMatchKeys() ) {
+//			buffer.append(key + "|");
+//		}
+//		// ::TODO: delete trailing '|'
 
 		buffer.append(", using-match-key=");
 		buffer.append(getUsingMatchKey());

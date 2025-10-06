@@ -32,6 +32,7 @@ public class TestKMyMoneyWritablePayeeImpl {
 	private static final KMMPyeID PYE_1_ID = TestKMyMoneyPayeeImpl.PYE_1_ID;
 	private static final KMMPyeID PYE_2_ID = TestKMyMoneyPayeeImpl.PYE_2_ID;
 	private static final KMMPyeID PYE_3_ID = TestKMyMoneyPayeeImpl.PYE_3_ID;
+	private static final KMMPyeID PYE_4_ID = TestKMyMoneyPayeeImpl.PYE_4_ID;
 
 	// -----------------------------------------------------------------
 
@@ -97,7 +98,11 @@ public class TestKMyMoneyWritablePayeeImpl {
 
 		assertEquals(PYE_1_ID, pye.getID());
 		assertEquals("Gehalt", pye.getName());
+		assertEquals(false, pye.getMatchingEnabled());
+		
+		assertEquals(false, pye.hasTransactions());
 	}
+	
 
 	@Test
 	public void test01_2() throws Exception {
@@ -105,6 +110,10 @@ public class TestKMyMoneyWritablePayeeImpl {
 
 		assertEquals(PYE_2_ID, pye.getID());
 		assertEquals("Geldautomat", pye.getName());
+		assertEquals(false, pye.getMatchingEnabled());
+		
+		assertEquals(true, pye.hasTransactions());
+		assertEquals(1, pye.getTransactions().size());
 	}
 
 	@Test
@@ -117,10 +126,12 @@ public class TestKMyMoneyWritablePayeeImpl {
 		assertEquals("fuerchtegott.schnorzelmoeller@prater.at", pye.getEmail());
 		assertEquals("", pye.getReference()); // sic, not null
 		assertEquals("Pezi-Bär von der Urania kennt ihn gut", pye.getNotes());
+		assertEquals(false, pye.getMatchingEnabled());
 
 		KMMAddress addr = pye.getAddress();
 		assertNotEquals(null, addr);
-		// Detailed test of the address: Cf. TestKMMWritableAddressImpl
+		
+		assertEquals(false, pye.hasTransactions());
 	}
 
 	// -----------------------------------------------------------------

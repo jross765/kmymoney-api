@@ -25,6 +25,8 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyPayeeImpl.class);
 
+	protected static final String MATCHKEYS_SEP = "\n"; // sic, i.e. "&#10;" on XML level
+
 	// ---------------------------------------------------------------
 
 	// the JWSDP-object we are facading.
@@ -73,16 +75,25 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
     
 	// ---------------------------------------------------------------
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public KMMPyeID getID() {
 		return new KMMPyeID(jwsdpPeer.getId());
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public String getName() {
 		return jwsdpPeer.getName();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public KMMComplAcctID getDefaultAccountID() {
 		if ( jwsdpPeer.getDefaultaccountid() == null )
@@ -91,6 +102,9 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 		return new KMMComplAcctID(jwsdpPeer.getDefaultaccountid());
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public KMMAddress getAddress() {
 		if ( jwsdpPeer.getADDRESS() == null )
@@ -99,16 +113,25 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 		return new KMMAddressImpl(jwsdpPeer.getADDRESS());
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public String getEmail() {
 		return jwsdpPeer.getEmail();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public String getReference() {
 		return jwsdpPeer.getReference();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public String getNotes() {
 		return jwsdpPeer.getNotes();
@@ -116,28 +139,76 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public BigInteger getMatchingEnabled() {
-		return jwsdpPeer.getMatchingenabled();
+	public boolean getMatchingEnabled() {
+		if ( jwsdpPeer.getMatchingenabled() == null )
+			return false;
+
+		if ( jwsdpPeer.getMatchingenabled().equals(BigInteger.ONE) )
+			return true;
+		else
+			return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public String getMatchKey() {
+	public List<String> getMatchKeys() {
+		ArrayList<String> result = new ArrayList<String>();
+		
+		String keysRaw = getMatchKeysRaw();
+		if ( keysRaw == null )
+			return result;
+		
+		for ( String key : keysRaw.split(MATCHKEYS_SEP) ) {
+			result.add(new String(key));
+		}
+				
+		return result;
+	}
+
+	// internal helper
+	protected String getMatchKeysRaw() {
 		return jwsdpPeer.getMatchkey();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public BigInteger getUsingMatchKey() {
-		return jwsdpPeer.getUsingmatchkey();
+	public boolean getUsingMatchKey() {
+		if ( jwsdpPeer.getUsingmatchkey() == null )
+			return false;
+
+		if ( jwsdpPeer.getUsingmatchkey().equals(BigInteger.ONE) )
+			return true;
+		else
+			return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public BigInteger getMatchIgnoreCase() {
-		return jwsdpPeer.getMatchignorecase();
+	public boolean getMatchIgnoreCase() {
+		if ( jwsdpPeer.getMatchignorecase() == null )
+			return false;
+
+		if ( jwsdpPeer.getMatchignorecase().equals(BigInteger.ONE) )
+			return true;
+		else
+			return false;
 	}
 
     // -----------------------------------------------------------------
 
+    /**
+     * {@inheritDoc}
+     */
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("null transaction split given");
@@ -183,10 +254,7 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
     // ----------------------------
 
     /**
-     * The returned list ist sorted by the natural order of the Transaction-Splits.
-     *
-     * @return all splits
-     * {@link KMyMoneyTransaction}
+     * {@inheritDoc}
      */
     public List<KMyMoneyTransactionSplit> getTransactionSplits() {
     	if (mySplitsNeedSorting) {
@@ -198,12 +266,15 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 	}
 
     /**
-     * @return true if ${@link #getTransactionSplits()}.size()>0
+     * {@inheritDoc}
      */
     public boolean hasTransactions() {
 		return getTransactionSplits().size() > 0;
 	}
 
+    /**
+     * {@inheritDoc}
+     */
     public List<KMyMoneyTransaction> getTransactions() {
 		List<KMyMoneyTransaction> retval = new ArrayList<KMyMoneyTransaction>();
 
@@ -221,6 +292,9 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 		return retval;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public List<KMyMoneyTransaction> getTransactions(LocalDate fromDate, LocalDate toDate) {
 		List<KMyMoneyTransaction> retval = new ArrayList<KMyMoneyTransaction>();
 
@@ -239,11 +313,11 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 	}
 
     /**
-     * @param spltID the transaction-split id to look for
-     * @return the identified split or null
+     * {@inheritDoc}
      */
     public KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID) {
     	for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
+    		// ::TODO
     		if ( splt.getID().equals(spltID) ) {
     			return splt;
     		}
@@ -280,8 +354,13 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 		buffer.append(", matching-enabled=");
 		buffer.append(getMatchingEnabled());
 
-		buffer.append(", match-key='");
-		buffer.append(getMatchKey() + "'");
+		// ::TODO: some weird behavior here
+		// Cf. TestKMyMoneyWritableFileImpl.test04_1_check_3
+//		buffer.append(", match-keys='");
+//		for ( String key : getMatchKeys() ) {
+//			buffer.append(key + "|");
+//		}
+//		// ::TODO: delete trailing '|'
 
 		buffer.append(", using-match-key=");
 		buffer.append(getUsingMatchKey());

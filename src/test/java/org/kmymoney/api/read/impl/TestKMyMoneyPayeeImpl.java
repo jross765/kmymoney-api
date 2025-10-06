@@ -8,10 +8,10 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
-import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.aux.KMMAddress;
+import org.kmymoney.base.basetypes.simple.KMMPyeID;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -19,6 +19,7 @@ public class TestKMyMoneyPayeeImpl {
 	public static final KMMPyeID PYE_1_ID = new KMMPyeID("P000002"); // Gehalt
 	public static final KMMPyeID PYE_2_ID = new KMMPyeID("P000003"); // Geldautomat
 	public static final KMMPyeID PYE_3_ID = new KMMPyeID("P000005"); // Schnorzelmoeller
+	public static final KMMPyeID PYE_4_ID = new KMMPyeID("P000009"); // Hubers Laden
 
 	// -----------------------------------------------------------------
 
@@ -66,6 +67,7 @@ public class TestKMyMoneyPayeeImpl {
 
 		assertEquals(PYE_1_ID, pye.getID());
 		assertEquals("Gehalt", pye.getName());
+		assertEquals(false, pye.getMatchingEnabled());
 		
 		assertEquals(false, pye.hasTransactions());
 	}
@@ -77,6 +79,7 @@ public class TestKMyMoneyPayeeImpl {
 
 		assertEquals(PYE_2_ID, pye.getID());
 		assertEquals("Geldautomat", pye.getName());
+		assertEquals(false, pye.getMatchingEnabled());
 		
 		assertEquals(true, pye.hasTransactions());
 		assertEquals(1, pye.getTransactions().size());
@@ -93,6 +96,7 @@ public class TestKMyMoneyPayeeImpl {
 		assertEquals("fuerchtegott.schnorzelmoeller@prater.at", pye.getEmail());
 		assertEquals("", pye.getReference()); // sic, not null
 		assertEquals("Pezi-Bär von der Urania kennt ihn gut", pye.getNotes());
+		assertEquals(false, pye.getMatchingEnabled());
 
 		KMMAddress addr = pye.getAddress();
 		assertNotEquals(null, addr);
@@ -100,4 +104,22 @@ public class TestKMyMoneyPayeeImpl {
 		
 		assertEquals(false, pye.hasTransactions());
 	}
+	
+	@Test
+	public void test01_4() throws Exception {
+		pye = kmmFile.getPayeeByID(PYE_4_ID);
+		assertNotEquals(null, pye);
+
+		assertEquals(PYE_4_ID, pye.getID());
+		assertEquals("Hubers Laden", pye.getName());
+		assertEquals(true, pye.getMatchingEnabled());
+		assertEquals(true, pye.getMatchIgnoreCase());
+		assertEquals(true, pye.getUsingMatchKey());
+		assertEquals(2, pye.getMatchKeys().size());
+		assertEquals("Läden in der Gegend", pye.getMatchKeys().get(0));
+		assertEquals("Kiosk Sesamstrasse", pye.getMatchKeys().get(1));
+
+		assertEquals(false, pye.hasTransactions());
+	}
+
 }
