@@ -217,17 +217,20 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 		KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
 		if ( old != null ) {
 			// There already is a split with that ID
-			if ( !old.equals(splt) ) {
-				System.err.println("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
-						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
-						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
-				LOGGER.error("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
-						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
-						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
-				IllegalStateException exc = new IllegalStateException("DEBUG");
-				exc.printStackTrace();
-				replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
-			}
+			int dummy = 0; // do nothing!
+						   // sic, the following error shall *not* be thrown
+						   // (as opposed to code in KMyMoneyTransaction)!
+//			if ( !old.equals(splt) ) {
+//				System.err.println("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
+//						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
+//						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
+//				LOGGER.error("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
+//						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
+//						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
+//				IllegalStateException exc = new IllegalStateException("DEBUG");
+//				exc.printStackTrace();
+//				replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
+//			}
 		} else {
 			// There is no transaction with that ID yet
 			mySplits.add(splt);
@@ -317,8 +320,7 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
      */
     public KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID) {
     	for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
-    		// ::TODO
-    		if ( splt.getID().equals(spltID) ) {
+    		if ( splt.getID().equals(spltID.getSplitID()) ) {
     			return splt;
     		}
     	}
