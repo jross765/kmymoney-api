@@ -67,6 +67,10 @@ public class TestKMyMoneyPayeeImpl {
 
 		assertEquals(PYE_1_ID, pye.getID());
 		assertEquals("Gehalt", pye.getName());
+		assertEquals("", pye.getEmail());
+		assertEquals("", pye.getReference());
+		assertEquals("asdf", pye.getIDPattern());
+		assertEquals("sdfg", pye.getURLTemplate());
 		assertEquals(false, pye.getMatchingEnabled());
 		
 		assertEquals(false, pye.hasTransactions());
@@ -79,6 +83,10 @@ public class TestKMyMoneyPayeeImpl {
 
 		assertEquals(PYE_2_ID, pye.getID());
 		assertEquals("Geldautomat", pye.getName());
+		assertEquals("", pye.getEmail());
+		assertEquals("", pye.getReference());
+		assertEquals(null, pye.getIDPattern());
+		assertEquals(null, pye.getURLTemplate());
 		assertEquals(false, pye.getMatchingEnabled());
 		
 		assertEquals(true, pye.hasTransactions());
@@ -95,6 +103,8 @@ public class TestKMyMoneyPayeeImpl {
 		assertEquals(null, pye.getDefaultAccountID());
 		assertEquals("fuerchtegott.schnorzelmoeller@prater.at", pye.getEmail());
 		assertEquals("", pye.getReference()); // sic, not null
+		assertEquals(null, pye.getIDPattern());
+		assertEquals(null, pye.getURLTemplate());
 		assertEquals("Pezi-Bär von der Urania kennt ihn gut", pye.getNotes());
 		assertEquals(false, pye.getMatchingEnabled());
 
@@ -112,7 +122,11 @@ public class TestKMyMoneyPayeeImpl {
 
 		assertEquals(PYE_4_ID, pye.getID());
 		assertEquals("Hubers Laden", pye.getName());
-		assertEquals(true, pye.getMatchingEnabled());
+		assertEquals("", pye.getEmail());
+		assertEquals("", pye.getReference());
+		assertEquals(null, pye.getIDPattern());
+		assertEquals(null, pye.getURLTemplate());
+ 		assertEquals(true, pye.getMatchingEnabled());
 		assertEquals(true, pye.getMatchIgnoreCase());
 		assertEquals(true, pye.getUsingMatchKey());
 		assertEquals(2, pye.getMatchKeys().size());

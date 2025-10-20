@@ -65,6 +65,20 @@ public interface KMyMoneyWritablePayee extends KMyMoneyPayee,
 
     /**
      * 
+     * @param patt
+     */
+    void setIDPattern(String patt);
+
+    /**
+     * 
+     * @param tpl
+     */
+    void setURLTemplate(String tpl);
+
+    // ---------------------------------------------------------------
+
+    /**
+     * 
      * @param enbl
      * 
      * @see #getMatchingEnabled()

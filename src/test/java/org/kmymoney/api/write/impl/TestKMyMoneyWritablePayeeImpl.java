@@ -98,6 +98,10 @@ public class TestKMyMoneyWritablePayeeImpl {
 
 		assertEquals(PYE_1_ID, pye.getID());
 		assertEquals("Gehalt", pye.getName());
+		assertEquals("", pye.getEmail());
+		assertEquals("", pye.getReference());
+		assertEquals("asdf", pye.getIDPattern());
+		assertEquals("sdfg", pye.getURLTemplate());
 		assertEquals(false, pye.getMatchingEnabled());
 		
 		assertEquals(false, pye.hasTransactions());
@@ -110,6 +114,10 @@ public class TestKMyMoneyWritablePayeeImpl {
 
 		assertEquals(PYE_2_ID, pye.getID());
 		assertEquals("Geldautomat", pye.getName());
+		assertEquals("", pye.getEmail());
+		assertEquals("", pye.getReference());
+		assertEquals(null, pye.getIDPattern());
+		assertEquals(null, pye.getURLTemplate());
 		assertEquals(false, pye.getMatchingEnabled());
 		
 		assertEquals(true, pye.hasTransactions());
@@ -125,6 +133,8 @@ public class TestKMyMoneyWritablePayeeImpl {
 		assertEquals(null, pye.getDefaultAccountID());
 		assertEquals("fuerchtegott.schnorzelmoeller@prater.at", pye.getEmail());
 		assertEquals("", pye.getReference()); // sic, not null
+		assertEquals(null, pye.getIDPattern());
+		assertEquals(null, pye.getURLTemplate());
 		assertEquals("Pezi-Bär von der Urania kennt ihn gut", pye.getNotes());
 		assertEquals(false, pye.getMatchingEnabled());
 
@@ -157,6 +167,7 @@ public class TestKMyMoneyWritablePayeeImpl {
 
 		pye.setName("Rantanplan");
 		pye.setNotes("World's most intelligent canine being");
+		pye.setIDPattern("glbb");
 
 		// ----------------------------
 		// Check whether the object can has actually be modified
@@ -191,6 +202,13 @@ public class TestKMyMoneyWritablePayeeImpl {
 		assertEquals(PYE_1_ID, pye.getID()); // unchanged
 		assertEquals("Rantanplan", pye.getName()); // changed
 		assertEquals("World's most intelligent canine being", pye.getNotes()); // changed
+		assertEquals("", pye.getEmail()); // unchanged
+		assertEquals("", pye.getReference()); // unchanged
+		assertEquals("glbb", pye.getIDPattern()); // changed
+		assertEquals("sdfg", pye.getURLTemplate()); // unchanged
+		assertEquals(false, pye.getMatchingEnabled()); // unchanged
+		
+		assertEquals(false, pye.hasTransactions()); // unchanged
 	}
 
 	private void test02_1_check_persisted(File outFile) throws Exception {
@@ -206,6 +224,13 @@ public class TestKMyMoneyWritablePayeeImpl {
 		assertEquals(PYE_1_ID, pye.getID()); // unchanged
 		assertEquals("Rantanplan", pye.getName()); // changed
 		assertEquals("World's most intelligent canine being", pye.getNotes()); // changed
+		assertEquals("", pye.getEmail()); // unchanged
+		assertEquals("", pye.getReference()); // unchanged
+		assertEquals("glbb", pye.getIDPattern()); // changed
+		assertEquals("sdfg", pye.getURLTemplate()); // unchanged
+		assertEquals(false, pye.getMatchingEnabled()); // unchanged
+		
+		assertEquals(false, pye.hasTransactions()); // unchanged
 	}
 
 	// -----------------------------------------------------------------

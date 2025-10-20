@@ -143,6 +143,24 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 	 * {@inheritDoc}
 	 */
 	@Override
+    public String getIDPattern() {
+		return jwsdpPeer.getIdpattern();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public String getURLTemplate() {
+		return jwsdpPeer.getUrltemplate();
+	}
+
+	// ---------------------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean getMatchingEnabled() {
 		if ( jwsdpPeer.getMatchingenabled() == null )
 			return false;

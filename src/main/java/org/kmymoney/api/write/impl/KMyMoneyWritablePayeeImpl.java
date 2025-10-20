@@ -181,9 +181,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     // ---------------------------------------------------------------
 
     /**
-     * @see KMyMoneyWritablePayee#setName(java.lang.String)
+     * {@inheritDoc}
      */
-    @Override
+	@Override
     public void setName(final String name) {
     	if ( name == null ) {
     		throw new IllegalArgumentException("argument <name> is null");
@@ -203,7 +203,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+	@Override
     public void setAddress(final KMMAddress adr) {
 		if ( adr == null ) {
 			throw new IllegalArgumentException("argument <adr> is null");
@@ -234,10 +237,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     }
 
     /**
-     * @param notes user-defined notes about the customer (may be null)
-     * @see KMyMoneyWritableCustomer#setNotes(String)
+     * {@inheritDoc}
      */
-    @Override
+	@Override
     public void setNotes(final String notes) {
 		if ( notes == null ) {
 			throw new IllegalArgumentException("argument <notes> is null");
@@ -262,6 +264,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 		}
     }
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setDefaultAccountID(final KMMComplAcctID acctID) {
     	if ( acctID == null ) {
@@ -289,6 +294,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setEmail(final String eml) {
     	if ( eml == null ) {
@@ -309,6 +317,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setReference(final String ref) {
     	if ( ref == null ) {
@@ -329,6 +340,59 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    // ---------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public void setIDPattern(final String patt) {
+    	if ( patt == null ) {
+    		throw new IllegalArgumentException("argument <patt> is null");
+    	}
+
+    	if ( patt.trim().length() == 0 ) {
+    		throw new IllegalArgumentException("argument <patt> is empty");
+    	}
+
+    	String oldPatt = getIDPattern();
+    	jwsdpPeer.setIdpattern(patt);
+    	getKMyMoneyFile().setModified(true);
+
+    	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+    	if ( propertyChangeSupport != null ) {
+    		propertyChangeSupport.firePropertyChange("reference", oldPatt, patt);
+    	}
+	}
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+    public void setURLTemplate(final String tpl) {
+    	if ( tpl == null ) {
+    		throw new IllegalArgumentException("argument <tpl> is null");
+    	}
+
+    	if ( tpl.trim().length() == 0 ) {
+    		throw new IllegalArgumentException("argument <tpl> is empty");
+    	}
+
+    	String oldTpl = getURLTemplate();
+    	jwsdpPeer.setUrltemplate(tpl);
+    	getKMyMoneyFile().setModified(true);
+
+    	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+    	if ( propertyChangeSupport != null ) {
+    		propertyChangeSupport.firePropertyChange("urlTemplate", oldTpl, tpl);
+    	}
+	}
+    
+    // ---------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setMatchingEnabled(final boolean enbl) {
     	boolean oldEnbl = getMatchingEnabled();
@@ -342,6 +406,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setMatchKeys(final List<String> keyList) {
     	if ( keyList == null ) {
@@ -353,6 +420,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+	@Override
 	public void addMatchKey(final String key) {
     	if ( key == null ) {
     		throw new IllegalArgumentException("argument <key> is null");
@@ -399,6 +470,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setUsingMatchKey(final boolean val) {
     	boolean oldVal = getUsingMatchKey();
@@ -412,6 +486,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void setMatchIgnoreCase(final boolean val) {
     	boolean oldVal = getUsingMatchKey();

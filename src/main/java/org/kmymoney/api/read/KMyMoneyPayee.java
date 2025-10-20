@@ -49,6 +49,18 @@ public interface KMyMoneyPayee extends KMyMoneyObject,
     String getNotes();
     
     // ---------------------------------------------------------------
+    
+    /**
+     * @return
+     */
+    String getIDPattern();
+
+    /**
+     * @return
+     */
+    String getURLTemplate();
+
+    // ---------------------------------------------------------------
 
     /**
      * @return

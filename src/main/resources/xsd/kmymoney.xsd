@@ -149,11 +149,13 @@
           <xs:attribute name="defaultaccountid" type="xs:NCName"/>
           <xs:attribute name="email" use="required"/>
           <xs:attribute name="id" use="required" type="xs:NCName"/>
+          <xs:attribute name="idpattern"/>
           <xs:attribute name="matchignorecase" type="xs:integer"/>
           <xs:attribute name="matchingenabled" use="required" type="xs:integer"/>
           <xs:attribute name="matchkey"/>
           <xs:attribute name="name" use="required"/>
           <xs:attribute name="reference" use="required"/>
+          <xs:attribute name="urltemplate"/>
           <xs:attribute name="usingmatchkey" type="xs:integer"/>
           <xs:attribute name="notes" />
         </xs:extension>
