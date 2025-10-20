@@ -105,9 +105,10 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		SECURITY jwsdpSec = file.createSecurityType();
 
 		jwsdpSec.setId(newID.toString());
-		jwsdpSec.setType(null);
+		jwsdpSec.setType(Const.SEC_TYPE_DEFAULT.getCode());
 		jwsdpSec.setSymbol(Const.SEC_SYMBOL_DEFAULT);
-		jwsdpSec.setName("no name given");;
+		jwsdpSec.setName("no name given");
+		jwsdpSec.setRoundingMethod(Const.SEC_ROUNDMETH_DEFAULT.getCode());
 		jwsdpSec.setPp(BigInteger.valueOf(Const.SEC_PP_DEFAULT));
 		jwsdpSec.setSaf(BigInteger.valueOf(Const.SEC_SAF_DEFAULT));
 		jwsdpSec.setTradingMarket(null);
@@ -268,7 +269,22 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 
 	@Override
 	public void setRoundingMethod(final KMMSecCurr.RoundingMethod meth) {
-		// TODO
+		if ( meth == null ) {
+			throw new IllegalArgumentException("argument <meth> is null");
+		}
+
+		if ( meth == KMMSecCurr.RoundingMethod.UNKNOWN ) {
+			throw new IllegalArgumentException("argumen <meth> is set to " + KMMSecCurr.RoundingMethod.UNKNOWN);
+		}
+		
+		KMMSecCurr.RoundingMethod oldMeth = getRoundingMethod();
+		jwsdpPeer.setRoundingMethod(meth.getCode());
+		getKMyMoneyFile().setModified(true);
+
+		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+		if (propertyChangeSupport != null) {
+		    propertyChangeSupport.firePropertyChange("roundingMethod", oldMeth, meth);
+		}
 	}
 
 	@Override

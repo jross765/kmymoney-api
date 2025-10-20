@@ -1,5 +1,7 @@
 package org.kmymoney.api;
 
+import org.kmymoney.api.read.KMMSecCurr;
+
 public class Const {
   
   public static final String KVP_KEY_ACCT_IBAN         = "iban";
@@ -26,9 +28,10 @@ public class Const {
 
   // -----------------------------------------------------------------
 
-  public static final int    SEC_PP_DEFAULT           = 2;
-  public static final int    SEC_SAF_DEFAULT          = 100;
-  public static final int    SEC_ROUNDMETH_DEFAULT    = 7;
-  public static final String SEC_SYMBOL_DEFAULT       = "DE000000001"; // pseudo-ISIN
+  public static final KMMSecCurr.Type           SEC_TYPE_DEFAULT         = KMMSecCurr.Type.STOCK;
+  public static final int                       SEC_PP_DEFAULT           = 2;
+  public static final int                       SEC_SAF_DEFAULT          = 100;
+  public static final KMMSecCurr.RoundingMethod SEC_ROUNDMETH_DEFAULT    = KMMSecCurr.RoundingMethod.ROUND;
+  public static final String                    SEC_SYMBOL_DEFAULT       = "DE000000001"; // pseudo-ISIN
   
 }

@@ -13,7 +13,6 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
-import org.kmymoney.api.read.UnknownRoundingMethodException;
 import org.kmymoney.api.read.UnknownSecurityTypeException;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
@@ -131,7 +130,7 @@ public class KMyMoneySecurityImpl extends KMyMoneyObjectImpl
     }
 
     @Override
-    public KMMSecCurr.RoundingMethod getRoundingMethod() throws UnknownRoundingMethodException {
+    public KMMSecCurr.RoundingMethod getRoundingMethod() {
     	if ( jwsdpPeer.getRoundingMethod() == null ) {
     		return null;
     	}
@@ -280,7 +279,7 @@ public class KMyMoneySecurityImpl extends KMyMoneyObjectImpl
 
 		try {
 			result += ", rounding-method=" + getRoundingMethod();
-		} catch (UnknownRoundingMethodException e) {
+		} catch (Exception e) {
 			result += ", rounding-method=" + "ERROR";
 		}
 

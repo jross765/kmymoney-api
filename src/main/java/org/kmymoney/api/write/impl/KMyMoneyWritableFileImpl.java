@@ -1194,8 +1194,8 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			final String name) {
 		KMyMoneyWritableSecurityImpl sec = new KMyMoneyWritableSecurityImpl(this);
 		sec.setType(type);
-		sec.setName(name);
 	    sec.setCode(code);
+		sec.setName(name);
 		((org.kmymoney.api.write.impl.hlp.FileSecurityManager) super.secMgr)
 			.addSecurity(sec);
 		
