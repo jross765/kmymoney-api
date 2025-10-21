@@ -17,6 +17,19 @@ file.
 * This repository contains no history before V. 1.7 (cf. notes in parent repo).
 
 ## Major Changes 
+### V. 0.8.0 &rarr; 0.8.1
+* Small corrections / bug fixes:
+  * `KMyMoneyPayee(Impl)`: 
+    * Fixed bug in split-bookkeeping stuff.
+    * Added two attributes (methods) coming from new file format that had been forgotten in V. 0.8.0.
+    * Improved interface for matching stuff and changed impl. accordingly.
+  * `KMyMoneyTransactionImpl`: 
+    * Added `getDateEnteredFormatted()` (consistency, had been forgotten)  
+    * Fixed bug in `getXYZDateFormatted()`
+  * `KMyMoneySecurityImpl`: Had forgotten to implement `setRoundingMethod()`.
+
+* Little bit of cleanup-work.
+
 ### V. 0.7 &rarr; 0.8
 **Caution: This is the first version of the API that is compatible with the KMyMoney V. 5.2.x format. No support for file format from V. 5.1.x any more.**
 
