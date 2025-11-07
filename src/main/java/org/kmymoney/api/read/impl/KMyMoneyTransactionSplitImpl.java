@@ -264,23 +264,29 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     @Override
-    public State getState() {
+    public ReconState getReconState() {
     	try {
-    		return State.valueOff( getStateInt() );
+    		return ReconState.valueOff( getReconStateInt() );
     	} catch (Exception e) {
-    		throw new MappingException("Could not map integer " + getStateInt() + " to State enum");
+    		throw new MappingException("Could not map integer " + getReconStateInt() + " to State enum");
     	}
+    }
+
+    @Override
+    @Deprecated
+    public ReconState getState() {
+    	return getReconState();
     }
 
     /**
      * <b>Using this method is discouraged.</b>
-     * Use {@link #getState()} whenever possible/applicable instead.
+     * Use {@link #getReconState()} whenever possible/applicable instead.
      * 
      * @return
      * 
      * @see #getState()
      */
-    public int getStateInt() {
+    public int getReconStateInt() {
     	if (jwsdpPeer.getReconcileflag() == null) {
     		return -1;
     	}

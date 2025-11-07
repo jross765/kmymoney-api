@@ -1,6 +1,7 @@
 package org.kmymoney.api.write.impl;
 
 import java.beans.PropertyChangeSupport;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Collection;
 
@@ -526,9 +527,49 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		jwsdpPeer.setAction(actStr);
 		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
 
-		if ( old == null || !old.equals(actStr) ) {
+		if ( old == null || 
+			 ! old.equals(actStr) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("splitAction", old, actStr);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setReconState(final ReconState stat) {
+		setReconStateInt(stat.getIndex());
+	}
+	
+	@Override
+	@Deprecated
+	public void setState(ReconState stat) {
+		setReconState(stat);
+	}
+
+	/**
+     * <b>Using this method is discouraged.</b>
+     * Use {@link #setReconState(org.kmymoney.api.read.KMyMoneyTransactionSplit.ReconState)} whenever possible/applicable instead.
+     * 
+     * @return
+     * 
+     * @see #setReconState(org.kmymoney.api.read.KMyMoneyTransactionSplit.ReconState)
+	 */
+	public void setReconStateInt(final int statInt) {
+		if ( statInt < 0 ) { // sic, 0 is allowed
+			throw new IllegalArgumentException("argument <statInt> is empty");
+		}
+
+		BigInteger old = getJwsdpPeer().getReconcileflag();
+		jwsdpPeer.setReconcileflag(BigInteger.valueOf(statInt));
+		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+
+		if ( old == null || 
+			 old.intValue() != statInt ) {
+			if ( helper.getPropertyChangeSupport() != null ) {
+				 helper.getPropertyChangeSupport().firePropertyChange("splitReconState", old, statInt);
 			}
 		}
 	}

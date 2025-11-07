@@ -147,7 +147,9 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 */
 	void setAction(Action act) throws IllegalTransactionSplitActionException;
 	
-	// ::TODO
-	// void setState(State stat);
+	void setReconState(ReconState stat);
+
+	@Deprecated
+	void setState(ReconState stat);
 
 }

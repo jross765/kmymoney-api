@@ -85,7 +85,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     }
     
     // Also called "ReconFlag"
-    public enum State {
+    public enum ReconState {
 
     	NOT_RECONCILED ( 0 ),
     	CLEARED        ( 1 ),
@@ -98,25 +98,25 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
 
     	// ---
 	      
-    	State(int index) {
+    	ReconState(int index) {
     		this.index = index;
     	}
 	      
     	// ---
 		
     	public int getIndex() {
-	  	 return index;
+    		return index;
     	}
 		
     	// no typo!
-    	public static State valueOff(int index) {
-	    		for ( State stat : values() ) {
-			if ( stat.getIndex() == index ) {
-				return stat;
-			}
-	    		}
+    	public static ReconState valueOff(int index) {
+    		for ( ReconState stat : values() ) {
+				if ( stat.getIndex() == index ) {
+					return stat;
+				}
+    		}
 		    
-	    		return null;
+    		return null;
     	}
     }
 	
@@ -220,7 +220,10 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      */
     Action getAction();
 
-    State getState();
+    ReconState getReconState();
+    
+    @Deprecated
+    ReconState getState();
     
     // ----------------------------
 
