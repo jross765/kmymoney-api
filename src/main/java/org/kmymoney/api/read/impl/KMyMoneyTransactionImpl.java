@@ -433,7 +433,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		buffer.append(", balance=");
 		buffer.append(getBalanceFormatted());
 
-		buffer.append(", description='");
+		buffer.append(", memo='");
 		buffer.append(getMemo() + "'");
 
 		buffer.append(", #splits=");

@@ -513,12 +513,16 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			buffer.append("ERROR");
 		}
 
-		buffer.append(", state=");
+		buffer.append(", recon-state=");
 		try {
-			buffer.append(getState());
+			buffer.append(getReconState());
 		} catch (Exception e) {
 			buffer.append("ERROR");
 		}
+
+		// Redundant, because the qualif-ID above already contains it:
+//		buffer.append(", transaction-id=");
+//		buffer.append(getTransaction().getID());
 
 		buffer.append(", account-id=");
 		buffer.append(getAccountID());
@@ -531,10 +535,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 		buffer.append(", memo='");
 		buffer.append(getMemo() + "'");
-
-		// usually not set:
-		// buffer.append(" transaction-description: '");
-		// buffer.append(getTransaction().getMemo() + "'");
 
 		buffer.append(", value=");
 		buffer.append(getValue());
