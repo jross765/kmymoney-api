@@ -558,14 +558,14 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	buffer.append(", #splits=");
 	buffer.append(getSplitsCount());
 
-	buffer.append(", post-date=");
+	buffer.append(", date-posted=");
 	try {
 	    buffer.append(getDatePosted().format(DATE_POSTED_FORMAT));
 	} catch (Exception e) {
 	    buffer.append(getDatePosted().toString());
 	}
 
-	buffer.append(", entry-date=");
+	buffer.append(", date-entered=");
 	try {
 	    buffer.append(getDateEntered().format(DATE_ENTERED_FORMAT));
 	} catch (Exception e) {
