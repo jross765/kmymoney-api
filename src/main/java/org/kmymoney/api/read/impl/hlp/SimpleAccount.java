@@ -321,14 +321,15 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 
 	@Override
 	public String getBalanceFormatted() {
-		return getCurrencyFormat().format(getBalance());
+		Locale lcl = Locale.getDefault();
+		return getBalanceFormatted(lcl);
 	}
 
 	@Override
 	public String getBalanceFormatted(final Locale lcl) {
 		NumberFormat cf = NumberFormat.getCurrencyInstance(lcl);
 		cf.setCurrency(getCurrency());
-		return cf.format(getBalance());
+		return cf.format(getBalance().getBigDecimal());
 	}
 
 	@Override
