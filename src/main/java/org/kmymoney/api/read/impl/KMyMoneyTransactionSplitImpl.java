@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Currency;
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
@@ -304,12 +305,16 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	return new FixedPointNumber(jwsdpPeer.getValue());
     }
 
+    public BigFraction getValueRat() {
+    	return BigFraction.parse(jwsdpPeer.getValue());
+    }
+
     /**
      * @see KMyMoneyTransactionSplit#getValueFormatted()
      */
     @Override
     public String getValueFormatted() {
-	return getValueCurrencyFormat().format(getValue());
+    	return getValueFormatted(Locale.getDefault());
     }
 
     /**
@@ -317,14 +322,12 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      */
     @Override
     public String getValueFormatted(final Locale lcl) {
-    	NumberFormat nf = NumberFormat.getInstance(lcl);
+		NumberFormat nf = getValueCurrencyFormat(lcl);
     	if ( getTransaction().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-    		// redundant, but symmetry:
     		nf.setCurrency(Currency.getInstance(getTransaction().getQualifSecCurrID().getCode()));
-    		return nf.format(getValue());
+    		return nf.format(getValue().getBigDecimal());
     	} else {
-    		// nf = NumberFormat.getNumberInstance(lcl);
-    		return nf.format(getValue()) + " " + getTransaction().getQualifSecCurrID().toString();
+    		return nf.format(getValue().getBigDecimal()) + " " + getTransaction().getQualifSecCurrID().toString();
     	}
     }
 
@@ -368,6 +371,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	return new FixedPointNumber(jwsdpPeer.getShares());
     }
 
+    @Override
+    public BigFraction getSharesRat() {
+    	return BigFraction.parse(jwsdpPeer.getShares());
+    }
+
     /**
      * The value is in the currency of the account!
      * @throws InvalidQualifSecCurrIDException 
@@ -388,12 +396,12 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      */
     @Override
     public String getSharesFormatted(final Locale lcl) {
-		NumberFormat nf = getSharesCurrencyFormat();
+		NumberFormat nf = getSharesCurrencyFormat(lcl);
 		if ( getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
 			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrency());
-			return nf.format(getShares());
+			return nf.format(getShares().getBigDecimal());
 		} else {
-			return nf.format(getShares()) + " " + getAccount().getQualifSecCurrID().toString();
+			return nf.format(getShares().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().toString();
 		}
     }
 
@@ -411,18 +419,29 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     }
     
     @Override
+    public BigFraction getPriceRat() {
+    	if ( jwsdpPeer.getPrice() == null )
+    		return null;
+    	
+    	if ( jwsdpPeer.getPrice().trim().length() == 0 )
+    		return null;
+    	
+    	return BigFraction.parse(jwsdpPeer.getPrice());
+    }
+
+    @Override
     public String getPriceFormatted() {
-    	return getPriceCurrencyFormat().format(getPrice());
+    	return getPriceFormatted(Locale.getDefault());
     }
 
     @Override
     public String getPriceFormatted(Locale lcl) {
-		NumberFormat nf = NumberFormat.getCurrencyInstance(lcl);
+		NumberFormat nf = getPriceCurrencyFormat(lcl);
 		if ( getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
 			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrency());
-			return nf.format(getPrice());
+			return nf.format(getPrice().getBigDecimal());
 		} else {
-			return nf.format(getPrice()) + " " + getAccount().getQualifSecCurrID().toString();
+			return nf.format(getPrice().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().toString();
 		}
     }
 
@@ -442,7 +461,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      * @return the currency-format of the transaction
      */
     public NumberFormat getValueCurrencyFormat() {
-    	return ((KMyMoneyTransactionImpl) getTransaction()).getCurrencyFormat();
+    	return getValueCurrencyFormat(Locale.getDefault());
+    }
+
+    public NumberFormat getValueCurrencyFormat(Locale lcl) {
+    	return ((KMyMoneyTransactionImpl) getTransaction()).getCurrencyFormat(lcl);
     }
 
     /**
@@ -451,11 +474,19 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      * @throws InvalidQualifSecCurrTypeException 
      */
     protected NumberFormat getSharesCurrencyFormat() {
+    	return getSharesCurrencyFormat(Locale.getDefault());
+    }
+    
+    protected NumberFormat getSharesCurrencyFormat(Locale lcl) {
     	return ((KMyMoneyAccountImpl) getAccount()).getCurrencyFormat();
     }
     
-    protected NumberFormat getPriceCurrencyFormat() {
-    	return getSharesCurrencyFormat(); // ::CHECK ::TODO
+    protected NumberFormat getPriceCurrencyFormat() {	
+    	return getPriceCurrencyFormat(Locale.getDefault());
+    }
+    
+    protected NumberFormat getPriceCurrencyFormat(Locale lcl) {
+    	return getSharesCurrencyFormat(lcl); // ::CHECK ::TODO
     }
     
     // ---------------------------------------------------------------

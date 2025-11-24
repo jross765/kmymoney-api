@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.TRANSACTION;
 import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
@@ -184,6 +185,8 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      */
     boolean isBalanced();
 
+    boolean isBalancedRat();
+
     KMMQualifSecCurrID getQualifSecCurrID();
 
     /**
@@ -191,15 +194,21 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * if the transaction is unbalanced, get sum of all split-values.
      * 
      * @return the sum of all splits
+     * 
+     * @see #getBalanceFormatted()
+     * @see #getBalanceFormatted(Locale)
      * @see #isBalanced()
      */
     FixedPointNumber getBalance();
 
+    BigFraction      getBalanceRat();
+    
     /**
      * The result is in the currency of the transaction.
      * @return 
      * 
-     * @see KMyMoneyTransaction#getBalance()
+     * @see #getBalance()
+     * @see #getBalanceFormatted(Locale)
      */
     String getBalanceFormatted();
 
@@ -207,8 +216,9 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * The result is in the currency of the transaction.
      * @param lcl 
      * @return 
-     * 
-     * @see KMyMoneyTransaction#getBalance()
+     *  
+     * @see #getBalance()
+     * @see #getBalanceFormatted()
      */
     String getBalanceFormatted(Locale lcl);
 
@@ -217,6 +227,9 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * if the transaction is unbalanced, get the missing split-value to balance it.
      * 
      * @return the sum of all splits
+     *  
+     * @see #getNegatedBalanceFormatted()
+     * @see #getNegatedBalanceFormatted(Locale)
      * @see #isBalanced()
      */
     FixedPointNumber getNegatedBalance();
@@ -225,7 +238,8 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * The result is in the currency of the transaction.
      * @return 
      * 
-     * @see KMyMoneyTransaction#getNegatedBalance()
+     * @see #getNegatedBalance()
+     * @see #getNegatedBalanceFormatted(Locale)
      */
     String getNegatedBalanceFormatted();
 
@@ -234,7 +248,9 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @param lcl 
      * @return 
      * 
-     * @see KMyMoneyTransaction#getNegatedBalance()
+     * @see #getNegatedBalance()
+     * @see #getNegatedBalanceFormatted()
      */
     String getNegatedBalanceFormatted(Locale lcl);
+
 }

@@ -1,6 +1,7 @@
 package org.kmymoney.api.currency;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class ComplexPriceTable implements Serializable {
 		if ( listeners == null ) {
 			listeners = new ArrayList<ComplexPriceTableChangeListener>();
 		}
+		
 		listeners.add(listener);
 	}
 
@@ -54,20 +56,26 @@ public class ComplexPriceTable implements Serializable {
 		if ( listeners == null ) {
 			listeners = new ArrayList<ComplexPriceTableChangeListener>();
 		}
+		
 		listeners.remove(listener);
 	}
 
 	protected void firePriceTableChanged(final String curr, final FixedPointNumber factor) {
 		if ( curr == null ) {
-			throw new IllegalArgumentException("null currency given");
+			throw new IllegalArgumentException("argument <curr> is null");
 		}
 
 		if ( curr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty currency given");
+			throw new IllegalArgumentException("argument <curr> is empty");
 		}
 		
 		if ( factor == null ) {
-			throw new IllegalArgumentException("null factor given");
+			throw new IllegalArgumentException("argument <factor> is null");
+		}
+		
+		if ( factor.isLessThan(BigDecimal.ZERO) ||
+			 factor.equals(BigDecimal.ZERO) ) {
+			throw new IllegalArgumentException("argument <factor> must be > 0");
 		}
 		
 		if ( listeners != null ) {
@@ -181,7 +189,9 @@ public class ComplexPriceTable implements Serializable {
 	// ---------------------------------------------------------------
 
 	/**
-	 * @return 
+	 * @param nameSpace 
+	 * @param code 
+	 * @return the factor to convert the price specified by the name-space-code-pair
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
 	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID.Type nameSpace, final String code) {
@@ -190,7 +200,7 @@ public class ComplexPriceTable implements Serializable {
 		}
 
 		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("empty code given");
+			throw new IllegalArgumentException("argument <code> is empty");
 		}
 
 		SimplePriceTable table = getByNamespace(nameSpace);
@@ -217,7 +227,7 @@ public class ComplexPriceTable implements Serializable {
 		}
 
 		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("empty code given");
+			throw new IllegalArgumentException("argument <code> is empty");
 		}
 
 		if ( pFactor == null ) {
@@ -249,11 +259,11 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("null value given");
 
 		if ( secCurrID == null ) {
-			throw new IllegalArgumentException("null security/currency ID given"); 
+			throw new IllegalArgumentException("argument <secCurrID> is null"); 
 		}
 		
 		if ( ! secCurrID.isSet() ) {
-			throw new IllegalArgumentException("unset security/currency ID given"); 
+			throw new IllegalArgumentException("argument <secCurrID> is null"); 
 		}
 		
 		SimplePriceTable table = getByNamespace(secCurrID.getType());
@@ -263,7 +273,7 @@ public class ComplexPriceTable implements Serializable {
 
 		return table.convertFromBaseCurrency(pValue, secCurrID.getCode());
 	}
-	
+
 	/*
 	public boolean convertFromBaseCurrency(FixedPointNumber pValue, final Currency curr) {
 
@@ -336,9 +346,6 @@ public class ComplexPriceTable implements Serializable {
 
 	// ---------------------------------------------------------------
 
-	/**
-	 * @return
-	 */
 	public List<KMMQualifSecCurrID.Type> getNameSpaces() {
 		ArrayList<KMMQualifSecCurrID.Type> result = new ArrayList<KMMQualifSecCurrID.Type>(namespace2CurrTab.keySet());
 		Collections.sort(result);

@@ -34,11 +34,11 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
     // -----------------------------------------------------------
 
     public SimpleCurrencyExchRateTable() {
-	// super();
-	mIso4217CurrCodes2Factor = new Hashtable<String, FixedPointNumber>();
+    	// super();
+    	mIso4217CurrCodes2Factor = new Hashtable<String, FixedPointNumber>();
 	
-	setConversionFactor("EUR", new FixedPointNumber(1));
-	// setConversionFactor("GBP", new FixedPointNumber("769/523"));
+    	setConversionFactor("EUR", new FixedPointNumber(1));
+    	// setConversionFactor("GBP", new FixedPointNumber("769/523"));
     }
 
     // -----------------------------------------------------------
@@ -48,8 +48,9 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * @return a factor {@link FixedPointNumber} that is to be multiplied with an
      *         amount of that currency to get the value in the base-currency.
      */
+    @Override
     public FixedPointNumber getConversionFactor(final String iso4217CurrCode) {
-	return mIso4217CurrCodes2Factor.get(iso4217CurrCode);
+    	return mIso4217CurrCodes2Factor.get(iso4217CurrCode);
     }
 
     /**
@@ -58,8 +59,9 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      *                        multiplied with an amount of that currency to get the
      *                        value in the base-currency.
      */
+    @Override
     public void setConversionFactor(final String iso4217CurrCode, final FixedPointNumber factor) {
-	mIso4217CurrCodes2Factor.put(iso4217CurrCode, factor);
+    	mIso4217CurrCodes2Factor.put(iso4217CurrCode, factor);
     }
 
     // ---------------------------------------------------------------
@@ -71,24 +73,52 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      */
     public boolean convertFromBaseCurrency(FixedPointNumber value, final String iso4217CurrencyCode) {
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 
 		if ( iso4217CurrencyCode == null ) {
-			throw new IllegalArgumentException("null ISO code given");
+			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is null");
 		}
 
 		if ( iso4217CurrencyCode.trim().equals("") ) {
-			throw new IllegalArgumentException("empty ISO codce given");
+			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is empty");
 		}
 
         FixedPointNumber factor = getConversionFactor(iso4217CurrencyCode);
         if (factor == null) {
             return false;
         }
+        
+        // CAUTION: mutable
         value.divide(factor);
         return true;
     }
+
+    // ::TODO
+    // CAUTION: Does not work like this, because BigFraction is immutable
+//    @Override
+//    public boolean convertFromBaseCurrencyRat(BigFraction value, final String iso4217CurrencyCode) {
+//		if ( value == null ) {
+//			throw new IllegalArgumentException("argument <value> is null");
+//		}
+//
+//		if ( iso4217CurrencyCode == null ) {
+//			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is null");
+//		}
+//
+//		if ( iso4217CurrencyCode.trim().equals("") ) {
+//			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is empty");
+//		}
+//
+//    	BigFraction factor = getConversionFactor(iso4217CurrencyCode).toBigFraction();
+//        if (factor == null) {
+//            return false;
+//        }
+//        
+//        // CAUTION: immutable
+//        value = value.divide(factor);
+//        return true;
+//    }
 
     /**
      * @param value               the value to convert
@@ -97,25 +127,52 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      */
     public boolean convertToBaseCurrency(FixedPointNumber value, final String iso4217CurrencyCode) {
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 
 		if ( iso4217CurrencyCode == null ) {
-			throw new IllegalArgumentException("null ISO code given");
+			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is null");
 		}
 
 		if ( iso4217CurrencyCode.trim().equals("") ) {
-			throw new IllegalArgumentException("empty ISO code given");
+			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is empty");
 		}
 
 		FixedPointNumber factor = getConversionFactor(iso4217CurrencyCode);
-		if (factor == null) {
-			return false;
-		}
-		
+    	if (factor == null) {
+    		return false;
+    	}
+    	
+        // CAUTION: mutable
 		value.multiply(factor);
 		return true;
     }
+
+    // ::TODO
+    // CAUTION: Does not work like this, because BigFraction is immutable
+//    @Override
+//    public boolean convertToBaseCurrencyRat(BigFraction value, final String iso4217CurrencyCode) {
+//		if ( value == null ) {
+//			throw new IllegalArgumentException("argument <value> is null");
+//		}
+//
+//		if ( iso4217CurrencyCode == null ) {
+//			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is null");
+//		}
+//
+//		if ( iso4217CurrencyCode.trim().equals("") ) {
+//			throw new IllegalArgumentException("argument <iso4217CurrencyCode> is empty");
+//		}
+//
+//    	BigFraction factor = getConversionFactor(iso4217CurrencyCode).toBigFraction();
+//    	if (factor == null) {
+//    		return false;
+//    	}
+//    	
+//    	// CAUTION: immutable
+//    	value = value.multiply(factor);
+//    	return true;
+//    }
 
     /**
      * @param value     the value to convert
@@ -123,16 +180,23 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * @return false if the conversion is not possible
      */
     public boolean convertToBaseCurrency(FixedPointNumber value, final Currency pCurrency) {
-	return convertToBaseCurrency(value, pCurrency.getCurrencyCode());
+    	return convertToBaseCurrency(value, pCurrency.getCurrencyCode());
     }
+
+    // ::TODO
+    // CAUTION: Does not work like this, because BigFraction is immutable
+//    public boolean convertToBaseCurrencyRat(BigFraction value, final Currency pCurrency) {
+//    	return convertToBaseCurrencyRat(value, pCurrency.getCurrencyCode());
+//    }
 
     // ---------------------------------------------------------------
 
     /**
      * @return all currency-names
      */
+    @Override
     public List<String> getCurrencies() {
-	return new ArrayList<String>(mIso4217CurrCodes2Factor.keySet());
+    	return new ArrayList<String>(mIso4217CurrCodes2Factor.keySet());
     }
 
     // ---------------------------------------------------------------
@@ -140,25 +204,28 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
     /**
      * forget all conversion-factors.
      */
+    @Override
     public void clear() {
         mIso4217CurrCodes2Factor.clear();
     }
 
+    // ---------------------------------------------------------------
+
     @Override
     public String toString() {
-	String result = "[SimpleCurrencyExchRateTable:\n";
+    	String result = "SimpleCurrencyExchRateTable [\n";
 	
-	result += "No. of entries: " + mIso4217CurrCodes2Factor.size() + "\n";
+    	result += "No. of entries: " + mIso4217CurrCodes2Factor.size() + "\n";
 	
-	result += "Entries:\n";
-	for ( String currCode : mIso4217CurrCodes2Factor.keySet() ) {
-	    // result += " - " + currCode + "\n";
-	    result += " - " + currCode + ";" + mIso4217CurrCodes2Factor.get(currCode) + "\n";
-	}
+    	result += "Entries:\n";
+    	for ( String currCode : mIso4217CurrCodes2Factor.keySet() ) {
+    		// result += " - " + currCode + "\n";
+    		result += " - " + currCode + ";" + mIso4217CurrCodes2Factor.get(currCode) + "\n";
+    	}
 	
-	result += "]";
+    	result += "]";
 	
-	return result;
+    	return result;
     }
 
 }

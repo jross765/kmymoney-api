@@ -2,6 +2,7 @@ package org.kmymoney.api.currency;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
     // -----------------------------------------------------------
 
     public SimpleSecurityQuoteTable() {
-	mSecID2Factor = new Hashtable<String, FixedPointNumber>();
+    	mSecID2Factor = new Hashtable<String, FixedPointNumber>();
     }
 
     // -----------------------------------------------------------
@@ -46,11 +47,11 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
     @Override
     public FixedPointNumber getConversionFactor(final String secID) {
 		if ( secID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
 		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("empty security ID given");
+			throw new IllegalArgumentException("argument <secID> is empty");
 		}
 
 		return mSecID2Factor.get(secID);
@@ -65,15 +66,15 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
     @Override
     public void setConversionFactor(final String secID, final FixedPointNumber factor) {
 		if ( secID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
 		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("empty security ID given");
+			throw new IllegalArgumentException("argument <secID> is empty");
 		}
 
 		if ( factor == null ) {
-			throw new IllegalArgumentException("null conversion factor given");
+			throw new IllegalArgumentException("argument <factor> is null");
 		}
 
 		mSecID2Factor.put(secID, factor);
@@ -93,11 +94,11 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 		}
 
 		if ( secID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
 		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("empty security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
         FixedPointNumber factor = getConversionFactor(secID);
@@ -105,6 +106,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
             return false;
         }
         
+        // CAUTION: mutable
         value.divide(factor);
         return true;
     }
@@ -133,6 +135,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			return false;
 		}
 		
+        // CAUTION: mutable
 		value.multiply(factor);
 		return true;
     }
@@ -159,19 +162,19 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 
     @Override
     public String toString() {
-	String result = "[SimpleSecurityQuoteTable:\n";
+    	String result = "SimpleSecurityQuoteTable: [\n";
 	
-	result += "No. of entries: " + mSecID2Factor.size() + "\n";
+    	result += "No. of entries: " + mSecID2Factor.size() + "\n";
 	
-	result += "Entries:\n";
-	for ( String secID : mSecID2Factor.keySet() ) {
-	    // result += " - " + secID + "\n";
-	    result += " - " + secID + ";" + mSecID2Factor.get(secID) + "\n";
-	}
+    	result += "Entries:\n";
+    	for ( String secID : mSecID2Factor.keySet() ) {
+    		// result += " - " + secID + "\n";
+    		result += " - " + secID + ";" + mSecID2Factor.get(secID) + "\n";
+    	}
 	
-	result += "]";
+    	result += "]";
 	
-	return result;
+    	return result;
     }
 
 }

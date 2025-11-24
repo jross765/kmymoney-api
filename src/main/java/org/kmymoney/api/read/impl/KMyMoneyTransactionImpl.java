@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.PAIR;
 import org.kmymoney.api.generated.SPLIT;
@@ -98,6 +99,11 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     	return getBalance().equals(new FixedPointNumber());
     }
 
+	@Override
+	public boolean isBalancedRat() {
+    	return getBalanceRat().equals(BigFraction.ZERO);
+	}
+
     /**
      * {@inheritDoc}
      */
@@ -116,6 +122,16 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     	
     	return result;
     }
+    
+	public Currency getCurrency() {
+		if ( getQualifSecCurrID().getType() != KMMQualifSecCurrID.Type.CURRENCY ) {
+			throw new IllegalStateException("Transaction security/currency is not of type " + KMMQualifSecCurrID.Type.CURRENCY);
+		}
+
+		String kmmCurrID = getQualifSecCurrID().getCode();
+		return Currency.getInstance(kmmCurrID);
+	}
+
 
     /**
 	 * The Currency-Format to use if no locale is given.
@@ -123,13 +139,17 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 	 * @return default currency-format with the transaction's currency set
 	 */
 	protected NumberFormat getCurrencyFormat() {
-		if (currencyFormat == null) {
-			currencyFormat = NumberFormat.getCurrencyInstance();
-			if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) { 
-				currencyFormat.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
-			} else {
-				currencyFormat = NumberFormat.getInstance();
-			}
+		return getCurrencyFormat(Locale.getDefault());
+	}
+	
+	protected NumberFormat getCurrencyFormat(Locale lcl) {
+		// The currency may have changed
+		if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) { 
+			currencyFormat = NumberFormat.getCurrencyInstance(lcl);
+			Currency curr = getCurrency();
+			currencyFormat.setCurrency(curr);
+		} else {
+			currencyFormat = NumberFormat.getNumberInstance(lcl);
 		}
 		
 		return currencyFormat;
@@ -146,6 +166,20 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     	}
 
     	return fp;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public BigFraction getBalanceRat() {
+		BigFraction fp = BigFraction.ZERO;
+
+		for ( KMyMoneyTransactionSplit split : getSplits() ) {
+			// CAUTION: BigFraction is immutable
+			fp = fp.add(split.getValueRat());
+		}
+
+		return fp;
     }
 
     /**

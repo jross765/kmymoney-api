@@ -6,6 +6,8 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.read.aux.KMMAccountReconciliation;
 import org.kmymoney.api.read.hlp.HasTransactions;
 import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
@@ -169,6 +171,11 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
 
     // -----------------------------------------------------------------
 
+    @SuppressWarnings("exports")
+    ACCOUNT getJwsdpPeer();
+
+    // -----------------------------------------------------------------
+
     /**
      * @return the unique id for that account (not meaningfull to human users)
      */
@@ -197,7 +204,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @return e.g. "Asset::Barvermögen::Bargeld"
      */
     String getQualifiedName();
-    
+
     // ---------------------------------------------------------------
 
     /**
@@ -335,6 +342,8 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     FixedPointNumber getBalance();
 
+    BigFraction      getBalanceRat();
+    
     /**
      * Be aware that the result is in the currency of this account!
      *
@@ -343,6 +352,8 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @return the balance formatted using the current locale
      */
     FixedPointNumber getBalance(LocalDate date);
+
+    BigFraction      getBalanceRat(LocalDate date);
 
     /**
      * Be aware that the result is in the currency of this account!
@@ -354,9 +365,15 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     FixedPointNumber getBalance(LocalDate date, List<KMyMoneyTransactionSplit> after);
 
+    BigFraction      getBalanceRat(LocalDate date, List<KMyMoneyTransactionSplit> after);
+
     FixedPointNumber getBalance(LocalDate date, KMMQualifSecCurrID secCurrID);
 
+    BigFraction      getBalanceRat(LocalDate date, KMMQualifSecCurrID secCurrID);
+
     FixedPointNumber getBalance(LocalDate date, Currency curr);
+
+    BigFraction      getBalanceRat(LocalDate date, Currency curr);
 
     /**
      * @param lastIncludesSplit last split to be included
@@ -400,6 +417,8 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     FixedPointNumber getBalanceRecursive() throws InvalidQualifSecCurrIDException;
 
+    BigFraction      getBalanceRecursiveRat();
+
     /**
      * Gets the balance including all sub-accounts.
      *
@@ -410,6 +429,8 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @throws InvalidQualifSecCurrTypeException 
      */
     FixedPointNumber getBalanceRecursive(LocalDate date) throws InvalidQualifSecCurrIDException;
+
+    BigFraction      getBalanceRecursiveRat(LocalDate date);
 
     /**
      * Ignores accounts for which this conversion is not possible.
@@ -423,6 +444,21 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     FixedPointNumber getBalanceRecursive(LocalDate date, KMMQualifSecCurrID secCurrID) throws InvalidQualifSecCurrIDException;
 
+    BigFraction      getBalanceRecursiveRat(LocalDate date, KMMQualifSecCurrID secCurrID) throws InvalidQualifSecCurrIDException;
+
+    /**
+     * 
+     * @param date
+     * @param secID
+     * @return Gets the balance including all sub-accounts.
+     * @throws InvalidQualifSecCurrTypeException
+     * @throws InvalidQualifSecCurrIDException
+     * @throws KMMIDNotSetException 
+     */
+    FixedPointNumber getBalanceRecursive(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
+
+    BigFraction      getBalanceRecursiveRat(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
+
     /**
      * Ignores accounts for which this conversion is not possible.
      *
@@ -435,16 +471,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     FixedPointNumber getBalanceRecursive(LocalDate date, Currency curr) throws InvalidQualifSecCurrIDException;
 
-    /**
-     * 
-     * @param date
-     * @param secID
-     * @return Gets the balance including all sub-accounts.
-     * @throws InvalidQualifSecCurrTypeException
-     * @throws InvalidQualifSecCurrIDException
-     * @throws KMMIDNotSetException 
-     */
-    FixedPointNumber getBalanceRecursive(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
+    BigFraction      getBalanceRecursiveRat(LocalDate date, Currency curr);
 
     // ----------------------------
 
@@ -458,17 +485,8 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     String getBalanceRecursiveFormatted() throws InvalidQualifSecCurrIDException;
 
-    /**
-     * Gets the balance including all sub-accounts.
-     *
-     * @param date if non-null transactions after this date are ignored in the
-     *             calculation
-     * @return the balance including all sub-accounts
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException 
-     */
-    String getBalanceRecursiveFormatted(LocalDate date) throws InvalidQualifSecCurrIDException;
-    
+    String getBalanceRecursiveFormatted(Locale lcl);
+
     // ---------------------------------------------------------------
     
     boolean hasReconciliations();

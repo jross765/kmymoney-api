@@ -472,4 +472,5 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	
     	return false;
 	}
+
 }

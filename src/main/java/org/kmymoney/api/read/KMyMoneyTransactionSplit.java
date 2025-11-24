@@ -3,6 +3,7 @@ package org.kmymoney.api.read;
 import java.util.Collection;
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
@@ -236,6 +237,8 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      */
     FixedPointNumber getValue();
 
+    BigFraction getValueRat();
+
     /**
      * The value is in the currency of the transaction!
      * @return the value-transfer this represents
@@ -300,6 +303,8 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      */
     FixedPointNumber getShares();
 
+    BigFraction      getSharesRat();
+
     /**
      * The quantity is in the currency of the account!
      * @return the number of items added to the account
@@ -333,6 +338,8 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * @see #getPriceFormatted(Locale)
      */
     FixedPointNumber getPrice();
+
+    BigFraction      getPriceRat();
 
     /**
      * 

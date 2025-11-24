@@ -13,11 +13,17 @@ public interface SimplePriceTable {
      */
     FixedPointNumber getConversionFactor(final String code);
 
+    // ::TODO
+    // BigFraction getConversionFactorRat(final String code);
+
     /**
      * @param code
      * @param factor
      */
     void setConversionFactor(final String code, final FixedPointNumber factor);
+
+    // ::TODO
+    // void setConversionFactorRat(final String code, final BigFraction factor);
 
     // ---------------------------------------------------------------
 
@@ -28,6 +34,11 @@ public interface SimplePriceTable {
      */
     boolean convertFromBaseCurrency(FixedPointNumber value, final String code);
 
+    // ::TODO
+    // boolean convertFromBaseCurrencyRat(BigFraction value, final String code);
+    
+    // ---
+
     /**
      * @param value
      * @param code
@@ -35,16 +46,13 @@ public interface SimplePriceTable {
      */
     boolean convertToBaseCurrency(FixedPointNumber value, final String code);
 
+    // ::TODO
+    // boolean convertToBaseCurrencyRat(BigFraction value, final String code);
+
     // ---------------------------------------------------------------
 
-    /**
-     * @return
-     */
     List<String> getCurrencies();
 
-    /**
-     * 
-     */
     void clear();
 
 }
