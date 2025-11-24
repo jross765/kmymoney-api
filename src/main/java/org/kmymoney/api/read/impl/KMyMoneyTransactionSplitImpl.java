@@ -437,11 +437,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     @Override
     public String getPriceFormatted(Locale lcl) {
 		NumberFormat nf = getPriceCurrencyFormat(lcl);
-		if ( getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrency());
+		if ( getTransaction().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			nf.setCurrency(new KMMQualifCurrID(getTransaction().getQualifSecCurrID()).getCurrency());
 			return nf.format(getPrice().getBigDecimal());
 		} else {
-			return nf.format(getPrice().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().toString();
+			return nf.format(getPrice().getBigDecimal()) + " " + getTransaction().getQualifSecCurrID().toString();
 		}
     }
 
@@ -486,7 +486,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     }
     
     protected NumberFormat getPriceCurrencyFormat(Locale lcl) {
-    	return getSharesCurrencyFormat(lcl); // ::CHECK ::TODO
+    	return getValueCurrencyFormat(lcl); // ::CHECK ::TODO
     }
     
     // ---------------------------------------------------------------

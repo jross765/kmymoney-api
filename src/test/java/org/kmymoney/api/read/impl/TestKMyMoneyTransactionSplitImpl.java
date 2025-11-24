@@ -130,7 +130,7 @@ public class TestKMyMoneyTransactionSplitImpl {
 		assertEquals(120.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(120, splt.getPriceRat().getNumerator().longValue());
 		assertEquals(1, splt.getPriceRat().getDenominator().longValue());
-		assertEquals("120 SECURITY:E000001", splt.getPriceFormatted());
+		assertEquals("120,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals("", splt.getMemo());
 //		assertEquals(null, splt.getUserDefinedAttributeKeys());
