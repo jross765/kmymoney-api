@@ -324,6 +324,8 @@ public interface KMyMoneyFile extends KMyMoneyObject {
      */
 	KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID);
 
+	KMyMoneyTransactionSplit getTransactionSplitByAcctIDAndTrxID(KMMAcctID acctID, KMMTrxID trxID);
+
     /**
      * @return list of all transaction splits (ro-objects)
      */

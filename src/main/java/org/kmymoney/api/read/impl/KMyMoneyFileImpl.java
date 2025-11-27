@@ -637,6 +637,52 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     @Override
+    public KMyMoneyTransactionSplit getTransactionSplitByAcctIDAndTrxID(final KMMAcctID acctID, final KMMTrxID trxID) {
+		if ( acctID == null ) {
+			throw new IllegalArgumentException("argument <acctID> is null");
+		}
+
+		if ( ! acctID.isSet() ) {
+			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
+
+		if ( trxID == null ) {
+			throw new IllegalArgumentException("argument <trxID> is null");
+		}
+
+		if ( ! trxID.isSet() ) {
+			throw new IllegalArgumentException("argument <trxID> is not set");
+		}
+
+		// Variant 1: Typically not that efficient
+//		KMyMoneyAccount acct = getAccountByID(acctID);
+//		if ( acct == null ) {
+//			LOGGER.error("getTransactionSplitByAcctIDAndTrxID: No account with ID " + acctID);
+//			return null;
+//		}
+
+//		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
+//		if ( splt.getTransactionID().equals(trxID) )
+//		return splt;
+//	}
+
+		// Variant 2: Typically more efficient
+		KMyMoneyTransaction trx = getTransactionByID(trxID);
+		if ( trx == null ) {
+			LOGGER.error("getTransactionSplitByAcctIDAndTrxID: No transaction with ID " + trxID);
+			return null;
+		}
+
+		for ( KMyMoneyTransactionSplit splt : trx.getSplits() ) {
+			if ( splt.getAccountID().getStdID().equals(acctID) )
+			return splt;
+		}
+
+		LOGGER.error("getTransactionSplitByAcctIDAndTrxID: No transaction split with account-ID " + acctID + " and transaction-ID " + trxID);
+		return null;
+    }
+
+    @Override
     public List<KMyMoneyTransactionSplit> getTransactionSplits() {
     	return trxMgr.getTransactionSplits();
     }

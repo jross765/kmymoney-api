@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.PAIR;
@@ -16,6 +17,7 @@ import org.kmymoney.api.read.KMyMoneyInstitution;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.aux.KMMAccountReconciliation;
 import org.kmymoney.api.read.impl.aux.KMMAccountReconciliationImpl;
+import org.kmymoney.api.read.impl.hlp.AccountBalanceHelper_FP;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.SimpleAccount;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import xyz.schnorxoborx.base.beanbase.UnknownAccountTypeException;
+import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
  * Implementation of KMyMoneyAccount that used a
@@ -407,7 +410,6 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		return buffer.toString();
     }
 
-
     // https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
     @Override
     public void printTree(StringBuilder buffer, String prefix, String childrenPrefix) {
@@ -453,6 +455,22 @@ public class KMyMoneyAccountImpl extends SimpleAccount
         }
     }
 
+    // ---------------------------------------------------------------
+	// Helpers -- balance pre-computed
+    // We have to provide this indirection for methods calling this
+    // outside of this module, because the actual implementation is in
+    // a non-exported package.
+
+	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc) {
+		return AccountBalanceHelper_FP.formatBalance( acct, blnc );
+	}
+	
+	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc, Locale lcl) {
+		return AccountBalanceHelper_FP.formatBalance( acct, blnc, lcl );
+	}
+	
+    // ---------------------------------------------------------------
+
     public boolean hasChildrenMatching(KMyMoneyAccount acct, KMyMoneyAccount.Type acctType) {
     	for ( KMyMoneyAccount chld : acct.getChildren() ) {
     		if ( chld.getType() == acctType ) {
@@ -472,5 +490,5 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	
     	return false;
 	}
-
+    
 }
