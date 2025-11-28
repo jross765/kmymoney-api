@@ -1,12 +1,25 @@
 module kmymoney.api {
-	requires static org.slf4j;
+
 	requires java.desktop;
 	requires jakarta.xml.bind;
 	requires java.xml;
+
+	requires static org.slf4j;
 	
-	requires transitive schnorxoborx.schnorxolib;
+	// ----------------------------
+	
+	// The following already marked as "transitive" in "schnorxoborx.schnorxolib":
+	requires transitive org.apache.commons.numbers.core;
+	requires transitive org.apache.commons.numbers.fraction;
+	requires transitive commons.configuration;
+	requires transitive org.apache.commons.cli;
+	
+	// Already drawn from "kmymoney.base":
+	// requires transitive schnorxoborx.schnorxolib;
 	
 	requires transitive kmymoney.base;
+	
+	// ----------------------------
 	
 	exports org.kmymoney.api.currency;
 	

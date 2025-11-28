@@ -342,18 +342,14 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     }
 
     /**
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException 
      * @see KMyMoneyTransactionSplit#getAccountBalanceFormatted()
      */
     @Override
     public String getAccountBalanceFormatted() {
-    	return ((KMyMoneyAccountImpl) getAccount()).getCurrencyFormat().format(getAccountBalance());
+    	return getAccountBalanceFormatted(Locale.getDefault());
     }
 
     /**
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException 
      * @see KMyMoneyTransactionSplit#getAccountBalanceFormatted(java.util.Locale)
      */
     @Override
@@ -401,7 +397,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrency());
 			return nf.format(getShares().getBigDecimal());
 		} else {
-			return nf.format(getShares().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().toString();
+			return nf.format(getShares().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().getCode().toString();
 		}
     }
 
@@ -457,12 +453,14 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     
     // ---------------------------------------------------------------
 
-    /**
-     * @return the currency-format of the transaction
-     */
-    public NumberFormat getValueCurrencyFormat() {
-    	return getValueCurrencyFormat(Locale.getDefault());
-    }
+    // ---------------------------------------------------------------
+	
+	/**
+	 * @return the currency-format of the transaction
+	 */
+	public NumberFormat getValueCurrencyFormat() {
+		return getValueCurrencyFormat(Locale.getDefault());
+	}
 
     public NumberFormat getValueCurrencyFormat(Locale lcl) {
     	return ((KMyMoneyTransactionImpl) getTransaction()).getCurrencyFormat(lcl);

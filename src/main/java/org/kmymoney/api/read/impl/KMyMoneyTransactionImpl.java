@@ -491,7 +491,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 
 		return buffer.toString();
     }
-
+    
     /**
      * sorts primarily on the date the transaction happened and secondarily on the
      * date it was entered.

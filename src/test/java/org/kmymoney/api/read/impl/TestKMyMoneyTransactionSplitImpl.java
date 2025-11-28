@@ -125,7 +125,7 @@ public class TestKMyMoneyTransactionSplitImpl {
 		assertEquals(15.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(15, splt.getSharesRat().getNumerator().longValue());
 		assertEquals(1, splt.getSharesRat().getDenominator().longValue());
-		assertEquals("15 SECURITY:E000001", splt.getSharesFormatted());
+		assertEquals("15 E000001", splt.getSharesFormatted());
 		
 		assertEquals(120.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(120, splt.getPriceRat().getNumerator().longValue());

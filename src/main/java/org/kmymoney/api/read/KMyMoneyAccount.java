@@ -381,6 +381,9 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     FixedPointNumber getBalance(KMyMoneyTransactionSplit lastIncludesSplit);
 
+    // ::TODO
+    // BigFraction      getBalance(KMyMoneyTransactionSplit lastIncludesSplit);
+    
     // ----------------------------
 
     /**
