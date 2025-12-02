@@ -108,7 +108,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     // ----------------------------
 
     private volatile ObjectFactory myJAXBFactory;
-    private volatile JAXBContext myJAXBContext;
+    private volatile JAXBContext   myJAXBContext;
 
     // ----------------------------
     
@@ -974,7 +974,6 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 
     	// fill prices
     	prcMgr  = new FilePriceManager(this);
-
     	loadPriceDatabase(pRootElement);
 
     	// fill maps
@@ -1044,6 +1043,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			// get the latest price in the file and insert it into
 			// our currency table
 			FixedPointNumber factor = getLatestPrice(new KMMQualifSecCurrID(nameSpace, fromSecCurr));
+			LOGGER.debug("loadPriceDatabaseCore: latest price for '" + nameSpace + ":" + fromSecCurr + "': " + factor);
 
 			if ( factor != null ) {
 				getCurrencyTable().setConversionFactor(nameSpace, fromSecCurr, factor);
