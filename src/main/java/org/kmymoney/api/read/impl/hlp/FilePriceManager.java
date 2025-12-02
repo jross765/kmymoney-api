@@ -372,7 +372,7 @@ public class FilePriceManager {
 	 * @param pCmdtyId    the currency-name
 	 * @param depth       used for recursion. Always call with '0' for aborting
 	 *                    recursive quotes (quotes to other then the base- currency)
-	 *                    we abort if the depth reached 6.
+	 *                    we abort if the depth reached RECURS_DEPTH_MAX + 1.
 	 * @return the latest price-quote in the KMyMoney file in the default-currency
 	 * @see {@link KMyMoneyFile#getLatestPrice(String, String)}
 	 * @see #getDefaultCurrencyID()
@@ -390,7 +390,7 @@ public class FilePriceManager {
 
 		LocalDate latestDate = null;
 		FixedPointNumber latestQuote = null;
-		FixedPointNumber factor = new FixedPointNumber(1); // factor is used if the quote is not to our base-currency
+		FixedPointNumber factor = FixedPointNumber.ONE.copy(); // factor is used if the quote is not to our base-currency
 		final int maxRecursionDepth = RECURS_DEPTH_MAX;
 
 		for ( KMyMoneyPrice prc : prcMap.values() ) {
@@ -468,7 +468,7 @@ public class FilePriceManager {
 		}
 
 		if ( factor == null ) {
-			factor = new FixedPointNumber(1);
+			factor = FixedPointNumber.ONE.copy();
 		}
 
 		return factor.multiply(latestQuote);
@@ -488,7 +488,7 @@ public class FilePriceManager {
 
 		LocalDate latestDate = null;
 		FixedPointNumber latestQuote = null;
-		FixedPointNumber factor = new FixedPointNumber(1); // factor is used if the quote is not to our base-currency
+		FixedPointNumber factor = FixedPointNumber.ONE.copy(); // factor is used if the quote is not to our base-currency
 		final int maxRecursionDepth = RECURS_DEPTH_MAX;
 
 		for ( PRICEPAIR pricePair : priceDB.getPRICEPAIR() ) {
@@ -590,7 +590,7 @@ public class FilePriceManager {
 		}
 
 		if ( factor == null ) {
-			factor = new FixedPointNumber(1);
+			factor = FixedPointNumber.ONE.copy();
 		}
 
 		return factor.multiply(latestQuote);
