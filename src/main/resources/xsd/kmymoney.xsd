@@ -246,14 +246,14 @@
         </xs:element>
       </xs:sequence>
       <xs:attribute name="account" use="required" type="xs:NCName"/>
-      <xs:attribute name="action" use="required"/>
+      <xs:attribute name="action"/>
       <xs:attribute name="bankid" use="required"/>
       <xs:attribute name="id" use="required" type="xs:NCName"/>
-      <xs:attribute name="memo" use="required"/>
-      <xs:attribute name="number" use="required"/>
-      <xs:attribute name="payee" use="required"/>
+      <xs:attribute name="memo"/>
+      <xs:attribute name="number"/>
+      <xs:attribute name="payee"/>
       <xs:attribute name="price" use="required"/>
-      <xs:attribute name="reconciledate" use="required"/>
+      <xs:attribute name="reconciledate"/>
       <xs:attribute name="reconcileflag" use="required" type="xs:integer"/>
       <xs:attribute name="shares" use="required"/>
       <xs:attribute name="value" use="required"/>
