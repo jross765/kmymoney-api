@@ -37,7 +37,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
     	// super();
     	mIso4217CurrCodes2Factor = new Hashtable<String, FixedPointNumber>();
 	
-    	setConversionFactor("EUR", new FixedPointNumber(1));
+    	setConversionFactor("EUR", FixedPointNumber.ONE.copy());
     	// setConversionFactor("GBP", new FixedPointNumber("769/523"));
     }
 
