@@ -72,10 +72,17 @@ public class ComplexPriceTable implements Serializable {
 		if ( factor == null ) {
 			throw new IllegalArgumentException("argument <factor> is null");
 		}
-		
+
+		// CAUTION: One might think that this check is a good idea.
+		// In fact, it is not, because it actually happens in real-life
+		// KMyMoney files that you will have null-price entries.
+		// (KMyMoney issues warnings, but tolerates them).
+		// ==> No exception, but only warning 
 		if ( factor.isLessThan(BigDecimal.ZERO) ||
 			 factor.equals(BigDecimal.ZERO) ) {
-			throw new IllegalArgumentException("argument <factor> must be > 0");
+			LOGGER.error("firePriceTableChanged: Encountered factor <= 0 for currency '" + curr + "': " + factor);
+			return;
+			// throw new IllegalArgumentException("argument <factor> must be > 0");
 		}
 		
 		if ( listeners != null ) {
@@ -216,12 +223,12 @@ public class ComplexPriceTable implements Serializable {
 	 * 
 	 * @param nameSpace 
 	 * @param code 
-	 * @param pFactor 
+	 * @param factor 
 	 *
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
 	public void setConversionFactor(final KMMQualifSecCurrID.Type nameSpace, final String code,
-			final FixedPointNumber pFactor) {
+			final FixedPointNumber factor) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
@@ -230,8 +237,20 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <code> is empty");
 		}
 
-		if ( pFactor == null ) {
-		    throw new IllegalArgumentException("argument <pFactor> is null");
+		if ( factor == null ) {
+		    throw new IllegalArgumentException("argument <factor> is null");
+		}
+
+		// CAUTION: One might think that this check is a good idea.
+		// In fact, it is not, because it actually happens in real-life
+		// KMyMoney files that you will have null-price entries.
+		// (KMyMoney issues warnings, but tolerates them).
+		// ==> No exception, but only warning 
+		if ( factor.isLessThan(BigDecimal.ZERO) ||
+			 factor.equals(BigDecimal.ZERO) ) {
+			LOGGER.error("setConversionFactor: Encountered factor <= 0 for currency/security '" + nameSpace + ":" + code + "': " + factor);
+			return;
+			// throw new IllegalArgumentException("argument <factor> must be > 0");
 		}
 
 		SimplePriceTable table = getByNamespace(nameSpace);
@@ -240,9 +259,9 @@ public class ComplexPriceTable implements Serializable {
 			table = getByNamespace(nameSpace);
 		}
 
-		table.setConversionFactor(code, pFactor);
+		table.setConversionFactor(code, factor);
 
-		firePriceTableChanged(code, pFactor);
+		firePriceTableChanged(code, factor);
 	}
 
 	// ---------------------------------------------------------------
@@ -256,7 +275,7 @@ public class ComplexPriceTable implements Serializable {
 	 */
 	public boolean convertFromBaseCurrency(final FixedPointNumber pValue, final KMMQualifSecCurrID secCurrID) {
 		if ( pValue == null )
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <pValue> is null");
 
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null"); 
@@ -300,15 +319,15 @@ public class ComplexPriceTable implements Serializable {
 
 	public boolean convertToBaseCurrency(final FixedPointNumber pValue, final KMMQualifSecCurrID secCurrID) {
 		if ( pValue == null ) {
-			throw new IllegalArgumentException("null value given"); 
+			throw new IllegalArgumentException("argument <pValue> is null"); 
 		}
 		
 		if ( secCurrID == null ) {
-			throw new IllegalArgumentException("null security/currency ID given"); 
+			throw new IllegalArgumentException("argument <secCurrID> is null"); 
 		}
 		
 		if ( ! secCurrID.isSet() ) {
-			throw new IllegalArgumentException("unset security/currency ID given"); 
+			throw new IllegalArgumentException("argument <secCurrID> is not set"); 
 		}
 		
 		SimplePriceTable table = getByNamespace(secCurrID.getType());
