@@ -38,7 +38,7 @@ public class AccountBalanceHelper_FP
 	// The currency will be the one of this account.
 	public static FixedPointNumber getBalance(final LocalDate date, List<KMyMoneyTransactionSplit> after,
 											  final SimpleAccount acct) {
-		FixedPointNumber balance = new FixedPointNumber();
+		FixedPointNumber balance = FixedPointNumber.ZERO.copy();
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			if ( date != null && 
@@ -119,7 +119,7 @@ public class AccountBalanceHelper_FP
 		}
 
 		if ( curr == null ||
-			 retval.equals(new FixedPointNumber()) ) {
+			 retval.equals(FixedPointNumber.ZERO.copy()) ) {
 			return retval;
 		}
 
@@ -152,16 +152,16 @@ public class AccountBalanceHelper_FP
 		return retval;
 	}
 
-	public static FixedPointNumber getBalance(final KMyMoneyTransactionSplit lastIncludesSplit,
+	public static FixedPointNumber getBalance(final KMyMoneyTransactionSplit lastSpltIncl,
 											  final SimpleAccount acct) {
-		FixedPointNumber balance = new FixedPointNumber();
+		FixedPointNumber balance = FixedPointNumber.ZERO.copy();
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
 				// CAUTION: FixedPointNumber is mutable
 				balance.add(splt.getShares());
 	
-				if ( splt == lastIncludesSplit ) {
+				if ( splt == lastSpltIncl ) {
 					break;
 				}
 			} catch ( Exception exc ) {
@@ -223,7 +223,7 @@ public class AccountBalanceHelper_FP
 		FixedPointNumber retval = getBalance(date, curr, acct);
 
 		if ( retval == null ) {
-			retval = new FixedPointNumber();
+			retval = FixedPointNumber.ZERO.copy();
 		}
 
 		// CAUTION: As opposed to the sister project JGnuCashLib, the following three lines 
@@ -263,6 +263,28 @@ public class AccountBalanceHelper_FP
 		// there are no children (which sounds sensible,
 		// but there might be special cases)
 		return getBalance(date, new KMMQualifSecCurrID(KMMQualifSecCurrID.Type.SECURITY, secID.get()), acct); 
+	}
+
+	public static FixedPointNumber getBalanceRecursive(final KMyMoneyTransactionSplit lastSpltIncl,
+													   final SimpleAccount acct) {
+		FixedPointNumber retval = FixedPointNumber.ZERO.copy();
+
+		if ( retval == null ) {
+			retval = FixedPointNumber.ZERO.copy();
+		}
+
+		for ( KMyMoneyAccount child : acct.getChildren() ) {
+			try {
+				// CAUTION: FixedPointNumber is mutable
+				retval.add(child.getBalanceRecursive(lastSpltIncl));
+			} catch ( Exception exc ) {
+				// Yes, it does happen sometimes!
+				LOGGER.error("getBalanceRecursive: Error adding balance for child account " + child.getID());
+				throw exc;
+			}
+		}
+
+		return retval;
 	}
 
 	// ----------------------------

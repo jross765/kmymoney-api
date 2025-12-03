@@ -225,6 +225,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 		return AccountBalanceHelper_FP.getBalance(lastIncludesSplit, this);
 	}
 
+	@Override
 	public BigFraction getBalanceRat(final KMyMoneyTransactionSplit lastIncludesSplit) {
 		return AccountBalanceHelper_BF.getBalance(lastIncludesSplit, this);
 	}
@@ -299,6 +300,18 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	@Override
 	public BigFraction getBalanceRecursiveRat(final LocalDate date, final Currency curr) {
 		return AccountBalanceHelper_BF.getBalanceRecursive(date, curr, this);
+	}
+
+	// ---
+
+	@Override
+	public FixedPointNumber getBalanceRecursive(final KMyMoneyTransactionSplit lastIncludesSplit) {
+		return AccountBalanceHelper_FP.getBalanceRecursive(lastIncludesSplit, this);
+	}
+
+	@Override
+	public BigFraction getBalanceRecursiveRat(final KMyMoneyTransactionSplit lastIncludesSplit) {
+		return AccountBalanceHelper_BF.getBalanceRecursive(lastIncludesSplit, this);
 	}
 
 	// ----------------------------

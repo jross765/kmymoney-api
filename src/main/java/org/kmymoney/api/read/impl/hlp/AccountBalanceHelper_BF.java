@@ -164,8 +164,8 @@ public class AccountBalanceHelper_BF
 		return retval;
 	}
 
-	public static BigFraction getBalance(final KMyMoneyTransactionSplit lastIncludesSplit,
-											  final SimpleAccount acct) {
+	public static BigFraction getBalance(final KMyMoneyTransactionSplit lastSpltIncl,
+										 final SimpleAccount acct) {
 		BigFraction balance = BigFraction.ZERO;
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
@@ -173,7 +173,7 @@ public class AccountBalanceHelper_BF
 				// CAUTION: BigFraction is immutable
 				balance = balance.add(splt.getSharesRat());
 	
-				if ( splt == lastIncludesSplit ) {
+				if ( splt == lastSpltIncl ) {
 					break;
 				}
 			} catch ( Exception exc ) {
@@ -275,6 +275,28 @@ public class AccountBalanceHelper_BF
 		// there are no children (which sounds sensible,
 		// but there might be special cases)
 		return getBalance(date, new KMMQualifSecCurrID(KMMQualifSecCurrID.Type.SECURITY, secID.get()), acct); 
+	}
+
+	public static BigFraction getBalanceRecursive(final KMyMoneyTransactionSplit lastSpltIncl,
+												  final SimpleAccount acct) {
+		BigFraction retval = getBalance(lastSpltIncl, acct);
+
+		if ( retval == null ) {
+			retval = BigFraction.ZERO;
+		}
+
+		for ( KMyMoneyAccount child : acct.getChildren() ) {
+			try {
+				// CAUTION: BigFraction is immutable
+				retval = retval.add( child.getBalanceRecursiveRat(lastSpltIncl) );
+			} catch ( Exception exc ) {
+				// Yes, it does happen sometimes!
+				LOGGER.error("getBalanceRecursive: Error adding balance for child account " + child.getID());
+				throw exc;
+			}
+		}
+
+		return retval;
 	}
 
 	// ----------------------------

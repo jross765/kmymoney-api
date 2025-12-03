@@ -376,13 +376,12 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
     BigFraction      getBalanceRat(LocalDate date, Currency curr);
 
     /**
-     * @param lastIncludesSplit last split to be included
+     * @param lastSpltIncl last split to be included
      * @return the balance up to and including the given split
      */
-    FixedPointNumber getBalance(KMyMoneyTransactionSplit lastIncludesSplit);
+    FixedPointNumber getBalance(KMyMoneyTransactionSplit lastSpltIncl);
 
-    // ::TODO
-    // BigFraction      getBalance(KMyMoneyTransactionSplit lastIncludesSplit);
+    BigFraction      getBalanceRat(KMyMoneyTransactionSplit lastSpltIncl);
     
     // ----------------------------
 
@@ -476,6 +475,14 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
 
     BigFraction      getBalanceRecursiveRat(LocalDate date, Currency curr);
 
+    /**
+     * @param lastSpltIncl last split to be included
+     * @return the recursive balance up to and including the given split
+     */
+    FixedPointNumber getBalanceRecursive(KMyMoneyTransactionSplit lastSpltIncl);
+
+    BigFraction      getBalanceRecursiveRat(KMyMoneyTransactionSplit lastSpltIncl);
+    
     // ----------------------------
 
     /**
