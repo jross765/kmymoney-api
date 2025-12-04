@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Collection;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
@@ -156,29 +157,29 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			final Collection<KMyMoneyTag> tagList, 
 			final KMMSpltID newID) {
 		if ( trx == null ) {
-			throw new IllegalArgumentException("null transaction given");
+			throw new IllegalArgumentException("argument <trx> is null");
 		}
 
 		if ( acct == null ) {
-			throw new IllegalArgumentException("null account given");
+			throw new IllegalArgumentException("argument <acct> is null");
 		}
 
 		// Sic: null is allowed!
 //		if ( pye == null ) {
-//			throw new IllegalArgumentException("null payee given");
+//			throw new IllegalArgumentException("argument <pye> is null");
 //		}
 
 		// Sic: null is allowed!
 //		if ( tagList == null ) {
-//			throw new IllegalArgumentException("null tag-list given");
+//			throw new IllegalArgumentException("argument <tagList> is null");
 //		}
 
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null ID given");
+			throw new IllegalArgumentException("argument <newID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
 
 		// This is needed because transaction.addSplit() later
@@ -246,7 +247,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setAccountID(final KMMComplAcctID acctID) {
 		if ( acctID == null ) {
-			throw new IllegalArgumentException("null account ID given");
+			throw new IllegalArgumentException("argument <acctID> is null");
 		}
 		
 		String old = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
@@ -267,7 +268,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setAccount(final KMyMoneyAccount acct) {
 		if ( acct == null ) {
-			throw new IllegalArgumentException("null account given");
+			throw new IllegalArgumentException("argument <acct> is null");
 		}
 		
 		setAccountID(acct.getID());
@@ -301,7 +302,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setShares(final FixedPointNumber n) {
 		if ( n == null ) {
-			throw new IllegalArgumentException("null shares given");
+			throw new IllegalArgumentException("argument <n> is null");
 		}
 
 		String old = getJwsdpPeer().getShares();
@@ -324,17 +325,27 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	@Override
+	public void setShares(final BigFraction n) {
+		if ( n == null ) {
+			throw new IllegalArgumentException("argument <n> is null");
+		}
+
+		FixedPointNumber temp = FixedPointNumber.of(n);
+		setShares(temp);
+	}
+
 	/**
 	 * @see KMyMoneyWritableTransactionSplit#setShares(FixedPointNumber)
 	 */
 	@Override
 	public void setShares(final String n) {
 		if ( n == null ) {
-			throw new IllegalArgumentException("null shares given");
+			throw new IllegalArgumentException("argument <n> is null");
 		}
 		
 		if ( n.isEmpty() ) {
-			throw new IllegalArgumentException("empty shares given");
+			throw new IllegalArgumentException("argument <n> is empty");
 		}
 	
 		try {
@@ -357,7 +368,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setValue(final FixedPointNumber n) {
 		if ( n == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <n> is null");
 		}
 		
 		String old = getJwsdpPeer().getValue();
@@ -369,7 +380,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			getJwsdpPeer().setShares(n.toKMyMoneyString());
 			if ( old == null || !old.equals(n.toKMyMoneyString()) ) {
 				if ( helper.getPropertyChangeSupport() != null ) {
-					helper.getPropertyChangeSupport().firePropertyChange("shares", new FixedPointNumber(oldValue), n);
+					helper.getPropertyChangeSupport().firePropertyChange("value", new FixedPointNumber(oldValue), n);
 				}
 			}
 		}
@@ -381,17 +392,27 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	@Override
+	public void setValue(final BigFraction n) {
+		if ( n == null ) {
+			throw new IllegalArgumentException("argument <n> is null");
+		}
+
+		FixedPointNumber temp = FixedPointNumber.of(n);
+		setValue(temp);
+	}
+
 	/**
 	 * @see KMyMoneyWritableTransactionSplit#setValue(FixedPointNumber)
 	 */
 	@Override
 	public void setValue(final String n) {
 		if ( n == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <n> is null");
 		}
 		
 		if ( n.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <n> is empty");
 		}
 
 		try {
@@ -411,7 +432,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setPrice(final FixedPointNumber prc) {
 		if ( prc == null ) {
-			throw new IllegalArgumentException("null price given");
+			throw new IllegalArgumentException("argument <prc> is null");
 		}
 		
 		String old = getJwsdpPeer().getPrice();
@@ -448,7 +469,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setPayeeID(KMMPyeID pyeID) {
 		if ( pyeID == null ) {
-			throw new IllegalArgumentException("null payee ID given");
+			throw new IllegalArgumentException("argument <pyeID> is null");
 		}
 		
 		String old = (getJwsdpPeer().getPayee() == null ? null : getJwsdpPeer().getPayee());
@@ -466,7 +487,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setPayee(KMyMoneyPayee pye) {
 		if ( pye == null ) {
-			throw new IllegalArgumentException("null payee given");
+			throw new IllegalArgumentException("argument <pye> is null");
 		}
 		
 		setPayeeID(pye.getID());
@@ -480,7 +501,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	@Override
 	public void setMemo(final String desc) {
 		if ( desc == null ) {
-			throw new IllegalArgumentException("null description given! Please use the empty string instead of null for an empty description");
+			throw new IllegalArgumentException("argument <desc> is null. Please use the empty string instead of null for an empty description");
 		}
 
 //		if ( desc.trim().equals("") ) {
@@ -516,11 +537,11 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 */
 	public void setActionStr(final String actStr) throws IllegalTransactionSplitActionException {
 		if ( actStr == null ) {
-			throw new IllegalArgumentException("null action given");
+			throw new IllegalArgumentException("argument <actStr> is null");
 		}
 
 		if ( actStr.trim().length() == 0 ) {
-			throw new IllegalArgumentException("empty action given");
+			throw new IllegalArgumentException("argument <actStr> is null");
 		}
 
 		String old = getJwsdpPeer().getAction();

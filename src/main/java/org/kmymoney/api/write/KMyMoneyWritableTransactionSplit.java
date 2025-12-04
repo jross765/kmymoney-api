@@ -1,5 +1,6 @@
 package org.kmymoney.api.write;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
@@ -63,6 +64,8 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 */
 	void setShares(FixedPointNumber n);
 
+	void setShares(BigFraction n);
+
 	/**
 	 * If the currencies of transaction and account match, this also does
 	 * ${@link #setShares(FixedPointNumber)}.
@@ -82,6 +85,8 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @see #getValue()
 	 */
 	void setValue(FixedPointNumber n);
+	
+	void setValue(BigFraction n);
 	
 	/**
 	 * If the currencies of transaction and account match, this also does
