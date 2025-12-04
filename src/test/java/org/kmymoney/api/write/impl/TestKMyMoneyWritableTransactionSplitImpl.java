@@ -119,12 +119,22 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(TRX_01_ID, splt.getTransactionID());
 		assertEquals(ACCT_1_ID, splt.getAccountID());
 		assertEquals(null, splt.getAction());
+		
 		assertEquals(10000.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(10000, splt.getValueRat().getNumerator().longValue());
+		assertEquals(1, splt.getValueRat().getDenominator().longValue());
 		assertEquals("10.000,00 €", splt.getValueFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(10000.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		// ::TODO: Here, it works correctly, as opposed to 
-		// TestKMyMoneyTransactionSplitImpl
-		assertEquals("10.000,00 €", splt.getSharesFormatted());
+		assertEquals(10000, splt.getSharesRat().getNumerator().longValue());
+		assertEquals(1, splt.getSharesRat().getDenominator().longValue());
+		assertEquals("10.000,00 €", splt.getSharesFormatted()); // ::TODO: locale-specific!
+		
+		assertEquals(1.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(1, splt.getPriceRat().getNumerator().longValue());
+		assertEquals(1, splt.getPriceRat().getDenominator().longValue());
+		assertEquals("1,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals("", splt.getMemo());
 //		assertEquals(null, splt.getUserDefinedAttributeKeys());
 	}
@@ -138,11 +148,23 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(TRX_18_ID, splt.getTransactionID());
 		assertEquals(ACCT_8_ID, splt.getAccountID());
 		assertEquals(KMyMoneyTransactionSplit.Action.BUY_SHARES, splt.getAction());
+		
 		assertEquals(1800.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(1800, splt.getValueRat().getNumerator().longValue());
+		assertEquals(1, splt.getValueRat().getDenominator().longValue());
 		assertEquals("1.800,00 €", splt.getValueFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(15.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		// ::TODO: The next two: That's not exactly what we want...
-		assertEquals("15 E000001", splt.getSharesFormatted());
+		assertEquals(15, splt.getSharesRat().getNumerator().longValue());
+		assertEquals(1, splt.getSharesRat().getDenominator().longValue());
+		// ::TODO: That's not exactly what we want...
+		assertEquals("15 E000001", splt.getSharesFormatted()); // ::TODO: locale-specific!
+		
+		assertEquals(120.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(120, splt.getPriceRat().getNumerator().longValue());
+		assertEquals(1, splt.getPriceRat().getDenominator().longValue());
+		assertEquals("120,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals("", splt.getMemo());
 //		assertEquals(null, splt.getUserDefinedAttributeKeys());
 	}

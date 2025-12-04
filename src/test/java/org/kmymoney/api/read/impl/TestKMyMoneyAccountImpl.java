@@ -93,7 +93,14 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(0, acct.getChildren().size());
 
 		assertEquals(11674.50, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(23349, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("11.674,50 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(11674.50, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(23349, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("11.674,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 
 		assertEquals(17, acct.getTransactions().size());
 		assertEquals("T000000000000000001", acct.getTransactions().get(0).getID().toString());
@@ -120,9 +127,15 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals("A000064", ((KMyMoneyAccount) acctArr[0]).getID().toString());
 		assertEquals("A000063", ((KMyMoneyAccount) acctArr[1]).getID().toString());
 
-		// ::TODO
 		assertEquals(0.0, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(3773.0, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(3773, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("3.773,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 
 		// ::TODO
 		assertEquals(0, acct.getTransactions().size());
@@ -153,8 +166,15 @@ public class TestKMyMoneyAccountImpl {
 
 		// ::CHECK: Really negative?
 		assertEquals(0.00, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(-6500.00, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
-
+		assertEquals(-6500, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("-6.500,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(0, acct.getTransactions().size());
 	}
 
@@ -176,9 +196,28 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(0, acct.getChildren().size());
 
 		assertEquals(34, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(34, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		// ::TODO
+		// assertEquals("34,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(34, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(34, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		// ::TODO
+		// assertEquals("34,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(1980.50, acct.getBalance(LocalDate.now(), Currency.getInstance("EUR")).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(3961, acct.getBalanceRat(LocalDate.now(), Currency.getInstance("EUR")).getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRat(LocalDate.now(), Currency.getInstance("EUR")).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("1.980,50 €", acct.getBalanceFormatted(LocalDate.now(), Currency.getInstance("EUR")).doubleValue());
+		
 		assertEquals(1980.50, acct.getBalanceRecursive(LocalDate.now(), Currency.getInstance("EUR")).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(3961, acct.getBalanceRecursiveRat(LocalDate.now(), Currency.getInstance("EUR")).getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRecursiveRat(LocalDate.now(), Currency.getInstance("EUR")).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("1.980,50 €", acct.getBalanceRecursiveFormatted(LocalDate.now(), Currency.getInstance("EUR")).doubleValue());
 
 		assertEquals(2, acct.getTransactions().size());
 	}
@@ -208,7 +247,14 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals("A000061", acctList.get(1).getID().toString());
 
 		assertEquals(0.00, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(15597.50, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(31195, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("15.597,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 
 		assertEquals(0, acct.getTransactions().size());
 	}
@@ -233,7 +279,14 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals("A000058", ((KMyMoneyAccount) acctArr[0]).getID().toString());
 
 		assertEquals(0.00, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(0.00, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 
 		assertEquals(0, acct.getTransactions().size());
 	}
@@ -263,7 +316,14 @@ public class TestKMyMoneyAccountImpl {
 
 		// ::CHECK: Really negative?
 		assertEquals(0.00, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(-16500.00, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(-16500, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("-16.500,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 
 		assertEquals(0, acct.getTransactions().size());
 	}
@@ -293,8 +353,15 @@ public class TestKMyMoneyAccountImpl {
 		// assertEquals("A000xyz", ((KMyMoneyAccount) acctArr[3]).getID().toString());
 
 		assertEquals(0.00, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(920.5, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
-
+		assertEquals(1841, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("920,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(0, acct.getTransactions().size());
 	}
 
@@ -316,7 +383,14 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(0, acct.getChildren().size());
 
 		assertEquals(0.00, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
 		assertEquals(0.00, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, acct.getBalanceRecursiveRat().getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
+		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
 
 		assertEquals(0, acct.getTransactions().size());
 	}
