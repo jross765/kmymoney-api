@@ -265,36 +265,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
     /**
      * {@inheritDoc}
-     */
-	@Override
-	public KMyMoneyWritableTransactionSplit getFirstSplit() throws TransactionSplitNotFoundException {
-		return (KMyMoneyWritableTransactionSplit) super.getFirstSplit();
-	}
-
-	/**
-	 * @see KMyMoneyWritableTransaction#getWritableFirstSplit()
-	 */
-	public KMyMoneyWritableTransactionSplit getWritableFirstSplit() throws TransactionSplitNotFoundException {
-		return (KMyMoneyWritableTransactionSplit) super.getFirstSplit();
-	}
-
-    /**
-     * {@inheritDoc}
-     */
-	@Override
-	public KMyMoneyWritableTransactionSplit getSecondSplit() throws TransactionSplitNotFoundException {
-		return (KMyMoneyWritableTransactionSplit) super.getSecondSplit();
-	}
-
-	/**
-	 * @see KMyMoneyWritableTransaction#getWritableSecondSplit()
-	 */
-	public KMyMoneyWritableTransactionSplit getWritableSecondSplit() throws TransactionSplitNotFoundException {
-		return (KMyMoneyWritableTransactionSplit) super.getSecondSplit();
-	}
-
-	/**
-     * {@inheritDoc}
 	 */
 	public KMyMoneyWritableTransactionSplit getWritableSplitByID(final KMMSpltID spltID) {
 		// alt:

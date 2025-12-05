@@ -29,7 +29,6 @@ import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xyz.schnorxoborx.base.beanbase.TransactionSplitNotFoundException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
@@ -304,26 +303,6 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		}
 		
 		return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public KMyMoneyTransactionSplit getFirstSplit() throws TransactionSplitNotFoundException {
-    	if ( getSplits().size() == 0 )
-    		throw new TransactionSplitNotFoundException();
-	
-    	return getSplits().get(0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public KMyMoneyTransactionSplit getSecondSplit() throws TransactionSplitNotFoundException {
-    	if ( getSplits().size() <= 1 )
-    		throw new TransactionSplitNotFoundException();
-	
-    	return getSplits().get(1);
     }
 
     /**

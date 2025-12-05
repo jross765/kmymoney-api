@@ -75,36 +75,11 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 	void setMemo(String desc);
 
 	/**
-	 * @return first split of a transaction
-	 * @throws TransactionSplitNotFoundException 
-	 * @see KMyMoneyTransaction#getFirstSplit()
-	 */
-	KMyMoneyWritableTransactionSplit getWritableFirstSplit() throws TransactionSplitNotFoundException;
-
-	/**
-	 * @return second split of a transaction
-	 * @throws TransactionSplitNotFoundException 
-	 * @see KMyMoneyTransaction#getSecondSplit()
-	 */
-	KMyMoneyWritableTransactionSplit getWritableSecondSplit() throws TransactionSplitNotFoundException;
-
-	/**
 	 * @param spltID 
 	 * @return 
 	 * @see KMyMoneyTransaction#getSplitByID(KMMSpltID)
 	 */
 	KMyMoneyWritableTransactionSplit getWritableSplitByID(KMMSpltID spltID);
-
-	/**
-	 *
-	 * @return the first split of this transaction or null.
-	 */
-	KMyMoneyWritableTransactionSplit getFirstSplit() throws TransactionSplitNotFoundException;
-
-	/**
-	 * @return the second split of this transaction or null.
-	 */
-	KMyMoneyWritableTransactionSplit getSecondSplit() throws TransactionSplitNotFoundException;
 
 	/**
 	 * @return 

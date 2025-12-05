@@ -11,7 +11,6 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
-import xyz.schnorxoborx.base.beanbase.TransactionSplitNotFoundException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
@@ -141,37 +140,6 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @see #getSplits()
      */
     KMyMoneyTransactionSplit getSplitByID(KMMSpltID spltID);
-
-    /**
-     *
-     * @return the first split of this transaction or null.
-     * <br>
-     * <em>Caution</em>: This only makes sense for simple transactions
-     * that consist of only two splits. 
-     * By no means is that guaranteed or even "normal"!
-     *  
-     * @throws TransactionSplitNotFoundException
-     * 
-     * @see #getSecondSplit()
-     * @see #getSplits()
-     * @see #getSplitsCount()
-     */
-    KMyMoneyTransactionSplit getFirstSplit() throws TransactionSplitNotFoundException;
-
-    /**
-     * @return the second split of this transaction or null.
-     * <br>
-     * <em>Caution</em>: This only makes sense for simple transactions
-     * that consist of only two splits.
-     * By no means is that guaranteed or even "normal"!
-     * 
-     * @throws TransactionSplitNotFoundException
-     *
-     * @see #getFirstSplit()
-     * @see #getSplits()
-     * @see #getSplitsCount()
-     */
-    KMyMoneyTransactionSplit getSecondSplit() throws TransactionSplitNotFoundException;
 
     /**
      *
