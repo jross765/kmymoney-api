@@ -159,7 +159,11 @@ public class AccountBalanceHelper_FP
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
 				// CAUTION: FixedPointNumber is mutable
-				balance.add(splt.getShares());
+				if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
+					balance.multiply(splt.getShares());
+				} else {
+					balance.add(splt.getShares());
+				}
 	
 				if ( splt == lastSpltIncl ) {
 					break;
@@ -267,7 +271,7 @@ public class AccountBalanceHelper_FP
 
 	public static FixedPointNumber getBalanceRecursive(final KMyMoneyTransactionSplit lastSpltIncl,
 													   final SimpleAccount acct) {
-		FixedPointNumber retval = FixedPointNumber.ZERO.copy();
+		FixedPointNumber retval = getBalance(lastSpltIncl, acct);
 
 		if ( retval == null ) {
 			retval = FixedPointNumber.ZERO.copy();

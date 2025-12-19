@@ -13,8 +13,12 @@ import org.junit.Test;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
+import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
+import org.kmymoney.base.basetypes.simple.KMMSpltID;
+import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -35,7 +39,7 @@ public class TestKMyMoneyAccountImpl {
 	
 	public static final KMMInstID INST_1_ID = TestKMyMoneyInstitutionImpl.INST_1_ID;
 	public static final KMMInstID INST_2_ID = TestKMyMoneyInstitutionImpl.INST_2_ID;
-
+	
 	// -----------------------------------------------------------------
 
 	private KMyMoneyFile kmmFile = null;
@@ -91,6 +95,8 @@ public class TestKMyMoneyAccountImpl {
 
 		assertEquals("A000002", acct.getParentAccountID().toString());
 		assertEquals(0, acct.getChildren().size());
+		
+		// ---
 
 		assertEquals(11674.50, acct.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(23349, acct.getBalanceRat().getNumerator().longValue());
@@ -102,9 +108,78 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(2, acct.getBalanceRecursiveRat().getDenominator().longValue());
 		assertEquals("11.674,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 
+		// ---
+
 		assertEquals(17, acct.getTransactions().size());
 		assertEquals("T000000000000000001", acct.getTransactions().get(0).getID().toString());
 		assertEquals("T000000000000000002", acct.getTransactions().get(1).getID().toString());
+	}
+
+	@Test
+	public void test01_1_2() throws Exception {
+		acct = kmmFile.getAccountByID(ACCT_1_ID);
+		assertNotEquals(null, acct);
+		assertEquals(ACCT_1_ID, acct.getID());
+		
+		// ---
+		
+		KMMTrxID trxID1 = new KMMTrxID("T000000000000000018");
+		KMMTrxID trxID2 = new KMMTrxID("T000000000000000017");
+		KMMTrxID trxID3 = new KMMTrxID("T000000000000000015");
+
+		KMMSpltID spltID1 = new KMMSpltID("S0001");
+		KMMSpltID spltID2 = new KMMSpltID("S0001");
+		KMMSpltID spltID3 = new KMMSpltID("S0001");
+
+		KMMQualifSpltID qualifSpltID1 = new KMMQualifSpltID(trxID1, spltID1); // last split
+		KMMQualifSpltID qualifSpltID2 = new KMMQualifSpltID(trxID2, spltID2); // last-but-one split
+		KMMQualifSpltID qualifSpltID3 = new KMMQualifSpltID(trxID3, spltID3); // third-last split
+		
+		KMyMoneyTransactionSplit splt1 = kmmFile.getTransactionSplitByID(qualifSpltID1);
+		KMyMoneyTransactionSplit splt2 = kmmFile.getTransactionSplitByID(qualifSpltID2);
+		KMyMoneyTransactionSplit splt3 = kmmFile.getTransactionSplitByID(qualifSpltID3);
+
+		// ---
+		
+		assertEquals(11674.50, acct.getBalance(splt1).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(23349, acct.getBalanceRat(splt1).getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRat(splt1).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("11.674,50 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
+		assertEquals(11674.50, acct.getBalanceRecursive(splt1).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(23349, acct.getBalanceRecursiveRat(splt1).getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRecursiveRat(splt1).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("11.674,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
+
+		// ---
+		
+		assertEquals(13484.50, acct.getBalance(splt2).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(26969, acct.getBalanceRat(splt2).getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRat(splt2).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("11.674,50 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
+		assertEquals(13484.50, acct.getBalanceRecursive(splt2).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(26969, acct.getBalanceRecursiveRat(splt2).getNumerator().longValue());
+		assertEquals(2, acct.getBalanceRecursiveRat(splt2).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("11.674,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
+
+		// ---
+		
+		assertEquals(15450.00, acct.getBalance(splt3).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(15450, acct.getBalanceRat(splt3).getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRat(splt3).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("11.674,50 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
+		
+		assertEquals(15450.00, acct.getBalanceRecursive(splt3).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(15450, acct.getBalanceRecursiveRat(splt3).getNumerator().longValue());
+		assertEquals(1, acct.getBalanceRecursiveRat(splt3).getDenominator().longValue());
+		// ::TODO
+		// assertEquals("11.674,50 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
 	}
 
 	@Test

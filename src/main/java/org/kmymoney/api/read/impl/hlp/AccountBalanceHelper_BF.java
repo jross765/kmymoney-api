@@ -171,7 +171,11 @@ public class AccountBalanceHelper_BF
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
 				// CAUTION: BigFraction is immutable
-				balance = balance.add(splt.getSharesRat());
+				if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
+					balance = balance.multiply(splt.getSharesRat());
+				} else {
+					balance = balance.add(splt.getSharesRat());
+				}
 	
 				if ( splt == lastSpltIncl ) {
 					break;
