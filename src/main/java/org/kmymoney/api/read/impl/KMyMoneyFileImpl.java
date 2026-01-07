@@ -71,6 +71,7 @@ import org.xml.sax.InputSource;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import me.tongfei.progressbar.ProgressBar;
 import xyz.schnorxoborx.base.beanbase.NoEntryFoundException;
 import xyz.schnorxoborx.base.beanbase.TooManyEntriesFoundException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
@@ -135,7 +136,12 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      */
     public KMyMoneyFileImpl(final File pFile) throws IOException {
     	super();
-    	loadFile(pFile);
+    	loadFile(pFile, false);
+    }
+
+    public KMyMoneyFileImpl(final File pFile, boolean withProgBar) throws IOException {
+    	super();
+    	loadFile(pFile, withProgBar);
     }
 
     /**
@@ -146,7 +152,12 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      */
     public KMyMoneyFileImpl(final InputStream is) throws IOException {
     	super();
-    	loadInputStream(is);
+    	loadInputStream(is, false);
+    }
+
+    public KMyMoneyFileImpl(final InputStream is, boolean withProgBar) throws IOException {
+    	super();
+    	loadInputStream(is, withProgBar);
     }
 
     // ---------------------------------------------------------------
@@ -181,7 +192,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * @throws IOException on low level reading-errors (FileNotFoundException if not found)
      * @see #setRootElement(KMYMONEYFILE)
      */
-    protected void loadFile(final File pFile) throws IOException{
+    protected void loadFile(final File pFile, boolean withProgBar) throws IOException{
 		long start = System.currentTimeMillis();
 
 		if ( pFile == null ) {
@@ -213,13 +224,13 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			}
 		}
 
-		loadInputStream(in);
+		loadInputStream(in, withProgBar);
 
 		long end = System.currentTimeMillis();
 		LOGGER.info("loadFile: Took " + (end - start) + " ms (total) ");
     }
 
-    protected void loadInputStream(InputStream in) throws UnsupportedEncodingException, IOException{
+    protected void loadInputStream(InputStream in, boolean withProgBar) throws UnsupportedEncodingException, IOException{
 		long start = System.currentTimeMillis();
 
 		NamespaceRemoverReader reader = new NamespaceRemoverReader(new InputStreamReader(in, "utf-8"));
@@ -234,7 +245,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 
 			KMYMONEYFILE obj = (KMYMONEYFILE) unmarshaller.unmarshal(new InputSource(new BufferedReader(reader)));
 			long start2 = System.currentTimeMillis();
-			setRootElement(obj);
+			setRootElement(obj, withProgBar);
 			long end = System.currentTimeMillis();
 			LOGGER.info("loadInputStream: Took " + (end - start) + " ms (total), " + (start2 - start)
 					+ " ms (jaxb-loading), " + (end - start2) + " ms (building facades)");
@@ -966,7 +977,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * @throws InvalidQualifSecCurrTypeException 
      * @throws InvalidQualifSecCurrIDException 
      */
-    protected void setRootElement(final KMYMONEYFILE pRootElement) {
+    protected void setRootElement(final KMYMONEYFILE pRootElement, boolean withProgBar) {
     	if (pRootElement == null) {
     		throw new IllegalArgumentException("argument <pRootElement> is null");
     	}
@@ -974,7 +985,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 
     	// fill prices
     	prcMgr  = new FilePriceManager(this);
-    	loadPriceDatabase(pRootElement);
+    	loadPriceDatabase(pRootElement, withProgBar);
 
     	// fill maps
     	// CAUTION: The order matters
@@ -982,7 +993,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	instMgr = new FileInstitutionManager(this);
     	pyeMgr  = new FilePayeeManager(this);
     	tagMgr  = new FileTagManager(this);
-    	trxMgr  = new FileTransactionManager(this);
+    	trxMgr  = new FileTransactionManager(this, withProgBar);
     	secMgr  = new FileSecurityManager(this);
     	currMgr = new FileCurrencyManager(this);
     }
@@ -994,14 +1005,17 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * @throws InvalidQualifSecCurrTypeException 
      * @throws InvalidQualifSecCurrIDException 
      */
-    private void loadPriceDatabase(final KMYMONEYFILE pRootElement) {
+    private void loadPriceDatabase(final KMYMONEYFILE pRootElement, boolean withProgBar) {
     	boolean noPriceDB = true;
 	
     	PRICES priceDB = pRootElement.getPRICES();
     	if ( priceDB.getPRICEPAIR().size() > 0 )
     		noPriceDB = false;
 	
-		loadPriceDatabaseCore(priceDB);
+    	if ( withProgBar )
+    		loadPriceDatabaseCore_wProgBar(priceDB);
+    	else
+    		loadPriceDatabaseCore_woProgBar(priceDB);
 
 		if ( noPriceDB ) {
 			// no price DB in file
@@ -1010,6 +1024,10 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     private void loadPriceDatabaseCore(PRICES priceDB) {
+    	loadPriceDatabaseCore_woProgBar(priceDB);
+    }
+    
+    private void loadPriceDatabaseCore_woProgBar(PRICES priceDB) {
 //  	getCurrencyTable().clear();
 //  	getCurrencyTable().setConversionFactor(KMMSecCurrID.Type.CURRENCY, 
 //  		                               getDefaultCurrencyID(), 
@@ -1017,8 +1035,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 	
 		String baseCurrency = getDefaultCurrencyID();
 	
-		for ( PRICEPAIR pricePair : priceDB.getPRICEPAIR() ) {
-			String fromSecCurr = pricePair.getFrom();
+		for ( PRICEPAIR jwsdpPrcPr : priceDB.getPRICEPAIR() ) {
+			String fromSecCurr = jwsdpPrcPr.getFrom();
 			// String toCurr      = pricePair.getTo();
 	    
 			// ::TODO: Try to implement Security type
@@ -1051,7 +1069,52 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 				LOGGER.warn("loadPriceDatabaseCore: The KMyMoney file defines a factor for a security '" 
 						+ fromSecCurr + "' but has no security for it");
 			}
-		} // for pricePair
+		} // for prcPr
+    }
+
+    private void loadPriceDatabaseCore_wProgBar(PRICES priceDB) {
+//  	getCurrencyTable().clear();
+//  	getCurrencyTable().setConversionFactor(KMMSecCurrID.Type.CURRENCY, 
+//  		                               getDefaultCurrencyID(), 
+//  		                               new FixedPointNumber(1));
+	
+		String baseCurrency = getDefaultCurrencyID();
+	
+		for ( PRICEPAIR jwsdpPrcPr : ProgressBar.wrap(priceDB.getPRICEPAIR(), "Price DB") ) {
+			String fromSecCurr = jwsdpPrcPr.getFrom();
+			// String toCurr      = pricePair.getTo();
+	    
+			// ::TODO: Try to implement Security type
+			KMMQualifSecCurrID.Type nameSpace = null;
+			if ( fromSecCurr.startsWith(KMMQualifSecCurrID.PREFIX_SECURITY) )
+				nameSpace = KMMQualifSecCurrID.Type.SECURITY;
+			else
+				nameSpace = KMMQualifSecCurrID.Type.CURRENCY;
+
+			// Check if we already have a latest price for this security
+			// (= currency, fund, ...)
+			if ( getCurrencyTable().getConversionFactor(nameSpace, fromSecCurr) != null ) {
+				continue;
+			}
+
+			if ( fromSecCurr.equals(baseCurrency) ) {
+					LOGGER.warn("loadPriceDatabaseCore: Ignoring price-quote for " + baseCurrency 
+			    + " because " + baseCurrency + " is our base-currency.");
+					continue;
+			}
+
+			// get the latest price in the file and insert it into
+			// our currency table
+			FixedPointNumber factor = getLatestPrice(new KMMQualifSecCurrID(nameSpace, fromSecCurr));
+			LOGGER.debug("loadPriceDatabaseCore: latest price for '" + nameSpace + ":" + fromSecCurr + "': " + factor);
+
+			if ( factor != null ) {
+				getCurrencyTable().setConversionFactor(nameSpace, fromSecCurr, factor);
+			} else {
+				LOGGER.warn("loadPriceDatabaseCore: The KMyMoney file defines a factor for a security '" 
+						+ fromSecCurr + "' but has no security for it");
+			}
+		} // for prcPr
     }
 
     // ---------------------------------------------------------------

@@ -138,6 +138,22 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
 	}
 
+	public KMyMoneyWritableFileImpl(final File file, boolean withProgBar)
+			throws IOException {
+		super(file, withProgBar);
+		setModified(false);
+
+    	// CAUTION: The order matters
+		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
+		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
+		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
+		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
+		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this, withProgBar);
+		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
+		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
+		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
+	}
+
 	public KMyMoneyWritableFileImpl(final InputStream is)
 			throws IOException {
 		super(is);
@@ -148,6 +164,21 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
 		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
 		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this);
+		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
+		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
+		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
+	}
+
+	public KMyMoneyWritableFileImpl(final InputStream is, boolean withProgBar)
+			throws IOException {
+		super(is, withProgBar);
+
+    	// CAUTION: The order matters
+		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
+		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
+		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
+		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
+		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this, withProgBar);
 		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
 		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
 		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
@@ -192,8 +223,8 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void loadFile(final File pFile) throws IOException {
-		super.loadFile(pFile);
+	protected void loadFile(final File pFile, boolean withProgBar) throws IOException {
+		super.loadFile(pFile, withProgBar);
 		lastWriteTime = Math.max(pFile.lastModified(), System.currentTimeMillis());
 	}
 
@@ -313,8 +344,8 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	 */
 	@SuppressWarnings("exports")
 	@Override
-	public void setRootElement(final KMYMONEYFILE rootElement) {
-		super.setRootElement(rootElement);
+	public void setRootElement(final KMYMONEYFILE rootElement, boolean withProgBar) {
+		super.setRootElement(rootElement, withProgBar);
 	}
 
 	/**

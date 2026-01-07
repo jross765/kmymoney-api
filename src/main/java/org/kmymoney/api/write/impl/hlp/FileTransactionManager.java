@@ -26,6 +26,10 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.FileT
 		super(kmmFile);
 	}
 
+	public FileTransactionManager(KMyMoneyWritableFileImpl kmmFile, boolean withProgBar) {
+		super(kmmFile, withProgBar);
+	}
+
 	// ---------------------------------------------------------------
 
 	/*

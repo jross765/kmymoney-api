@@ -25,6 +25,8 @@ import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import me.tongfei.progressbar.ProgressBar;
+
 public class FileTransactionManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileTransactionManager.class);
@@ -40,14 +42,23 @@ public class FileTransactionManager {
 
 	public FileTransactionManager(KMyMoneyFileImpl kmmFile) {
 		this.kmmFile = kmmFile;
-		init(kmmFile.getRootElement());
+		init(kmmFile.getRootElement(), false);
+	}
+
+	public FileTransactionManager(KMyMoneyFileImpl kmmFile, boolean withProgBar) {
+		this.kmmFile = kmmFile;
+		init(kmmFile.getRootElement(), withProgBar);
 	}
 
 	// ---------------------------------------------------------------
 
-	private void init(final KMYMONEYFILE pRootElement) {
+	private void init(final KMYMONEYFILE pRootElement, boolean withProgBar) {
 		init1(pRootElement);
-		init2(pRootElement);
+		
+		if ( withProgBar )
+			init2_wProgBar(pRootElement);
+		else
+			init2_woProgBar(pRootElement);
 	}
 
 	private void init1(final KMYMONEYFILE pRootElement) {
@@ -61,6 +72,10 @@ public class FileTransactionManager {
 	}
 
 	private void init2(final KMYMONEYFILE pRootElement) {
+		init2_woProgBar(pRootElement);
+	}
+	
+	private void init2_woProgBar(final KMYMONEYFILE pRootElement) {
 		trxSpltMap = new HashMap<KMMQualifSpltID, KMyMoneyTransactionSplit>();
 
 		for ( KMyMoneyTransaction trx : trxMap.values() ) {
@@ -79,14 +94,43 @@ public class FileTransactionManager {
 					trxSpltMap.put(splt.getQualifID(), splt);
 				}
 			} catch (RuntimeException e) {
-				LOGGER.error("init2: [RuntimeException] Problem in " + getClass().getName() + ".init2: "
+				LOGGER.error("init2_woProgBar: [RuntimeException] Problem in " + getClass().getName() + ".init2: "
 						+ "ignoring illegal Transaction entry with id=" + trx.getID(), e);
 //		System.err.println("init2: ignoring illegal Transaction entry with id: " + trx.getID());
 //		System.err.println("  " + e.getMessage());
 			}
 		} // for trx
 
-		LOGGER.debug("init2: No. of entries in transaction split map: " + trxSpltMap.size());
+		LOGGER.debug("init2_woProgBar: No. of entries in transaction split map: " + trxSpltMap.size());
+	}
+
+	private void init2_wProgBar(final KMYMONEYFILE pRootElement) {
+		trxSpltMap = new HashMap<KMMQualifSpltID, KMyMoneyTransactionSplit>();
+
+		for ( KMyMoneyTransaction trx : ProgressBar.wrap(trxMap.values(), "Transactions") ) {
+			try {
+				List<KMyMoneyTransactionSplit> spltList = null;
+				if ( kmmFile instanceof KMyMoneyWritableFileImpl ) {
+					// CAUTION: As opposed to the code in the sister project,
+					// the second and third arg here has to be set to "true", else the
+					// whole shebang will not work.
+					// Cannot explain this...
+					spltList = ((KMyMoneyTransactionImpl) trx).getSplits(true, true, true);
+				} else {
+					spltList = ((KMyMoneyTransactionImpl) trx).getSplits(true, true, true);
+				}
+				for ( KMyMoneyTransactionSplit splt : spltList ) {
+					trxSpltMap.put(splt.getQualifID(), splt);
+				}
+			} catch (RuntimeException e) {
+				LOGGER.error("init2_wProgBar: [RuntimeException] Problem in " + getClass().getName() + ".init2: "
+						+ "ignoring illegal Transaction entry with id=" + trx.getID(), e);
+//		System.err.println("init2: ignoring illegal Transaction entry with id: " + trx.getID());
+//		System.err.println("  " + e.getMessage());
+			}
+		} // for trx
+
+		LOGGER.debug("init2_wProgBar: No. of entries in transaction split map: " + trxSpltMap.size());
 	}
 
 	// ----------------------------
@@ -257,6 +301,8 @@ public class FileTransactionManager {
 	private List<TRANSACTION> getTransactions_raw() {
 		List<TRANSACTION> result = new ArrayList<TRANSACTION>();
 
+		// ::TODO: This loop is useless. Just return the list we are 
+		// iterating over
 		for ( TRANSACTION jwsdpTrx : kmmFile.getRootElement().getTRANSACTIONS().getTRANSACTION() ) {
 			result.add(jwsdpTrx);
 		}

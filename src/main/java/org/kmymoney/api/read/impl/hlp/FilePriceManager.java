@@ -65,8 +65,8 @@ public class FilePriceManager {
 		prcMap   = new HashMap<KMMPriceID, KMyMoneyPrice>();
 
 		initPriceDB(pRootElement);
-		List<PRICEPAIR> prices = priceDB.getPRICEPAIR();
-		for ( PRICEPAIR jwsdpPrcPr : prices ) {
+		List<PRICEPAIR> prcPrList = priceDB.getPRICEPAIR();
+		for ( PRICEPAIR jwsdpPrcPr : prcPrList ) {
 			String fromCurr = jwsdpPrcPr.getFrom();
 			String toCurr = jwsdpPrcPr.getTo();
 			KMMPricePairID currPair = new KMMPricePairID(fromCurr, toCurr);
