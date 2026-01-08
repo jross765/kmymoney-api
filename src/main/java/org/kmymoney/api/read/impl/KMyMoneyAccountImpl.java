@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.PAIR;
 import org.kmymoney.api.generated.RECONCILIATION;
@@ -323,10 +324,27 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 
     // ---------------------------------------------------------------
     
+    @Override
+    public boolean isClosed() {
+    	String val = getUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED);
+    	
+    	if ( val == null )
+    		return false;
+    	
+    	if ( val.equals("yes") ) // ::MAGIC
+    		return true;
+    	else
+    		return false;
+    }
+    
+    // ----------------------------
+    
+    @Override
     public boolean hasReconciliations() {
     	return ( myRecons.size() > 0 );
     }
 
+    @Override
     public List<KMMAccountReconciliation> getReconciliations() {
     	return myRecons;
     }

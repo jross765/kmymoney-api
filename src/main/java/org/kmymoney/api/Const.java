@@ -5,6 +5,7 @@ import org.kmymoney.api.read.KMMSecCurr;
 public class Const {
   
   public static final String KVP_KEY_ACCT_IBAN         = "iban";
+  public static final String KVP_KEY_ACCT_CLOSED       = "mm-closed";
   
   public static final String KVP_KEY_SEC_SECURITY_ID   = "kmm-security-id";  
   public static final String KVP_KEY_SEC_ONLINE_SOURCE = "kmm-online-source";

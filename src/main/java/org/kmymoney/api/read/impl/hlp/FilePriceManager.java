@@ -250,7 +250,7 @@ public class FilePriceManager {
 	// i.e. the ones that does *not* make use of the semantics 
 	// in the KMyMoney-Price-IDs (s.t. that you generally should not do, 
 	// not just in this particular case -- we consider semantics in IDs 
-	// a bad design decision, although one seen quite often in the wild).
+	// a bad design decision, although it's seen quite often in the wild).
 	
 	@SuppressWarnings("unused")
 	private KMyMoneyPrice getPriceByQualifSecCurrIDDate_Var1(final KMMQualifSecCurrID qualifID, final LocalDate date) {
@@ -267,7 +267,7 @@ public class FilePriceManager {
 	// This is the "dirty" but efficient variant of the core function above, 
 	// i.e. the one that *does* make use of the semantics 
 	// in the KMyMoney-Price-IDs (s.t. that you generally should not do, 
-	// not just in this particular case. But we will make and exception here,
+	// not just in this particular case. But we will make an exception here,
 	// because things are as they are in KMyMoney, we cannot change it, so
 	// why not make use of this not-so-good design decision of the KMyMoney 
 	// developers?). Just make sure to keep the clean variant.

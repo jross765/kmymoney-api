@@ -499,6 +499,8 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
 
     // ---------------------------------------------------------------
     
+    boolean isClosed();
+    
     boolean hasReconciliations();
 
     List<KMMAccountReconciliation> getReconciliations();
