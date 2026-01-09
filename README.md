@@ -17,6 +17,41 @@ file.
 * This repository contains no history before V. 1.7 (cf. notes in parent repo).
 
 ## Major Changes 
+### V. 0.8.1 &rarr; 0.9
+
+* Introduced important add-on: exact numbers / computations, as opposed to current implementation 
+  based on class `FixedPointNumber` in `SchnorxoLib`, which allows for high/arbitrary-precision 
+  computations, but not for exact ones).
+    
+  (Based on `SchnorxoLib` V. 0.2 and
+  class `BigFraction` in Apache Commons Numbers. ==> new dependency)
+    
+   * Package "`read`":
+     * `KMyMoneyTrxSplit(Impl)`: New methods `getValueRat()`, `getSharesRat()` and `getPriceRat()`
+
+       ("rat" for "rational number") that return the according values as
+       fractions / rational numbers.
+     * `KMyMoneyAccount(Impl)`, `KMyMoneyTransaction(Impl)`: new methods `getBalanceXYZRat()`
+
+       (symmetric to already existing ones) that return balance of account / transaction as *exactly computed* number (i.e., as fraction).
+    * Package "`write`": accordingly.
+    * Package "`currency`":
+       * ::TODO: Introduce BigFraction in package "currency"
+       * Small improvements
+
+* `KMyMoneyAccount(Impl)`: Method `isClosed()`.
+
+* Bug fixes: 
+   * Computing (recursive) account balance, when given transaction split.
+   * Computing recursive account balance (general).
+   * ComplexPriceTable: Accepting factor
+
+* `KMyMoney(Writable)Transaction(Impl)`: Moved code to new module "API Specialized Entities".
+ 
+* Loading files now shows progress bars for the parts that typically take longer: Price-DB and transactions (optional, off by default).
+
+* Various small improvements here and there.
+
 ### V. 0.8.0 &rarr; 0.8.1
 * Small corrections / bug fixes:
   * `KMyMoneyPayee(Impl)`: 

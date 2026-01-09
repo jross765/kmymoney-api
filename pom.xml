@@ -37,7 +37,7 @@
 			<dependency>
 				<groupId>org.kmymoney</groupId>
 				<artifactId>kmymoney-base</artifactId>
-				<version>0.8.1</version>
+				<version>0.8.2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -114,6 +114,19 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>me.tongfei</groupId>
+			<artifactId>progressbar</artifactId>
+			<version>0.10.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.jline/jline-terminal -->
+		<dependency>
+			<groupId>org.jline</groupId>
+			<artifactId>jline-terminal</artifactId>
+			<version>3.30.6</version>
+		</dependency>
+
 		<!-- *********************************************************  -->
 		
 		<dependency>
@@ -130,7 +143,7 @@
 		<dependency>
 			<groupId>org.kmymoney</groupId>
 			<artifactId>kmymoney-base</artifactId>
-			<version>0.8.1</version>
+			<version>0.8.2</version>
 			<scope>compile</scope>
 		</dependency>
 
