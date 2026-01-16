@@ -11,12 +11,14 @@ import java.util.Currency;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.SUBACCOUNT;
 import org.kmymoney.api.generated.SUBACCOUNTS;
 import org.kmymoney.api.read.KMyMoneyAccount;
+import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
@@ -30,6 +32,7 @@ import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
@@ -40,7 +43,7 @@ import xyz.schnorxoborx.base.beanbase.UnknownAccountTypeException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
- * Extension of KMyMoneyAccountImpl to allow writing instead of
+ * Extension of KMyMoneyAccountImpl to allow read-write access instead of
  * read-only access.
  */
 public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl 
@@ -55,6 +58,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 	// Used by ${@link #getBalance()} to cache the result.
 	private FixedPointNumber myBalanceCached = null;
+	private BigFraction      myBalanceCachedRat = null;
 
 	// Used by ${@link #getBalance()} to cache the result.
 	private PropertyChangeListener myBalanceCachedInvalidator = null;
@@ -64,33 +68,83 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * @param jwsdpPeer 
 	 * @param file 
+	 * 
+	 * @see KMyMoneyAccountImpl#KMyMoneyAccountImpl(ACCOUNT, KMyMoneyFile)
 	 */
 	@SuppressWarnings("exports")
 	public KMyMoneyWritableAccountImpl(final ACCOUNT jwsdpPeer, final KMyMoneyFileImpl file) {
-		super(jwsdpPeer, file);
+		super(constr_checkPeer(jwsdpPeer), constr_checkROFile(file));
 	}
 
 	/**
-	 * @param file 
+	 * @param file
+	 * 
+	 * @see KMyMoneyAccountImpl#KMyMoneyAccountImpl(ACCOUNT, KMyMoneyFile) )
 	 */
 	public KMyMoneyWritableAccountImpl(final KMyMoneyWritableFileImpl file) {
-		super(createAccount_int(file, file.getNewAccountID()), file);
+		super(createAccount_int(file, file.getNewAccountID()), constr_checkRWFile(file));
 	}
-	
+
 	public KMyMoneyWritableAccountImpl(final KMyMoneyAccountImpl acct, final boolean addSplits) {
-		super(acct.getJwsdpPeer(), acct.getKMyMoneyFile());
+		super(constr_getPeer(acct), constr_getKMMFile(acct));
 
 		if (addSplits) {
-		    for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) acct.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
-		    	if ( ! acct.isRootAccount() &&
-		    		 splt.getAccountID().equals(acct.getID()) ) {
-		    		super.addTransactionSplit(splt);
+			if ( ! acct.isRootAccount() ) {
+				for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) acct.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
+					if ( splt.getAccountID().equals(acct.getID()) ) {
+						super.addTransactionSplit(splt);
 			    // NO:
 //				    addTransactionSplit(new KMyMoneyTransactionSplitImpl(splt.getJwsdpPeer(), splt.getTransaction(), 
 //		                                false, false));
-		    	}
-		    }
+					}
+				} // for splt
+		    } // if acct
 		}
+	}
+
+	// ----------------------------
+	// Extra check methods for constructor, as we may do nothing before
+	// calling super().
+	// Cf.: https://stackoverflow.com/questions/79135581/in-java-avoiding-null-dereferences-when-calling-super-in-constructor
+	
+	private static ACCOUNT constr_checkPeer(final ACCOUNT jwsdpPeer) {
+		if ( jwsdpPeer == null ) {
+			throw new IllegalArgumentException("argument <jwsdpPeer> is null");
+		}
+		
+		return jwsdpPeer;
+	}
+
+	private static KMyMoneyFileImpl constr_checkROFile(final KMyMoneyFileImpl file) {
+		if ( file == null ) {
+			throw new IllegalArgumentException("argument <file> is null");
+		}
+		
+		return file;
+	}
+
+	private static KMyMoneyWritableFileImpl constr_checkRWFile(final KMyMoneyWritableFileImpl file) {
+		if ( file == null ) {
+			throw new IllegalArgumentException("argument <file> is null");
+		}
+		
+		return file;
+	}
+
+	private static ACCOUNT constr_getPeer(final KMyMoneyAccountImpl acct) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+		
+		return acct.getJwsdpPeer();
+	}
+
+	private static KMyMoneyFile constr_getKMMFile(final KMyMoneyAccountImpl acct) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+		
+		return acct.getKMyMoneyFile();
 	}
 
 	// ---------------------------------------------------------------
@@ -100,14 +154,14 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 * @return
 	 */
 	private static ACCOUNT createAccount_int(
-			final KMyMoneyWritableFileImpl file, 
+			final KMyMoneyWritableFileImpl file,
 			final KMMAcctID newID) {
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null ID given");
+			throw new IllegalArgumentException("argument <mewID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
 
 		ACCOUNT jwsdpAcct = file.createAccountType();
@@ -120,8 +174,13 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 		file.getRootElement().getACCOUNTS().getACCOUNT().add(jwsdpAcct);
 		file.setModified(true);
+
+		LOGGER.debug("createAccount_int: Created new account (core): " + jwsdpAcct.getId());
+
 		return jwsdpAcct;
 	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * Remove this account from the system.<br/>
@@ -136,11 +195,58 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalStateException("Cannot remove account while it contains child-accounts!");
 		}
 
-		getWritableKMyMoneyFile().getRootElement().getACCOUNTS().getACCOUNT().remove(jwsdpPeer);
 		getWritableKMyMoneyFile().removeAccount(this);
 	}
 
 	// ---------------------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public KMyMoneyWritableFileImpl getWritableKMyMoneyFile() {
+		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	}
+
+	// ---------------------------------------------------------------
+
+	/**
+	 * 
+	 */
+	@Override
+	public KMyMoneyWritableTransactionSplit getWritableTransactionSplitByID(final KMMQualifSpltID spltID) {
+		return (KMyMoneyWritableTransactionSplit) super.getTransactionSplitByID(spltID);
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public List<KMyMoneyWritableTransactionSplit> getWritableTransactionSplits() {
+		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
+
+		for ( KMyMoneyTransactionSplit splt : super.getTransactionSplits() ) {
+			KMyMoneyWritableTransactionSplitImpl newSplt = new KMyMoneyWritableTransactionSplitImpl(splt);
+			result.add(newSplt);
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param impl the split to add to mySplits
+	 */
+	protected void addTransactionSplit(final KMyMoneyWritableTransactionSplitImpl impl) {
+		super.addTransactionSplit(impl);
+		// ((KMyMoneyFileImpl) getKMyMoneyFile()).getAccountManager().addTransactionSplit(impl, false);
+	}
 
 	/**
 	 * @see KMyMoneyAccount#addTransactionSplit(KMyMoneyTransactionSplit)
@@ -148,14 +254,18 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
-		
+
+		if ( ! splt.getAccountID().equals(getID()) ) {
+			throw new IllegalArgumentException("split " + splt.getID() + " does not belong to account " + getID());
+		}
+
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting name is forbidden for top-level accounts");
-			throw new UnsupportedOperationException("Setting name is forbidden for top-level accounts");
+			LOGGER.error("Adding transaction split is forbidden for top-level accounts");
+			throw new UnsupportedOperationException("Adding transaction split is forbidden for top-level accounts");
 		}
-		
+
 		super.addTransactionSplit(splt);
 
 		setIsModified();
@@ -167,24 +277,24 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	}
 
 	/**
-	 * @param impl the split to remove
+	 * @param splt the split to remove
 	 */
 	protected void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
-		
+
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting name is forbidden for top-level accounts");
-			throw new UnsupportedOperationException("Setting name is forbidden for top-level accounts");
+			LOGGER.error("Removing transaction split is forbidden for top-level accounts");
+			throw new UnsupportedOperationException("Removing transaction split is forbidden for top-level accounts");
 		}
-		
+
 		List<KMyMoneyTransactionSplit> transactionSplits = getTransactionSplits();
 		// That does not work with writable splits:
 		// transactionSplits.remove(splt);
 		// Instead:
 		for ( int i = 0; i < transactionSplits.size(); i++ ) {
-			if ( transactionSplits.get(i).getID().equals(splt.getID())) {
+			if ( transactionSplits.get(i).getID().equals(splt.getID()) ) {
 				transactionSplits.remove(i);
 				i--;
 			}
@@ -203,13 +313,14 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setName(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
-		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+
+		if ( name.trim().length() == 0 ) {
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
@@ -221,10 +332,10 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( oldName == name ) {
 			return; // nothing has changed
 		}
-		
-		this.jwsdpPeer.setName(name);
+
+		this.getJwsdpPeer().setName(name);
 		setIsModified();
-		
+
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
@@ -238,18 +349,18 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void setInstitutionID(final KMMInstID instID) {
 		if ( instID == null ) {
-			throw new IllegalArgumentException("null institution-ID given!");
+			throw new IllegalArgumentException("argument <instID> is null");
 		}
 
 		if ( ! instID.isSet() ) {
-			throw new IllegalArgumentException("unset institution-ID given!");
+			throw new IllegalArgumentException("argument <instID> is not set");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
 			LOGGER.error("Setting institution ID for is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting institution ID is forbidden for top-level accounts");
 		}
-		
+
 		KMMInstID oldInstID = getInstitutionID();
 		// ::TODO: Diese extra-Abfrage auf null ist bei optionalen Feldern noetig
 		// (oder besser bei allen) ==> ueberall sonst einbauen 
@@ -259,8 +370,8 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 				return; // nothing has changed
 			}
 		}
-		
-		this.jwsdpPeer.setInstitution(instID.toString());
+
+		this.getJwsdpPeer().setInstitution(instID.toString());
 		setIsModified();
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
@@ -277,11 +388,11 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void setQualifSecCurrID(final KMMQualifSecCurrID secCurrID) {
 		if ( secCurrID == null ) {
-			throw new IllegalArgumentException("null security/currency ID given!");
+			throw new IllegalArgumentException("argument <secCurrID> is null");
 		}
 
 		if ( ! secCurrID.isSet() ) {
-			throw new IllegalArgumentException("unset security/currency ID given!");
+			throw new IllegalArgumentException("argument <secCurrID> is not set");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
@@ -293,17 +404,17 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( oldCurrId == secCurrID ) {
 			return; // nothing has changed
 		}
-		
-		this.jwsdpPeer.setCurrency(secCurrID.getCode());
+
+		this.getJwsdpPeer().setCurrency(secCurrID.getCode());
 		setIsModified();
-		
+
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
 			propertyChangeFirer.firePropertyChange("currencyID", oldCurrId, secCurrID.getCode());
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -316,7 +427,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( ! secID.isSet() ) {
 			throw new IllegalArgumentException("unset security ID given");
 		}
-		
+
 		setQualifSecCurrID(new KMMQualifSecID(secID));
 	}
 	
@@ -340,14 +451,14 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( currCode == null ) {
 			throw new IllegalArgumentException("null currency code given");
 		}
-		
+
 		if ( currCode.isEmpty() ) {
 			throw new IllegalArgumentException("empty currency code given");
 		}
 
 		setCurrency(Currency.getInstance(currCode));
 	}
-	
+
 	// ----------------------------
 
 	protected void setIsModified() {
@@ -360,103 +471,14 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public FixedPointNumber getBalance() {
-		if ( myBalanceCached != null ) {
-			return myBalanceCached;
-		}
-
-		List<KMyMoneyTransactionSplit> after = new ArrayList<KMyMoneyTransactionSplit>();
-		FixedPointNumber balance = getBalance(LocalDate.now(), after);
-
-		if ( after.isEmpty() ) {
-			myBalanceCached = balance;
-
-			// add a listener to keep the cache up to date
-			if ( myBalanceCachedInvalidator != null ) {
-				myBalanceCachedInvalidator = new PropertyChangeListener() {
-					private final Collection<KMyMoneyTransactionSplit> splitsWeAreAddedTo = new HashSet<KMyMoneyTransactionSplit>();
-
-					public void propertyChange(final PropertyChangeEvent evt) {
-						myBalanceCached = null;
-
-						// we don't handle the case of removing an account
-						// because that happens seldomly enough
-
-						if ( evt.getPropertyName().equals("account") && 
-							 evt.getSource() instanceof KMyMoneyWritableTransactionSplit ) {
-							KMyMoneyWritableTransactionSplit splitw = (KMyMoneyWritableTransactionSplit) evt.getSource();
-							if ( splitw.getAccount() != KMyMoneyWritableAccountImpl.this ) {
-								helper.removePropertyChangeListener("account", this);
-								helper.removePropertyChangeListener("shares", this);
-								helper.removePropertyChangeListener("datePosted", this);
-								splitsWeAreAddedTo.remove(splitw);
-							}
-
-						}
-						
-						if ( evt.getPropertyName().equals("transactionSplits") ) {
-							Collection<KMyMoneyTransactionSplit> splits = (Collection<KMyMoneyTransactionSplit>) evt.getNewValue();
-							for ( KMyMoneyTransactionSplit split : splits ) {
-								if ( ! (split instanceof KMyMoneyWritableTransactionSplit) || 
-									 splitsWeAreAddedTo.contains(split) ) {
-									continue;
-								}
-								KMyMoneyWritableTransactionSplit splitw = (KMyMoneyWritableTransactionSplit) split;
-								helper.addPropertyChangeListener("account", this);
-								helper.addPropertyChangeListener("shares", this);
-								helper.addPropertyChangeListener("datePosted", this);
-								splitsWeAreAddedTo.add(splitw);
-							}
-						}
-					}
-				};
-				
-				helper.addPropertyChangeListener("currencyID", myBalanceCachedInvalidator);
-				helper.addPropertyChangeListener("currencyNameSpace", myBalanceCachedInvalidator);
-				helper.addPropertyChangeListener("transactionSplits", myBalanceCachedInvalidator);
-			}
-		}
-
-		return balance;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public FixedPointNumber getBalanceChange(final LocalDate from, final LocalDate to) {
-		FixedPointNumber retval = new FixedPointNumber();
-	
-		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
-			LocalDate whenHappened = splt.getTransaction().getDatePosted();
-			
-			if ( !whenHappened.isBefore(to) ) {
-				continue;
-			}
-			
-			if ( whenHappened.isBefore(from) ) {
-				continue;
-			}
-			
-			retval = retval.add(splt.getShares());
-		}
-		
-		return retval;
-	}
-	
-	// ---------------------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setMemo(final String descr) {
 		if ( descr == null ) {
-			throw new IllegalArgumentException("null description given");
+			throw new IllegalArgumentException("argument <descr> is null");
 		}
-		
-    	// Caution: empty string allowed here
-		// if ( descr.isEmpty() ) {
-		//   throw new IllegalArgumentException("empty description given");
+
+		// Caution: empty string allowed here
+		// if ( descr.trim().length() == 0 ) {
+		//   throw new IllegalArgumentException("argument <descr> is null");
 		// }
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
@@ -469,20 +491,25 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			return; // nothing has changed
 		}
 		
-		jwsdpPeer.setDescription(descr);
+		getJwsdpPeer().setDescription(descr);
 		setIsModified();
 		
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
-			propertyChangeFirer.firePropertyChange("description", oldDescr, descr);
+			propertyChangeFirer.firePropertyChange("memo", oldDescr, descr);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setType(final KMyMoneyAccount.Type type) {
+		if ( type == null ) {
+			throw new IllegalArgumentException("argument <type> is null");
+		}
+
 		setTypeBigInt(type.getCodeBig());
 	}
 
@@ -512,7 +539,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( oldType == typeInt ) {
 			return; // nothing has changed
 		}
-		
+
 		// ::CHECK
 		// Not sure whether we should allow this action at all...
 		// It does happen that you set an account's type wrong by accident,
@@ -524,9 +551,9 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new UnsupportedOperationException("Changing account type is forbidden for accounts that already contain transactions: " + getID());
 		}
     	
-		jwsdpPeer.setType(typeInt);
+		getJwsdpPeer().setType(typeInt);
 		setIsModified();
-		
+
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
@@ -537,6 +564,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setParentAccountID(final KMMComplAcctID prntAcctID) {
 		if ( prntAcctID == null ) {
 			setParentAccount(null);
@@ -544,7 +572,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( ! prntAcctID.isSet() ) {
-			throw new IllegalArgumentException("unset account ID given!");
+			throw new IllegalArgumentException("argument <prntAcctID> is not set");
 		}
 
 		// check if new parent is a child-account recursively
@@ -602,14 +630,15 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setParentAccount(final KMyMoneyAccount prntAcct) {
 		if ( prntAcct == null ) {
-			this.jwsdpPeer.setParentaccount(null);
+			this.getJwsdpPeer().setParentaccount(null);
 			return;
 		}
 
 		if ( prntAcct == this ) {
-			throw new IllegalArgumentException("I cannot be my own parent!");
+			throw new IllegalArgumentException("An account cannot be set its own parent");
 		}
 
 		setParentAccountID(prntAcct.getID());
@@ -620,16 +649,179 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
-	public KMyMoneyWritableFileImpl getWritableKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	@Override
+	public FixedPointNumber getBalance() {
+		if ( myBalanceCached != null ) {
+			return myBalanceCached;
+		}
+
+		List<KMyMoneyTransactionSplit> after = new ArrayList<KMyMoneyTransactionSplit>();
+		FixedPointNumber balance = getBalance(LocalDate.now(), after);
+
+		if ( after.isEmpty() ) {
+			myBalanceCached = balance;
+
+			// add a listener to keep the cache up to date
+			if ( myBalanceCachedInvalidator != null ) {
+				myBalanceCachedInvalidator = new PropertyChangeListener() {
+					private final Collection<KMyMoneyTransactionSplit> splitsWeAreAddedTo = new HashSet<KMyMoneyTransactionSplit>();
+
+					public void propertyChange(final PropertyChangeEvent evt) {
+						myBalanceCached = null;
+
+						// we don't handle the case of removing an account
+						// because that happens seldomly enough
+
+						if ( evt.getPropertyName().equals("account") && 
+							 evt.getSource() instanceof KMyMoneyWritableTransactionSplit ) {
+							KMyMoneyWritableTransactionSplit splitw = (KMyMoneyWritableTransactionSplit) evt.getSource();
+							if ( splitw.getAccount() != KMyMoneyWritableAccountImpl.this ) {
+								helper.removePropertyChangeListener("account", this);
+								helper.removePropertyChangeListener("shares", this);
+								helper.removePropertyChangeListener("datePosted", this);
+								splitsWeAreAddedTo.remove(splitw);
+							}
+
+						}
+
+						if ( evt.getPropertyName().equals("transactionSplits") ) {
+							Collection<KMyMoneyTransactionSplit> splits = (Collection<KMyMoneyTransactionSplit>) evt.getNewValue();
+							for ( KMyMoneyTransactionSplit split : splits ) {
+								if ( ! ( split instanceof KMyMoneyWritableTransactionSplit ) || 
+									 splitsWeAreAddedTo.contains(split) ) {
+									continue;
+								}
+								KMyMoneyWritableTransactionSplit splitw = (KMyMoneyWritableTransactionSplit) split;
+								helper.addPropertyChangeListener("account", this);
+								helper.addPropertyChangeListener("shares", this);
+								helper.addPropertyChangeListener("datePosted", this);
+								splitsWeAreAddedTo.add(splitw);
+							}
+						}
+					}
+				};
+
+				helper.addPropertyChangeListener("currencyID", myBalanceCachedInvalidator);
+				helper.addPropertyChangeListener("currencyNameSpace", myBalanceCachedInvalidator);
+				helper.addPropertyChangeListener("transactionSplits", myBalanceCachedInvalidator);
+			}
+		}
+
+		return balance;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	public BigFraction getBalanceRat() {
+		if ( myBalanceCachedRat != null ) {
+			return myBalanceCachedRat;
+		}
+
+		List<KMyMoneyTransactionSplit> after = new ArrayList<KMyMoneyTransactionSplit>();
+		BigFraction balance = getBalanceRat(LocalDate.now(), after);
+
+		if ( after.isEmpty() ) {
+			myBalanceCachedRat = balance;
+
+			// add a listener to keep the cache up to date
+			if ( myBalanceCachedInvalidator != null ) {
+				myBalanceCachedInvalidator = new PropertyChangeListener() {
+					private final Collection<KMyMoneyTransactionSplit> splitsWeAreAddedTo = new HashSet<KMyMoneyTransactionSplit>();
+
+					public void propertyChange(final PropertyChangeEvent evt) {
+						myBalanceCachedRat = null;
+
+						// we don't handle the case of removing an account
+						// because that happens seldomly enough
+
+						if ( evt.getPropertyName().equals("account") && 
+							 evt.getSource() instanceof KMyMoneyWritableTransactionSplit ) {
+							KMyMoneyWritableTransactionSplit splitw = (KMyMoneyWritableTransactionSplit) evt.getSource();
+							if ( splitw.getAccount() != KMyMoneyWritableAccountImpl.this ) {
+								helper.removePropertyChangeListener("account", this);
+								helper.removePropertyChangeListener("quantity", this);
+								helper.removePropertyChangeListener("datePosted", this);
+								splitsWeAreAddedTo.remove(splitw);
+							}
+
+						}
+
+						if ( evt.getPropertyName().equals("transactionSplits") ) {
+							List<KMyMoneyTransactionSplit> splits = (List<KMyMoneyTransactionSplit>) evt.getNewValue();
+							for ( KMyMoneyTransactionSplit splt : splits ) {
+								if ( ! ( splt instanceof KMyMoneyWritableTransactionSplit ) ||
+									 splitsWeAreAddedTo.contains(splt) ) {
+									continue;
+								}
+								KMyMoneyWritableTransactionSplit splitw = (KMyMoneyWritableTransactionSplit) splt;
+								helper.addPropertyChangeListener("account", this);
+								helper.addPropertyChangeListener("quantity", this);
+								helper.addPropertyChangeListener("datePosted", this);
+								splitsWeAreAddedTo.add(splitw);
+							}
+						}
+					}
+				};
+
+				helper.addPropertyChangeListener("currencyID", myBalanceCachedInvalidator);
+				helper.addPropertyChangeListener("currencyNameSpace", myBalanceCachedInvalidator);
+				helper.addPropertyChangeListener("transactionSplits", myBalanceCachedInvalidator);
+			}
+		}
+
+		return balance;
+	}
+	
+	// ----------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public FixedPointNumber getBalanceChange(final LocalDate from, final LocalDate to) {
+		FixedPointNumber retval = new FixedPointNumber();
+
+		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
+			LocalDate whenHappened = splt.getTransaction().getDatePosted();
+			
+			if ( ! whenHappened.isBefore(to) ) {
+				continue;
+			}
+			
+			if ( whenHappened.isBefore(from) ) {
+				continue;
+			}
+			
+			retval.add(splt.getShares()); // mutable
+		}
+		
+		return retval;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public BigFraction getBalanceChangeRat(final LocalDate from, final LocalDate to) {
+		BigFraction retval = BigFraction.ZERO;
+
+		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
+			LocalDate whenHappened = splt.getTransaction().getDatePosted();
+
+			if ( ! whenHappened.isBefore( to ) ) {
+				continue;
+			}
+
+			if ( whenHappened.isBefore( from ) ) {
+				continue;
+			}
+
+			retval = retval.add(splt.getSharesRat()); // immutable
+		}
+
+		return retval;
 	}
 
 	// -------------------------------------------------------
@@ -640,26 +832,26 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void addUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
-		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+
+		if ( name.trim().length() == 0 ) {
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
-		
-		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+
+		if ( value.trim().length() == 0 ) {
+			throw new IllegalArgumentException("argument <value> is empty");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
 			LOGGER.error("Adding user-defined attribute is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Adding user-defined attribute is forbidden for top-level accounts");
 		}
-		
+
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
 			ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
 			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
@@ -677,22 +869,22 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void removeUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
-		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+
+		if ( name.trim().length() == 0 ) {
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
 			LOGGER.error("Removing user-defined attribute is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Removing user-defined attribute is forbidden for top-level accounts");
 		}
-		
+
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
 			throw new KVPListDoesNotContainKeyException();
 		}
-		
+
 		HasWritableUserDefinedAttributesImpl
 			.removeUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
 			                             	name);
@@ -704,28 +896,28 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void setUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
-		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+
+		if ( name.trim().length() == 0 ) {
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
 			LOGGER.error("Setting user-defined attribute is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting user-defined attribute is forbidden for top-level accounts");
 		}
-		
+
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
 			throw new KVPListDoesNotContainKeyException();
 		}
-		
+
 		HasWritableUserDefinedAttributesImpl
 			.setUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
 			                             name, value);
 	}
 
-    // -----------------------------------------------------------------
+	// ---------------------------------------------------------------
 
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();

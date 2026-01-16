@@ -43,15 +43,17 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     // ---------------------------------------------------------------
 
     // the JWSDP-object we are facading.
-    protected final ACCOUNT         jwsdpPeer;
+    protected final ACCOUNT jwsdpPeer;
 
     // ---------------------------------------------------------------
 
     // protected KMyMoneyObjectImpl helper;
 
+    // ---------------------------------------------------------------
+
     /*
      * The splits of this transaction. May not be fully initialized during loading
-     * of the KMyMoney-file.
+     * of the KMyMoney file.
      */
     private final List<KMyMoneyTransactionSplit> mySplits = new ArrayList<KMyMoneyTransactionSplit>();
 
@@ -61,8 +63,8 @@ public class KMyMoneyAccountImpl extends SimpleAccount
      */
     private boolean mySplitsNeedSorting = false;
     
-    // ---------------------------------------------------------------
-
+    // ----------------------------
+    
     protected List<RECONCILIATION> jwsdpRecons = null;
 
     private final List<KMMAccountReconciliation> myRecons = new ArrayList<KMMAccountReconciliation>();
@@ -74,7 +76,9 @@ public class KMyMoneyAccountImpl extends SimpleAccount
      * @param kmmFile the file to register under
      */
     @SuppressWarnings("exports")
-    public KMyMoneyAccountImpl(final ACCOUNT peer, final KMyMoneyFile kmmFile) {
+    public KMyMoneyAccountImpl(
+    		final ACCOUNT peer,
+    		final KMyMoneyFile kmmFile) {
     	super(kmmFile);
 
     	jwsdpPeer = peer;
@@ -88,6 +92,14 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	    final boolean addToInst) {
     	super(kmmFile);
     	
+    	if ( peer == null ) {
+    		throw new IllegalArgumentException("argument <peer> is null");
+    	}
+
+    	if ( kmmFile == null ) {
+    		throw new IllegalArgumentException("argument <kmmFile> is null");
+    	}
+
     	this.jwsdpPeer = peer;
 
     	if ( addToInst ) {
@@ -102,7 +114,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     }
 
     // ---------------------------------------------------------------
-    
+
     private void initRecons() {
     	if ( jwsdpPeer.getRECONCILIATIONS() != null ) {
     		jwsdpRecons = jwsdpPeer.getRECONCILIATIONS().getRECONCILIATION();
@@ -119,6 +131,8 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	}
     }
 
+    // ---------------------------------------------------------------
+
     /**
      * @return the JWSDP-object we are wrapping.
      */
@@ -130,8 +144,9 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     // ---------------------------------------------------------------
 
     /**
-     * @see KMyMoneyAccount#getID()
+     * {@inheritDoc}
      */
+    @Override
     public KMMComplAcctID getID() {
     	// CAUTION: In the KMyMoney file, the prefix for the special top-level accounts
     	// is always "AStd::" (two colons).
@@ -144,7 +159,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	else
     		return new KMMComplAcctID(jwsdpPeer.getId());
     }
-    
+
     // ---------------------------------------------------------------
 
 	@Override
@@ -212,16 +227,24 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     // ---------------------------------------------------------------
 
     /**
-     * @see KMyMoneyAccount#getName()
+     * {@inheritDoc}
      */
+    @Override
     public String getName() {
     	return jwsdpPeer.getName();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getMemo() {
     	return jwsdpPeer.getDescription();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getNumber() {
     	return jwsdpPeer.getNumber();
     }
@@ -252,6 +275,9 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	return jwsdpPeer.getType();
     }
 
+    /**
+	 * {@inheritDoc}
+	 */
     @Override
 	public KMMQualifSecCurrID getQualifSecCurrID() {
 		KMMQualifSecCurrID result = null;
@@ -264,6 +290,8 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 
 		return result;
 	}
+    
+    // ----------------------------
 
 	/**
      * @see KMyMoneyAccount#getTransactionSplits()
@@ -278,23 +306,30 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	return mySplits;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null transaction-split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
 		KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
 		if ( old != null ) {
 			// There already is a split with that ID
-			if ( !old.equals(splt) ) {
+			if ( ! old.equals(splt) ) {
 				System.err.println(
-						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: "
-								+ splt.getQualifID() + "[" + splt.getClass().getName() + "] and " + old.getQualifID()
-								+ "[" + old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old="
-								+ old.toString());
-				LOGGER.error("addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: "
-						+ splt.getQualifID() + "[" + splt.getClass().getName() + "] and " + old.getQualifID() + "["
-						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
+						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
+								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
+								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
+								"new=" + splt.toString() + "\n" +
+								"old=" + old.toString());
+				LOGGER.error("addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
+								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
+								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
+								"new=" + splt.toString() + "\n" +
+								"old=" + old.toString());
 				IllegalStateException exc = new IllegalStateException("DEBUG");
 				exc.printStackTrace();
 				replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
@@ -316,14 +351,17 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     		final KMyMoneyTransactionSplit splt,
     		final KMyMoneyTransactionSplitImpl impl) {
     	if ( ! mySplits.remove(splt) ) {
-    		throw new IllegalArgumentException("old object not found!");
+    		throw new IllegalArgumentException("Could not remove split from local list");
     	}
 
     	mySplits.add(impl);
     }
 
     // ---------------------------------------------------------------
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isClosed() {
     	String val = getUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED);
@@ -339,11 +377,17 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     
     // ----------------------------
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasReconciliations() {
     	return ( myRecons.size() > 0 );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<KMMAccountReconciliation> getReconciliations() {
     	return myRecons;
@@ -351,7 +395,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 
     public void addReconciliation(final KMMAccountReconciliation rcon) {
     	if ( rcon == null ) {
-    		throw new IllegalArgumentException("null reconciliation given");
+    		throw new IllegalArgumentException("argument <rcon> is null");
     	}
     	
     	// ::TODO check for date -- no duplicates allowed
@@ -360,20 +404,19 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 
     // ---------------------------------------------------------------
 
-	/**
-	 * @param name the name of the user-defined attribute
-	 * @return the value or null if not set
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
-		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
 			return null;
 		}
 		
@@ -382,11 +425,10 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	}
 
     /**
-     * @return all keys that can be used with
-     *         ${@link #getUserDefinedAttribute(String)}}.
+     * {@inheritDoc}
      */
 	public List<String> getUserDefinedAttributeKeys() {
-		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
 			return null;
 		}
 		
@@ -508,5 +550,5 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	
     	return false;
 	}
-    
+
 }
