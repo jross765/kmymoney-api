@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
@@ -120,7 +121,12 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     		return null;
     	}
     }
-	
+
+    // -----------------------------------------------------------------
+
+    @SuppressWarnings("exports")
+    SPLIT getJwsdpPeer();
+
     // ---------------------------------------------------------------
     
     /**
@@ -151,13 +157,32 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
 
     /**
      * @return the account we transfer from/to.
-     * 
+     * <br/>
+     * This may be null if an account-ID is specified in
+     * the KMyMoney file that does not belong to an account.
+
      * @see #getAccountID()
      */
     KMyMoneyAccount getAccount();
 
     // ----------------------------
-    
+
+    /**
+     * @return the ID of the transaction this is a split of.
+     * 
+     * @see #getTransaction()
+     */
+    KMMTrxID getTransactionID();
+
+    /**
+     * @return the transaction this is a split of.
+     * 
+     * @see #getTransactionID()
+     */
+    KMyMoneyTransaction getTransaction();
+
+    // ----------------------------
+
     String getNumber();
 
     // ----------------------------
@@ -199,27 +224,12 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     // ----------------------------
 
     /**
-     * @return the ID of the transaction this is a split of.
-     * 
-     * @see #getTransaction()
-     */
-    KMMTrxID getTransactionID();
-
-    /**
-     * @return the transaction this is a split of.
-     * 
-     * @see #getTransactionID()
-     */
-    KMyMoneyTransaction getTransaction();
-
-    // ----------------------------
-
-    /**
-     * Get the type of association this split has with
-     * an invoice's lot.
+     * Get the split action.
      * @return null, or one of the ACTION_xyz values defined
      */
     Action getAction();
+
+    // ----------------------------
 
     ReconState getReconState();
     
@@ -232,6 +242,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * The value is in the currency of the transaction!
      * @return the value-transfer this represents
      * 
+     * @see #getValueRat()
      * @see #getValueFormatted()
      * @see #getValueFormatted(Locale)
      */
@@ -244,6 +255,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * @return the value-transfer this represents
      * 
      * @see #getValue()
+     * @see #getValueRat()
      * @see #getValueFormatted(Locale)
      */
     String getValueFormatted();
@@ -254,6 +266,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * @return the value-transfer this represents
      * 
      * @see #getValue()
+     * @see #getValueRat()
      * @see #getValueFormatted()
      */
     String getValueFormatted(Locale lcl);
@@ -261,57 +274,31 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     // ----------------------------
 
     /**
-     * @return the balance of the account (in the account's currency)
-     *         up to this split.
-     *         
-     * @see #getAccountBalanceFormatted()
-     * @see #getAccountBalanceFormatted(Locale)
-     */
-    FixedPointNumber getAccountBalance();
-
-    /**
-     * @return the balance of the account (in the account's currency)
-     *         up to this split.
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException
-     *  
-     * @see #getAccountBalance()
-     * @see #getAccountBalanceFormatted(Locale)
-     */
-    String getAccountBalanceFormatted() throws InvalidQualifSecCurrIDException;
-
-    /**
-     * @param lcl 
-     * @return 
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException 
-     * @see KMyMoneyAccount#getBalanceFormatted()
-     * 
-     * @see #getAccountBalance()
-     * @see #getAccountBalanceFormatted()
-     */
-    String getAccountBalanceFormatted(Locale lcl) throws InvalidQualifSecCurrIDException;
-
-    // ----------------------------
-
-    /**
      * The quantity is in the currency of the account!
      * @return the number of items added to the account
      * 
+     * @see #getSharesRat()
      * @see #getSharesFormatted()
      * @see #getSharesFormatted(Locale)
      */
     FixedPointNumber getShares();
 
+    /**
+     * The quantity is in the currency of the account!
+     * @return the number of items added to the account
+     * 
+     * @see #getShares()
+     * @see #getSharesFormatted()
+     * @see #getSharesFormatted(Locale)
+     */
     BigFraction      getSharesRat();
 
     /**
      * The quantity is in the currency of the account!
      * @return the number of items added to the account
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException
      *  
      * @see #getShares()
+     * @see #getSharesRat()
      * @see #getSharesFormatted(Locale)
      */
     String getSharesFormatted() throws InvalidQualifSecCurrIDException;
@@ -320,10 +307,9 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * The quantity is in the currency of the account!
      * @param lcl the locale to use
      * @return the number of items added to the account
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException
      * 
      * @see #getShares()
+     * @see #getSharesRat()
      * @see #getSharesFormatted()
      */
     String getSharesFormatted(Locale lcl) throws InvalidQualifSecCurrIDException;
@@ -363,9 +349,10 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     // ----------------------------
 
     /**
-     * @return the user-defined description for this object
+     * @return the user-defined memo for this split
      *         (may contain multiple lines and non-ascii-characters)
      */
     String getMemo();
-    
+
 }
+

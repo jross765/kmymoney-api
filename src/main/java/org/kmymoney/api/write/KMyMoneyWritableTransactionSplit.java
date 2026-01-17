@@ -12,9 +12,7 @@ import xyz.schnorxoborx.base.beanbase.IllegalTransactionSplitActionException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
- * Transaction-Split that can be modified<br/>
- * For propertyChange we support the properties "value", "shares"
- * "description",  "splitAction" and "accountID".
+ * Transaction-Split that can be modified.
  * 
  * @see KMyMoneyTransactionSplit
  */
@@ -34,12 +32,13 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 
 	/**
 	 * Does not convert the quantity to another currency if the new account has
-	 * another one then the old!
+	 * another one than the old one!
 	 * 
 	 * @param acctID the new account to give this money to/take it from.
 	 * 
 	 * @see #getAccount()
 	 * @see #getAccountID()
+	 * @see #setAccount(KMyMoneyAccount)
 	 */
 	void setAccountID(KMMComplAcctID acctID);
 
@@ -51,6 +50,7 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * 
 	 * @see #getAccount()
 	 * @see #getAccountID()
+	 * @see #setAccountID(KMMComplAcctID)
 	 */
 	void setAccount(KMyMoneyAccount acct);
 
@@ -61,9 +61,21 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @param n the new quantity (in the currency of the account)
 	 * 
 	 * @see #getShares()
+	 * @see #setShares(BigFraction)
+	 * @see #setShares(String)
 	 */
 	void setShares(FixedPointNumber n);
 
+	/**
+	 * If the currencies of transaction and account match, this also does
+	 * ${@link #setShares(String)}.
+	 * 
+	 * @param n the new quantity (in the currency of the account)
+	 * 
+	 * @see #getShares()
+	 * @see #setShares(FixedPointNumber)
+	 * @see #setShares(String)
+	 */
 	void setShares(BigFraction n);
 
 	/**
@@ -73,6 +85,8 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @param n the new quantity (in the currency of the account)
 	 * 
 	 * @see #getShares()
+	 * @see #setShares(BigFraction)
+	 * @see #setShares(FixedPointNumber)
 	 */
 	void setShares(String n);
 
@@ -95,6 +109,7 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @param n the new value (in the currency of the transaction)
 	 * 
 	 * @see #getValue()
+	 * @see #setValue(FixedPointNumber)
 	 */
 	void setValue(String n);
 

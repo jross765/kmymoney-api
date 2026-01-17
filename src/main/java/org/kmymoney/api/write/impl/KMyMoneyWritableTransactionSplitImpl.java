@@ -10,6 +10,7 @@ import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTag;
+import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
@@ -57,6 +58,11 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		super(jwsdpPeer, trx, 
 			  addSpltToAcct, addSpltToPye, addSpltToTags);
 	}
+
+    public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplit splt) {
+    	super(splt.getJwsdpPeer(), splt.getTransaction(), 
+    		  true, true, true);
+    }
 
     /**
 	 * create a new split and and add it to the given transaction.
@@ -218,9 +224,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		// trx.getJwsdpPeer().getSPLITS().getSPLIT().add(jwsdpSplt);
 		file.setModified(true);
     
-        LOGGER.debug("createTransactionSplit_int: Created new transaction split (core): " + jwsdpSplt.getId());
+        	LOGGER.debug("createTransactionSplit_int: Created new transaction split (core): " + jwsdpSplt.getId());
 		
-        return jwsdpSplt;
+        	return jwsdpSplt;
 	}
 
 	// ---------------------------------------------------------------
@@ -406,20 +412,20 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 * @see KMyMoneyWritableTransactionSplit#setValue(FixedPointNumber)
 	 */
 	@Override
-	public void setValue(final String n) {
-		if ( n == null ) {
-			throw new IllegalArgumentException("argument <n> is null");
+	public void setValue(final String valStr) {
+		if ( valStr == null ) {
+			throw new IllegalArgumentException("argument <valStr> is null");
 		}
 		
-		if ( n.isEmpty() ) {
-			throw new IllegalArgumentException("argument <n> is empty");
+		if ( valStr.trim().length() == 0 ) {
+			throw new IllegalArgumentException("argument <valStr> is empty");
 		}
 
 		try {
-			this.setValue(new FixedPointNumber(n.toLowerCase().replaceAll("&euro;", "").replaceAll("&pound;", "")));
+			this.setValue(new FixedPointNumber(valStr.toLowerCase().replaceAll("&euro;", "").replaceAll("&pound;", "")));
 		} catch (NumberFormatException e) {
 			try {
-				Number parsed = this.getValueCurrencyFormat().parse(n);
+				Number parsed = this.getValueCurrencyFormat().parse(valStr);
 				this.setValue(new FixedPointNumber(parsed.toString()));
 			} catch (NumberFormatException e1) {
 				throw e;
@@ -619,9 +625,6 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
     // ---------------------------------------------------------------
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
 		StringBuffer buffer = new StringBuffer();
@@ -629,10 +632,6 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		buffer.append("qualif-id=");
 		buffer.append(getQualifID());
-
-		// Part of qualif-id:
-		// buffer.append(" transaction-id=");
-		// buffer.append(getTransaction().getID());
 
 		buffer.append(", action=");
 		try {

@@ -337,32 +337,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     // ---------------------------------------------------------------
 
     /**
-     * @see KMyMoneyTransactionSplit#getAccountBalance()
-     */
-    @Override
-    public FixedPointNumber getAccountBalance() {
-    	return getAccount().getBalance(this);
-    }
-
-    /**
-     * @see KMyMoneyTransactionSplit#getAccountBalanceFormatted()
-     */
-    @Override
-    public String getAccountBalanceFormatted() {
-    	return getAccountBalanceFormatted(Locale.getDefault());
-    }
-
-    /**
-     * @see KMyMoneyTransactionSplit#getAccountBalanceFormatted(java.util.Locale)
-     */
-    @Override
-    public String getAccountBalanceFormatted(final Locale lcl) {
-    	return getAccount().getBalanceFormatted(lcl);
-    }
-
-    // ---------------------------------------------------------------
-
-    /**
      * @see KMyMoneyTransactionSplit#getShares()
      */
     @Override
