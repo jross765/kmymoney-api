@@ -39,10 +39,9 @@ import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xyz.schnorxoborx.base.beanbase.TransactionSplitNotFoundException;
-
 /**
- * JWSDP-Implmentation of a Transaction that can be changed.
+ * Extension of KMyMoneyTransactionImpl to allow read-write access instead of
+ * read-only access.
  */
 public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl 
                                              implements KMyMoneyWritableTransaction 
@@ -74,7 +73,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		// file.addTransaction(this); NO! Redundant
 	}
 
-	public KMyMoneyWritableTransactionImpl(final KMyMoneyTransactionImpl trx) {
+	public KMyMoneyWritableTransactionImpl(final KMyMoneyTransaction trx) {
 		super(trx.getJwsdpPeer(), trx.getKMyMoneyFile());
 
 		// ::TODO / ::CHECK
@@ -509,8 +508,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			                             name, value);
 	}
 
-	// ---------------------------------------------------------------
-
+    // ---------------------------------------------------------------
+    
     @Override
     public String toString() {
 	StringBuffer buffer = new StringBuffer();
