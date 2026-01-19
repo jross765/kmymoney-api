@@ -90,13 +90,15 @@ public class FileTransactionManager {
 				} else {
 					spltList = ((KMyMoneyTransactionImpl) trx).getSplits(true, true, true);
 				}
-				for ( KMyMoneyTransactionSplit splt : spltList ) {
-					trxSpltMap.put(splt.getQualifID(), splt);
+				if ( spltList != null ) { // shouldn't happen, just in case...
+					for ( KMyMoneyTransactionSplit splt : spltList ) {
+						trxSpltMap.put(splt.getQualifID(), splt);
+					}
 				}
 			} catch (RuntimeException e) {
 				LOGGER.error("init2_woProgBar: [RuntimeException] Problem in " + getClass().getName() + ".init2: "
-						+ "ignoring illegal Transaction entry with id=" + trx.getID(), e);
-//		System.err.println("init2: ignoring illegal Transaction entry with id: " + trx.getID());
+						+ "ignoring illegal Transaction entry with ID=" + trx.getID(), e);
+//		System.err.println("init2_woProgBar: ignoring illegal Transaction entry with ID: " + trx.getID());
 //		System.err.println("  " + e.getMessage());
 			}
 		} // for trx
@@ -119,13 +121,15 @@ public class FileTransactionManager {
 				} else {
 					spltList = ((KMyMoneyTransactionImpl) trx).getSplits(true, true, true);
 				}
-				for ( KMyMoneyTransactionSplit splt : spltList ) {
-					trxSpltMap.put(splt.getQualifID(), splt);
+				if ( spltList != null ) { // shouldn't happen, just in case...
+					for ( KMyMoneyTransactionSplit splt : spltList ) {
+						trxSpltMap.put(splt.getQualifID(), splt);
+					}
 				}
 			} catch (RuntimeException e) {
 				LOGGER.error("init2_wProgBar: [RuntimeException] Problem in " + getClass().getName() + ".init2: "
-						+ "ignoring illegal Transaction entry with id=" + trx.getID(), e);
-//		System.err.println("init2: ignoring illegal Transaction entry with id: " + trx.getID());
+						+ "ignoring illegal Transaction entry with ID=" + trx.getID(), e);
+//		System.err.println("init2_wProgBar: ignoring illegal Transaction entry with ID: " + trx.getID());
 //		System.err.println("  " + e.getMessage());
 			}
 		} // for trx
@@ -176,26 +180,36 @@ public class FileTransactionManager {
 		return retval;
 	}
 
-	public List<? extends KMyMoneyTransaction> getTransactions() {
-		if ( trxMap == null ) {
+	// ---------------------------------------------------------------
+
+	public KMyMoneyTransactionSplit getTransactionSplitByID(final KMMQualifSpltID spltID) {
+		if ( spltID == null ) {
+			throw new IllegalArgumentException("argument <spltID> is null");
+		}
+
+		if ( ! spltID.isSet() ) {
+			throw new IllegalArgumentException("argument <spltID> is not set");
+		}
+
+		if ( trxSpltMap == null ) {
 			throw new IllegalStateException("no root-element loaded");
 		}
-		
-		ArrayList<KMyMoneyTransaction> temp = new ArrayList<KMyMoneyTransaction>(trxMap.values());
-		Collections.sort(temp);
-		
-		return Collections.unmodifiableList(temp);
-	}
 
-	// ----------------------------
+		KMyMoneyTransactionSplit retval = trxSpltMap.get(spltID);
+		if ( retval == null ) {
+			LOGGER.warn("getTransactionSplitByID: No Transaction-Split with ID '" + spltID + "'. We know " + trxSpltMap.size() + " transaction splits.");
+		}
+
+		return retval;
+	}
 
 	public List<KMyMoneyTransactionSplit> getTransactionSplitsBySecID(final KMMSecID secID) {
 		if ( secID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 		
 		if ( ! secID.isSet() ) {
-			throw new IllegalArgumentException("unset security ID given");
+			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 		
 		KMMQualifSecID qualifID = new KMMQualifSecID(secID);
@@ -204,11 +218,11 @@ public class FileTransactionManager {
 
 	public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecID(final KMMQualifSecID qualifID) {
 		if ( qualifID == null ) {
-			throw new IllegalArgumentException("null quailf. security ID given");
+			throw new IllegalArgumentException("argument <qualifID> is null");
 		}
 		
 		if ( ! qualifID.isSet() ) {
-			throw new IllegalArgumentException("unset quailf. security ID given");
+			throw new IllegalArgumentException("argument <qualifID> is not set");
 		}
 		
 		return getTransactionSplitsByQualifSecCurrID(qualifID);
@@ -225,11 +239,11 @@ public class FileTransactionManager {
 
 	public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifCurrID(final KMMQualifCurrID qualifID) {
 		if ( qualifID == null ) {
-			throw new IllegalArgumentException("null qualif. currency ID given");
+			throw new IllegalArgumentException("argument <qualifID> is null");
 		}
 		
 		if ( ! qualifID.isSet() ) {
-			throw new IllegalArgumentException("unset qualif. currency ID given");
+			throw new IllegalArgumentException("argument <qualifID> is not set");
 		}
 		
 		return getTransactionSplitsByQualifSecCurrID(qualifID);
@@ -237,11 +251,11 @@ public class FileTransactionManager {
 
 	public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecCurrID(final KMMQualifSecCurrID qualifID) {
 		if ( qualifID == null ) {
-			throw new IllegalArgumentException("null qualif. security/currendcy ID given");
+			throw new IllegalArgumentException("argument <qualifID> is null");
 		}
 		
 		if ( ! qualifID.isSet() ) {
-			throw new IllegalArgumentException("unset qualif. security/currendcy ID given");
+			throw new IllegalArgumentException("argument <qualifID> is not set");
 		}
 		
 		List<KMyMoneyTransactionSplit> result = new ArrayList<KMyMoneyTransactionSplit>();
@@ -258,25 +272,15 @@ public class FileTransactionManager {
 
 	// ---------------------------------------------------------------
 
-	public KMyMoneyTransactionSplit getTransactionSplitByID(final KMMQualifSpltID spltID) {
-		if ( spltID == null ) {
-			throw new IllegalArgumentException("null split ID given");
-		}
-
-		if ( ! spltID.isSet() ) {
-			throw new IllegalArgumentException("unset split ID given");
-		}
-
-		if ( trxSpltMap == null ) {
+	public List<? extends KMyMoneyTransaction> getTransactions() {
+		if ( trxMap == null ) {
 			throw new IllegalStateException("no root-element loaded");
 		}
 
-		KMyMoneyTransactionSplit retval = trxSpltMap.get(spltID);
-		if ( retval == null ) {
-			LOGGER.warn("getTransactionSplitByID: No Transaction-Split with ID '" + spltID + "'. We know " + trxSpltMap.size() + " transaction splits.");
-		}
-
-		return retval;
+		ArrayList<KMyMoneyTransaction> temp = new ArrayList<KMyMoneyTransaction>(trxMap.values());
+		Collections.sort(temp);
+		
+		return Collections.unmodifiableList(temp);
 	}
 
 	public List<KMyMoneyTransactionImpl> getTransactions_readAfresh() {
@@ -288,9 +292,9 @@ public class FileTransactionManager {
 				result.add(trx);
 			} catch (RuntimeException e) {
 				LOGGER.error("getTransactions_readAfresh: [RuntimeException] Problem in " + getClass().getName()
-						+ ".getTransactions_readAfresh: " + "ignoring illegal Transaction entry with id="
+						+ ".getTransactions_readAfresh: " + "ignoring illegal Transaction entry with ID="
 						+ jwsdpTrx.getId(), e);
-//		System.err.println("getTransactions_readAfresh: ignoring illegal Transaction entry with id: " + jwsdpTrx.getTrnID().getValue());
+//		System.err.println("getTransactions_readAfresh: ignoring illegal Transaction entry with ID: " + jwsdpTrx.getTrnID().getValue());
 //		System.err.println("  " + e.getMessage());
 			}
 		}
@@ -334,9 +338,9 @@ public class FileTransactionManager {
 					result.add(splt);
 				} catch (RuntimeException e) {
 					LOGGER.error("getTransactionSplits_readAfresh(1): [RuntimeException] Problem in "
-							+ "ignoring illegal Transaction Split entry with id="
+							+ "ignoring illegal Transaction Split entry with ID="
 							+ trx.getID() + ":" + jwsdpTrxSplt.getId(), e);
-//			System.err.println("getTransactionSplits_readAfresh(1): ignoring illegal Transaction Split entry with id: " + jwsdpTrxSplt.getSplitID().getValue());
+//			System.err.println("getTransactionSplits_readAfresh(1): ignoring illegal Transaction Split entry with ID: " + jwsdpTrxSplt.getSplitID().getValue());
 //			System.err.println("  " + e.getMessage());
 				}
 			} // for jwsdpTrxSplt
@@ -365,9 +369,9 @@ public class FileTransactionManager {
 						result.add(splt);
 					} catch (RuntimeException e) {
 						LOGGER.error("getTransactionSplits_readAfresh(2): [RuntimeException] Problem in "
-								+ "ignoring illegal Transaction Split entry with id="
+								+ "ignoring illegal Transaction Split entry with ID="
 								+ trx.getID() + ":" + jwsdpTrxSplt.getId(), e);
-//			System.err.println("getTransactionSplits_readAfresh(2): ignoring illegal Transaction Split entry with id: " + jwsdpTrxSplt.getSplitID().getValue());
+//			System.err.println("getTransactionSplits_readAfresh(2): ignoring illegal Transaction Split entry with ID: " + jwsdpTrxSplt.getSplitID().getValue());
 //			System.err.println("  " + e.getMessage());
 					}
 				} // for jwsdpTrxSplt

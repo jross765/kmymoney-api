@@ -53,16 +53,18 @@ public class FileAccountManager {
 				acctMap.put(acct.getID(), acct);
 			} catch (RuntimeException e) {
 				LOGGER.error("init: [RuntimeException] Problem in " + getClass().getName() + ".init: "
-						+ "ignoring illegal Account-Entry with id=" + jwsdpAcct.getId(), e);
+						+ "ignoring illegal Account-Entry with ID=" + jwsdpAcct.getId(), e);
 			}
 		} // for
 
 		LOGGER.debug("init: No. of entries in account map: " + acctMap.size());
 	}
 
+	// ----------------------------
+
 	/**
 	 * @param jwsdpAcct the JWSDP-peer (parsed xml-element) to fill our object with
-	 * @return the new KMyMoneyAccount to wrap the given jaxb-object.
+	 * @return the new KMyMoneyAccount to wrap the given JAXB-object.
 	 */
 	protected KMyMoneyAccountImpl createAccount(final ACCOUNT jwsdpAcct) {
 		KMyMoneyAccountImpl acct = new KMyMoneyAccountImpl(jwsdpAcct, kmmFile);
@@ -101,6 +103,7 @@ public class FileAccountManager {
 		KMyMoneyAccount retval = acctMap.get(acctID);
 		if ( retval == null ) {
 			LOGGER.error("getAccountByID: No Account with ID '" + acctID + "'. We know " + acctMap.size() + " accounts.");
+//			System.err.println("getAccountByID: No Account with ID '" + acctID + "'. We know " + acctMap.size() + " accounts.");
 		}
 
 		return retval;
@@ -120,11 +123,11 @@ public class FileAccountManager {
 
 	public List<KMyMoneyAccount> getAccountsByParentID(final KMMComplAcctID acctID) {
 		if ( acctID == null ) {
-			throw new IllegalArgumentException("null account ID given");
+			throw new IllegalArgumentException("argument <acctID> is null");
 		}
 
 		if ( ! acctID.isSet() ) {
-			throw new IllegalArgumentException("unset account ID given");
+			throw new IllegalArgumentException("argument <acctID> is not set");
 		}
 
 		if ( acctMap == null ) {
@@ -147,7 +150,7 @@ public class FileAccountManager {
 				}
 			}
 		}
-		
+
 		retval.sort(Comparator.naturalOrder()); 
 
 		return retval;
@@ -277,7 +280,7 @@ public class FileAccountManager {
 
 	/*
 	 * First try to fetch the account by id, then fall back to traversing all
-	 * accounts to get if by it's name.
+	 * accounts to get if by its name.
 	 */
 	public KMyMoneyAccount getAccountByIDorName(final KMMComplAcctID acctID, final String name)
 			throws NoEntryFoundException, TooManyEntriesFoundException {
@@ -307,7 +310,7 @@ public class FileAccountManager {
 
 	/*
 	 * First try to fetch the account by id, then fall back to traversing all
-	 * accounts to get if by it's name.
+	 * accounts to get if by its name.
 	 */
 	public KMyMoneyAccount getAccountByIDorName(final KMMAcctID acctID, final String name)
 			throws NoEntryFoundException, TooManyEntriesFoundException {
@@ -332,7 +335,7 @@ public class FileAccountManager {
 	
 	/*
 	 * First try to fetch the account by id, then fall back to traversing all
-	 * accounts to get if by it's name.
+	 * accounts to get if by its name.
 	 */
 	public KMyMoneyAccount getAccountByIDorNameEx(final KMMComplAcctID acctID, final String name)
 			throws NoEntryFoundException, TooManyEntriesFoundException {
