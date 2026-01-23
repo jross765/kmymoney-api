@@ -167,6 +167,10 @@ public interface KMyMoneyWritableAccount extends KMyMoneyAccount,
 //    KMyMoneyWritableAccountLot createWritableTransactionSplit();
 
     // ---------------------------------------------------------------
+    
+    void setClosed();
+    
+    void unsetClosed();
 
 	/**
 	 * Remove this account from the system.<br/>

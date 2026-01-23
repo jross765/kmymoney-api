@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.ObjectFactory;
@@ -915,6 +916,30 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		HasWritableUserDefinedAttributesImpl
 			.setUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
 			                             name, value);
+	}
+
+	// ---------------------------------------------------------------
+	
+	@Override
+	public void setClosed()
+	{
+		if ( isClosed() )
+			return;
+		
+		if ( getUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED) == null ) {
+			addUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED, "yes"); // ::MAGIC
+		} else {
+			setUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED, "yes"); // ::MAGIC
+		}
+	}
+
+	@Override
+	public void unsetClosed()
+	{
+		if ( ! isClosed() )
+			return;
+		
+		removeUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED);
 	}
 
 	// ---------------------------------------------------------------
