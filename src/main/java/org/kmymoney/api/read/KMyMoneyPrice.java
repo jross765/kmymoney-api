@@ -2,6 +2,7 @@ package org.kmymoney.api.read;
 
 import java.time.LocalDate;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.hlp.KMyMoneyPricePairCore;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
@@ -122,6 +123,8 @@ public interface KMyMoneyPrice extends Comparable<KMyMoneyPrice>,
      * @see #getValueFormatted()
      */
     FixedPointNumber getValue();
+    
+    BigFraction      getValueRat();
     
     /**
      * @return Returns the price value (the actual "price" in the narrower sense)

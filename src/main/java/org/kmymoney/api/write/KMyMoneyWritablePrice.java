@@ -3,6 +3,7 @@ package org.kmymoney.api.write;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
@@ -74,5 +75,7 @@ public interface KMyMoneyWritablePrice extends KMyMoneyPrice,
      * @see #getValue()
      */
     void setValue(FixedPointNumber val);
+
+    void setValue(BigFraction val);
 
 }

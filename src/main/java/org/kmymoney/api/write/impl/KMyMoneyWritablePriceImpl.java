@@ -12,6 +12,7 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.basetypes.complex.KMMPriceID; // <-- sic, API.basetypes, not BASE.basetypes
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.PRICE;
@@ -365,7 +366,7 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     @Override
     public void setValue(FixedPointNumber val) {
 		if ( val == null )
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <val> is null");
 
 		FixedPointNumber oldVal = getValue();
 
@@ -377,6 +378,17 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 			propertyChangeSupport.firePropertyChange("price", oldVal, val);
 		}
     }
+
+	@Override
+	// ::TODO
+	public void setValue(final BigFraction val) {
+		if ( val == null ) {
+			throw new IllegalArgumentException("argument <val> is null");
+		}
+
+		FixedPointNumber temp = FixedPointNumber.of(val);
+		setValue(temp);
+	}
 
     // ---------------------------------------------------------------
     

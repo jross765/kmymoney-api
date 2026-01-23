@@ -7,6 +7,7 @@ import java.util.Currency;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.PRICE;
 import org.kmymoney.api.read.KMyMoneyCurrency;
@@ -238,6 +239,14 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
 			return null;
 
 		return new FixedPointNumber(jwsdpPeer.getPrice());
+    }
+
+    @Override
+    public BigFraction getValueRat() {
+		if ( jwsdpPeer.getPrice() == null )
+			return null;
+
+		return BigFraction.parse(jwsdpPeer.getPrice());
     }
 
     @Override
