@@ -104,7 +104,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     // ----------------------------
 
     private KMYMONEYFILE rootElement;
-    private KMyMoneyObjectImpl myKMyMoneyObject;
+    private KMyMoneyObjectImpl myKMyMoneyObject; // ::TODO ::CHECK: really needed?
 
     // ----------------------------
 
@@ -132,7 +132,6 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * @param pFile the file to load and initialize from
      * @throws IOException on low level reading-errors (FileNotFoundException if not
      *                     found)
-     * @see #loadFile(File)
      */
     public KMyMoneyFileImpl(final File pFile) throws IOException {
     	super();
@@ -148,7 +147,6 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * @param is the input stream to load and initialize from
      * @throws IOException on low level reading-errors (FileNotFoundException if not
      *                     found)
-     * @see #loadInputStream(InputStream)
      */
     public KMyMoneyFileImpl(final InputStream is) throws IOException {
     	super();
@@ -159,7 +157,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	super();
     	loadInputStream(is, withProgBar);
     }
-
+    
     // ---------------------------------------------------------------
 
     /**
@@ -776,7 +774,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 	}
 
 	@Override
-	public KMyMoneyTag getTagByNameUniq(String expr) 
+	public KMyMoneyTag getTagByNameUniq(final String expr) 
 			throws NoEntryFoundException, TooManyEntriesFoundException {
     	return tagMgr.getTagsByNameUniq(expr);
 	}
@@ -973,21 +971,28 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     /**
      * Set the new root-element and load all accounts, transactions,... from it.
      *
-     * @param pRootElement the new root-element
-     * @throws InvalidQualifSecCurrTypeException 
-     * @throws InvalidQualifSecCurrIDException 
+     * @param rootElt the new root-element
      */
-    protected void setRootElement(final KMYMONEYFILE pRootElement, boolean withProgBar) {
-    	if (pRootElement == null) {
-    		throw new IllegalArgumentException("argument <pRootElement> is null");
+    protected void setRootElement(final KMYMONEYFILE rootElt, boolean withProgBar) {
+    	if ( rootElt == null ) {
+    		throw new IllegalArgumentException("argument <rootElt> is null");
     	}
-    	rootElement = pRootElement;
 
-    	// fill prices
-    	prcMgr  = new FilePriceManager(this);
+    	rootElement = rootElt;
+
+    	loadEntityMgrs(rootElt, withProgBar);
+    }
+
+	protected void loadEntityMgrs(final KMYMONEYFILE pRootElement, boolean withProgBar) {
+		LOGGER.debug("loadEntityMgrs: called");
+		
+		// fill prices
+		// Caution: the price manager has to be instantiated
+		// *before* loading the price database
+    	prcMgr = new FilePriceManager(this);
     	loadPriceDatabase(pRootElement, withProgBar);
 
-    	// fill maps
+    	// Init helper entity managers / fill maps
     	// CAUTION: The order matters
     	acctMgr = new FileAccountManager(this);
     	instMgr = new FileInstitutionManager(this);
@@ -996,7 +1001,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	trxMgr  = new FileTransactionManager(this, withProgBar);
     	secMgr  = new FileSecurityManager(this);
     	currMgr = new FileCurrencyManager(this);
-    }
+	}
 
     // ---------------------------------------------------------------
 
@@ -1005,7 +1010,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * @throws InvalidQualifSecCurrTypeException 
      * @throws InvalidQualifSecCurrIDException 
      */
-    private void loadPriceDatabase(final KMYMONEYFILE pRootElement, boolean withProgBar) {
+    protected void loadPriceDatabase(final KMYMONEYFILE pRootElement, boolean withProgBar) {
     	boolean noPriceDB = true;
 	
     	PRICES priceDB = pRootElement.getPRICES();
@@ -1023,11 +1028,11 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 		}
     }
 
-    private void loadPriceDatabaseCore(PRICES priceDB) {
+    private void loadPriceDatabaseCore(final PRICES priceDB) {
     	loadPriceDatabaseCore_woProgBar(priceDB);
     }
     
-    private void loadPriceDatabaseCore_woProgBar(PRICES priceDB) {
+    private void loadPriceDatabaseCore_woProgBar(final PRICES priceDB) {
 //  	getCurrencyTable().clear();
 //  	getCurrencyTable().setConversionFactor(KMMSecCurrID.Type.CURRENCY, 
 //  		                               getDefaultCurrencyID(), 
@@ -1072,7 +1077,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 		} // for prcPr
     }
 
-    private void loadPriceDatabaseCore_wProgBar(PRICES priceDB) {
+    private void loadPriceDatabaseCore_wProgBar(final PRICES priceDB) {
 //  	getCurrencyTable().clear();
 //  	getCurrencyTable().setConversionFactor(KMMSecCurrID.Type.CURRENCY, 
 //  		                               getDefaultCurrencyID(), 
@@ -1111,10 +1116,11 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			if ( factor != null ) {
 				getCurrencyTable().setConversionFactor(nameSpace, fromSecCurr, factor);
 			} else {
-				LOGGER.warn("loadPriceDatabaseCore: The KMyMoney file defines a factor for a security '" 
-						+ fromSecCurr + "' but has no security for it");
+				LOGGER.warn("loadPriceDatabaseCore: The KMyMoney file defines a factor for '" 
+						+ nameSpace + ":" + fromSecCurr + 
+						"' but has no security for it");
 			}
-		} // for prcPr
+		} // for jwsdpPrcPr
     }
 
     // ---------------------------------------------------------------

@@ -88,6 +88,8 @@ import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -104,6 +106,8 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
                                       implements KMyMoneyWritableFile,
                                                  IDManager
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyWritableFileImpl.class);
+
 	// ::MAGIC
 	private static final int HEX = 16;
 	private static final String CODEPAGE = "UTF-8";
@@ -119,75 +123,36 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 	/**
 	 * @param file the file to load
-	 * @throws IOException                   on bsic io-problems such as a
+	 * @throws IOException                   on basic io-problems such as a
 	 *                                       FileNotFoundException
 	 */
-	public KMyMoneyWritableFileImpl(final File file)
-			throws IOException {
+	public KMyMoneyWritableFileImpl(final File file) throws IOException {
 		super(file);
 		setModified(false);
-
-    	// CAUTION: The order matters
-		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
-		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
-		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
-		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
-		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this);
-		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
-		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
-		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
 	}
 
-	public KMyMoneyWritableFileImpl(final File file, boolean withProgBar)
-			throws IOException {
+	public KMyMoneyWritableFileImpl(final File file, boolean withProgBar) throws IOException {
 		super(file, withProgBar);
 		setModified(false);
-
-    	// CAUTION: The order matters
-		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
-		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
-		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
-		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
-		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this, withProgBar);
-		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
-		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
-		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
 	}
 
-	public KMyMoneyWritableFileImpl(final InputStream is)
-			throws IOException {
+	public KMyMoneyWritableFileImpl(final InputStream is) throws IOException {
 		super(is);
-
-    	// CAUTION: The order matters
-		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
-		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
-		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
-		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
-		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this);
-		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
-		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
-		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
+		setModified(false);
 	}
 
-	public KMyMoneyWritableFileImpl(final InputStream is, boolean withProgBar)
-			throws IOException {
+	public KMyMoneyWritableFileImpl(final InputStream is, boolean withProgBar) throws IOException {
 		super(is, withProgBar);
-
-    	// CAUTION: The order matters
-		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
-		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
-		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
-		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
-		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this, withProgBar);
-		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
-		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
-		prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
+		setModified(false);
 	}
 
 	// ---------------------------------------------------------------
 	// ::TODO Description
 	// ---------------------------------------------------------------
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public KMyMoneyWritableFile getWritableKMyMoneyFile() {
 		return this;
@@ -240,7 +205,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void writeFile(File file, CompressMode compMode) throws IOException {
+	public void writeFile(final File file, CompressMode compMode) throws IOException {
 		if ( file == null ) {
 			throw new IllegalArgumentException("argument <file> is null");
 		}
@@ -339,25 +304,30 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			.addTransaction(trx);
 	}
 
-	/**
-	 * @see KMyMoneyFileImpl#setRootElement(GncV2)
-	 */
-	@SuppressWarnings("exports")
+	// ---------------------------------------------------------------
+
+	// CAUTION: In this method, the order of the instantiation of the classes matters,
+	// and it's even more complicated than in the ro-variant of the method
+	// (the one that is overloaded here).
 	@Override
-	public void setRootElement(final KMYMONEYFILE rootElement, boolean withProgBar) {
-		super.setRootElement(rootElement, withProgBar);
+	protected void loadEntityMgrs(final KMYMONEYFILE pRootElement, boolean withProgBar) {
+		LOGGER.debug("loadEntityMgrs: called");
+		
+    	// fill prices
+    	prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
+    	loadPriceDatabase(pRootElement, withProgBar);
+
+    	// fill maps
+    	// CAUTION: The order matters
+		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
+		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
+		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
+		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
+		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this, withProgBar);
+		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
+		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
 	}
 
-	/**
-	 * @return the underlying JAXB-element
-	 * @see KMyMoneyWritableFile#getRootElement()
-	 */
-	@SuppressWarnings("exports")
-	@Override
-	public KMYMONEYFILE getRootElement() {
-		return super.getRootElement();
-	}
-	
 	// ---------------------------------------------------------------
 
 	protected INSTITUTION createInstitutionType() {
@@ -558,19 +528,6 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	}
 
 	// ----------------------------
-
-	/**
-	 * @see KMyMoneyWritableFile#createWritableAccount(Type, KMMQualifSecCurrID, KMMComplAcctID, String)
-	 */
-	@Override
-	@Deprecated
-	public KMyMoneyWritableAccount createWritableAccount() {
-		KMyMoneyWritableAccountImpl acct = new KMyMoneyWritableAccountImpl(this);
-		((org.kmymoney.api.write.impl.hlp.FileAccountManager) super.acctMgr)
-			.addAccount(acct);
-		
-		return acct;
-	}
 
 	/**
 	 * @see KMyMoneyWritableFile#createWritableAccount(Type, KMMQualifSecCurrID, KMMComplAcctID, String)
@@ -1044,18 +1001,21 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	 * @param pCmdtyName         common name of the new currency
 	 */
 	@Override
-	public void addCurrency(final String pCmdtySpace, final String pCmdtyId, final FixedPointNumber conversionFactor,
+	public void addCurrency(final String pCmdtySpace, final String pCmdtyID, final FixedPointNumber conversionFactor,
 			final int pCmdtyNameFraction, final String pCmdtyName) {
 
 		if ( conversionFactor == null ) {
 			throw new IllegalArgumentException("argument <conversionFactor> is null");
 		}
+		
 		if ( pCmdtySpace == null ) {
 			throw new IllegalArgumentException("argument <pCmdtySpace> is null");
 		}
-		if ( pCmdtyId == null ) {
-			throw new IllegalArgumentException("argument <pCmdtyId> is null");
+
+		if ( pCmdtyID == null ) {
+			throw new IllegalArgumentException("argument <pCmdtyID> is null");
 		}
+		
 		if ( pCmdtyName == null ) {
 			throw new IllegalArgumentException("argument <pCmdtyName> is null");
 		}
@@ -1071,15 +1031,15 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			newCurrency.setCmdtyName(pCmdtyName);
 			newCurrency.setVersion(Const.XML_FORMAT_VERSION);
 			getRootElement().getGncBook().getBookElements().add(newCurrency);
-			incrementCountDataFor("commodity");
+			incrementCountDataFor("security");
 		}
+		
 		// add price-quote
 		CURRENCY currency = new GncV2.GncBook.GncPricedb.Price.PriceCommodity();
 		currency.setCmdtySpace(pCmdtySpace);
-		currency.setCmdtyId(pCmdtyId);
+		currency.setCmdtyId(pCmdtyID);
 
-		CURRENCY baseCurrency = getObjectFactory()
-				.createGncV2GncBookGncPricedbPricePriceCurrency();
+		CURRENCY baseCurrency = getObjectFactory().createGncV2GncBookGncPricedbPricePriceCurrency();
 		baseCurrency.setCmdtySpace(CurrencyNameSpace.NAMESPACE_CURRENCY);
 		baseCurrency.setCmdtyId(getDefaultCurrencyID());
 
@@ -1173,7 +1133,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 		return result;
 	}
-    
+
 	@Override
 	public KMyMoneyWritableSecurity getWritableSecurityByNameUniq(final String expr) 
 			throws NoEntryFoundException, TooManyEntriesFoundException {
@@ -1426,6 +1386,8 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		setModified(true);
 	}
 
+	// ---------------------------------------------------------------
+	// ::TODO Description
 	// ---------------------------------------------------------------
 	
 	@Override
