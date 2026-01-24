@@ -117,7 +117,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 			} else if ( parentID.toString().equals("") ||
 						parentID.toString().equals("(unset)") ||
 						parentID.toString().equals("(unknown)") ) {
-				return getName();
+				return "UNKNOWN" + SEPARATOR + getName();
 			} else {
 				return getName();
 			}
@@ -330,6 +330,10 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 
 	@Override
 	public KMyMoneyTransactionSplit getLastSplitBeforeRecursive(final LocalDate date) {
+		if ( date == null ) {
+			throw new IllegalArgumentException("argument <date> is null");
+		}
+
 		KMyMoneyTransactionSplit lastSplit = null;
 	
 		for ( KMyMoneyTransactionSplit split : getTransactionSplits() ) {
@@ -363,6 +367,10 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 
 	@Override
 	public boolean hasTransactions() {
+		if ( this.getTransactionSplits() == null ) {
+			return false;
+		}
+		
 		return this.getTransactionSplits().size() > 0;
 	}
 
