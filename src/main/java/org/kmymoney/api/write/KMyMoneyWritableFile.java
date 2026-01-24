@@ -188,9 +188,6 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
 	 * @return a new account that is already added to this file as a top-level
 	 *         account
 	 */
-	@Deprecated
-	KMyMoneyWritableAccount createWritableAccount();
-
 	KMyMoneyWritableAccount createWritableAccount(KMyMoneyAccount.Type type, 
 												  KMMQualifSecCurrID secCurrID, 
 												  KMMComplAcctID parentID, 
