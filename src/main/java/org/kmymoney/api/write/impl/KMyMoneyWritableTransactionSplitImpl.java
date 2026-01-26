@@ -399,6 +399,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	}
 
 	@Override
+	// ::TODO
 	public void setValue(final BigFraction n) {
 		if ( n == null ) {
 			throw new IllegalArgumentException("argument <n> is null");
