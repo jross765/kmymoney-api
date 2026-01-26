@@ -115,6 +115,19 @@ public class AccountBalanceHelper_BF
 		return retval;
 	}
 
+	public static BigFraction getBalance(final LocalDate date, final KMMSecID secID,
+										 final SimpleAccount acct) throws KMMIDNotSetException {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secCurrID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secCurrID is not set>");
+		}
+
+		return getBalance(date, new KMMQualifSecCurrID(secID), acct);
+	}
+
 	public static BigFraction getBalance(final LocalDate date, final Currency curr,
 										 final SimpleAccount acct) {
 		BigFraction retval = getBalance(date, acct);

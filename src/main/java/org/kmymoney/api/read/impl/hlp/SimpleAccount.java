@@ -209,6 +209,18 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	public FixedPointNumber getBalance(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
+		return AccountBalanceHelper_FP.getBalance(date, secID, this);
+	}
+
+	@Override
+	public BigFraction getBalanceRat(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
+		return AccountBalanceHelper_BF.getBalance(date, secID, this);
+	}
+
+	// ---
+
+	@Override
 	public FixedPointNumber getBalance(final LocalDate date, final Currency curr) {
 		return AccountBalanceHelper_FP.getBalance(date, curr, this);
 	}
@@ -281,12 +293,12 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
-	public FixedPointNumber getBalanceRecursive(LocalDate date, KMMSecID secID) throws KMMIDNotSetException {
+	public FixedPointNumber getBalanceRecursive(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
 		return AccountBalanceHelper_FP.getBalanceRecursive(date, secID, this);
 	}
 	
 	@Override
-	public BigFraction getBalanceRecursiveRat(LocalDate date, KMMSecID secID) throws KMMIDNotSetException {
+	public BigFraction getBalanceRecursiveRat(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
 		return AccountBalanceHelper_BF.getBalanceRecursive(date, secID, this);
 	}
 	
@@ -335,7 +347,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 		}
 
 		KMyMoneyTransactionSplit lastSplit = null;
-	
+
 		for ( KMyMoneyTransactionSplit split : getTransactionSplits() ) {
 			if ( date == null || 
 				 split.getTransaction().getDatePosted()

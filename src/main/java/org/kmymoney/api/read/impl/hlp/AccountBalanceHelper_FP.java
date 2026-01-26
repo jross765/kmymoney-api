@@ -109,6 +109,21 @@ public class AccountBalanceHelper_FP
 		return retval;
 	}
 
+	public static FixedPointNumber getBalance(final LocalDate date, final KMMSecID secID,
+											  final SimpleAccount acct) throws KMMIDNotSetException {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
+		}
+
+		FixedPointNumber retval = getBalance(date, acct);
+
+		return getBalance(date, new KMMQualifSecCurrID(secID), acct);
+	}
+
 	public static FixedPointNumber getBalance(final LocalDate date, final Currency curr,
 											  final SimpleAccount acct) {
 		FixedPointNumber retval = getBalance(date, acct);
