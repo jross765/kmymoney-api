@@ -18,8 +18,6 @@ import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xyz.schnorxoborx.base.numbers.FixedPointNumber; // sic
-
 public class AccountBalanceHelper_BF
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountBalanceHelper_BF.class);
@@ -90,11 +88,8 @@ public class AccountBalanceHelper_BF
 			return null;
 		}
 	
-		// BEGIN ::TODO: 
-		// Works, but is ugly.
-		// Have that symmetrical with FP-variant
-		FixedPointNumber hlp = FixedPointNumber.of(retval);
-		if ( ! priceTab.convertToBaseCurrency(hlp, secCurrID) ) {
+		retval = priceTab.convertToBaseCurrencyRat(retval, secCurrID);
+		if ( retval == null ) {
 			Collection<String> currList = acct.getKMyMoneyFile().getCurrencyTable()
 					.getCurrencies(acct.getQualifSecCurrID().getType());
 			LOGGER.error("getBalance: Cannot transfer " + "from our currency '"
@@ -104,13 +99,12 @@ public class AccountBalanceHelper_BF
 			return null;
 		}
 	
-		if ( ! priceTab.convertFromBaseCurrency(hlp, secCurrID) ) {
+		retval = priceTab.convertFromBaseCurrencyRat(retval, secCurrID);
+		if ( retval == null ) {
 			LOGGER.error("getBalance: Cannot transfer " + "from base-currenty to given currency '"
 					+ secCurrID.toString() + "'!");
 			return null;
 		}
-		retval = hlp.toBigFraction();
-		// END ::TODO
 	
 		return retval;
 	}
@@ -156,23 +150,19 @@ public class AccountBalanceHelper_BF
 			return null;
 		}
 
-		// BEGIN ::TODO: 
-		// Works, but is ugly.
-		// Have that symmetrical with FP-variant
-		FixedPointNumber hlp = FixedPointNumber.of(retval);
-		if ( ! priceTab.convertToBaseCurrency(hlp, acct.getQualifSecCurrID()) ) {
+		retval = priceTab.convertToBaseCurrencyRat(retval, acct.getQualifSecCurrID());
+		if ( retval == null ) {
 			LOGGER.warn("getBalance: Cannot transfer " + "from our currency '"
 					+ acct.getQualifSecCurrID().toString() + "' to the base-currency!");
 			return null;
 		}
 
-		if ( ! priceTab.convertFromBaseCurrency(hlp, new KMMQualifCurrID(curr)) ) {
+		retval = priceTab.convertFromBaseCurrencyRat(retval, new KMMQualifCurrID(curr));
+		if ( retval == null ) {
 			LOGGER.warn("getBalance: Cannot transfer " + "from base-currenty to given currency '"
 					+ curr + "'!");
 			return null;
 		}
-		retval = hlp.toBigFraction();
-		// END ::TODO
 
 		return retval;
 	}
@@ -239,7 +229,7 @@ public class AccountBalanceHelper_BF
 		}
 
 		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			return getBalanceRecursive(date, new KMMQualifCurrID(secCurrID.getCode()).getCurrency(), acct);
+			return getBalanceRecursive(date, new KMMQualifCurrID(secCurrID.getCode()).getCurrID().get(), acct);
 		} else {
 			return getBalance(date, secCurrID, acct); // CAUTION: This assumes that under a stock account,
 												      // there are no children (which sounds sensible,

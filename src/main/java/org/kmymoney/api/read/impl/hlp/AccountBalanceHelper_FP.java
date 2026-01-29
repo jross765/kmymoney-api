@@ -90,7 +90,8 @@ public class AccountBalanceHelper_FP
 			return null;
 		}
 	
-		if ( ! priceTab.convertToBaseCurrency(retval, secCurrID) ) {
+		retval = priceTab.convertToBaseCurrency(retval, secCurrID);
+		if ( retval == null ) {
 			Collection<String> currList = acct.getKMyMoneyFile().getCurrencyTable()
 					.getCurrencies(acct.getQualifSecCurrID().getType());
 			LOGGER.error("getBalance: Cannot transfer " + "from our currency '"
@@ -100,7 +101,8 @@ public class AccountBalanceHelper_FP
 			return null;
 		}
 	
-		if ( ! priceTab.convertFromBaseCurrency(retval, secCurrID) ) {
+		retval = priceTab.convertFromBaseCurrency(retval, secCurrID);
+		if ( retval == null ) {
 			LOGGER.error("getBalance: Cannot transfer " + "from base-currenty to given currency '"
 					+ secCurrID.toString() + "'!");
 			return null;
@@ -152,13 +154,15 @@ public class AccountBalanceHelper_FP
 			return null;
 		}
 
-		if ( ! priceTab.convertToBaseCurrency(retval, acct.getQualifSecCurrID()) ) {
+		retval = priceTab.convertToBaseCurrency(retval, acct.getQualifSecCurrID());
+		if ( retval == null ) {
 			LOGGER.warn("getBalance: Cannot transfer " + "from our currency '"
 					+ acct.getQualifSecCurrID().toString() + "' to the base-currency!");
 			return null;
 		}
 
-		if ( ! priceTab.convertFromBaseCurrency(retval, new KMMQualifCurrID(curr)) ) {
+		retval = priceTab.convertFromBaseCurrency(retval, new KMMQualifCurrID(curr));
+		if ( retval == null ) {
 			LOGGER.warn("getBalance: Cannot transfer " + "from base-currenty to given currency '"
 					+ curr + "'!");
 			return null;
@@ -229,7 +233,7 @@ public class AccountBalanceHelper_FP
 		}
 
 		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			return getBalanceRecursive(date, new KMMQualifCurrID(secCurrID.getCode()).getCurrency(), acct);
+			return getBalanceRecursive(date, new KMMQualifCurrID(secCurrID.getCode()).getCurrID().get(), acct);
 		} else {
 			return getBalance(date, secCurrID, acct); // CAUTION: This assumes that under a stock account,
 												      // there are no children (which sounds sensible,
