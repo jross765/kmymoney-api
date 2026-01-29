@@ -2,56 +2,72 @@ package org.kmymoney.api.currency;
 
 import java.util.List;
 
+import org.apache.commons.numbers.fraction.BigFraction;
+
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 public interface SimplePriceTable {
 
     /**
-     * @param code
+     * @param codeOrID
      * @return conversion factor from currency specified by
      *         code to base currency
      */
-    FixedPointNumber getConversionFactor(final String code);
-
-    // ::TODO
-    // BigFraction getConversionFactorRat(final String code);
+    FixedPointNumber getConversionFactor(String codeOrID);
 
     /**
-     * @param code
+     * @param codeOrID
+     * @return
+     */
+    BigFraction      getConversionFactorRat(String codeOrID);
+
+    /**
+     * @param codeOrID
      * @param factor
      */
-    void setConversionFactor(final String code, final FixedPointNumber factor);
+    void setConversionFactor(String codeOrID, FixedPointNumber factor);
 
-    // ::TODO
-    // void setConversionFactorRat(final String code, final BigFraction factor);
+    /**
+     * @param codeOrID
+     * @param factor
+     */
+    void setConversionFactorRat(String codeOrID, BigFraction factor);
 
     // ---------------------------------------------------------------
 
     /**
      * @param value
-     * @param code
+     * @param codeOrID
      * @return
      */
-    boolean convertFromBaseCurrency(FixedPointNumber value, final String code);
+    FixedPointNumber convertFromBaseCurrency(FixedPointNumber value, String codeOrID);
 
-    // ::TODO
-    // boolean convertFromBaseCurrencyRat(BigFraction value, final String code);
+    /**
+     * @param value
+     * @param codeOrID
+     * @return
+     */
+    BigFraction      convertFromBaseCurrencyRat(BigFraction value, String codeOrID);
     
     // ---
 
     /**
      * @param value
-     * @param code
+     * @param codeOrID
      * @return
      */
-    boolean convertToBaseCurrency(FixedPointNumber value, final String code);
+    FixedPointNumber convertToBaseCurrency(FixedPointNumber value, String codeOrID);
 
-    // ::TODO
-    // boolean convertToBaseCurrencyRat(BigFraction value, final String code);
+    /**
+     * @param value
+     * @param codeOrID
+     * @return
+     */
+    BigFraction      convertToBaseCurrencyRat(BigFraction value, String codeOrID);
 
     // ---------------------------------------------------------------
 
-    List<String> getCurrencies();
+    List<String> getCodes();
 
     void clear();
 
