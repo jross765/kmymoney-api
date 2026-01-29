@@ -995,29 +995,51 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	 * If the currency already exists, add a new price-quote for it.
 	 *
 	 * @param pCmdtySpace        the name space (e.g. "GOODS" or "CURRENCY")
-	 * @param pCmdtyId           the currency-name
+	 * @param pCmdtyID           the currency-name
 	 * @param conversionFactor   the conversion-factor from the base-currency (EUR).
 	 * @param pCmdtyNameFraction number of decimal-places after the comma
 	 * @param pCmdtyName         common name of the new currency
 	 */
+	// ::TODO: ::CHECK: Is this method really needed? If not, get rid of it.
+	// ::TODO: Improve interface / provide variants
 	@Override
-	public void addCurrency(final String pCmdtySpace, final String pCmdtyID, final FixedPointNumber conversionFactor,
-			final int pCmdtyNameFraction, final String pCmdtyName) {
+	public void addCurrency(
+			final String pCmdtySpace,
+			final String pCmdtyID,
+			final FixedPointNumber conversionFactor,
+			final int pCmdtyNameFraction,
+			final String pCmdtyName) {
 
-		if ( conversionFactor == null ) {
-			throw new IllegalArgumentException("argument <conversionFactor> is null");
-		}
-		
 		if ( pCmdtySpace == null ) {
 			throw new IllegalArgumentException("argument <pCmdtySpace> is null");
 		}
-
+		
+		if ( pCmdtySpace.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <pCmdtySpace> is empty");
+		}
+		
 		if ( pCmdtyID == null ) {
 			throw new IllegalArgumentException("argument <pCmdtyID> is null");
 		}
 		
+		if ( pCmdtyID.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <pCmdtyID> is empty");
+		}
+		
+		if ( conversionFactor == null ) {
+			throw new IllegalArgumentException("argument <conversionFactor> is null");
+		}
+		
+		if ( pCmdtyNameFraction <= 0 ) {
+			throw new IllegalArgumentException("argument <pCmdtyNameFraction> is <= 0");
+		}
+		
 		if ( pCmdtyName == null ) {
 			throw new IllegalArgumentException("argument <pCmdtyName> is null");
+		}
+		
+		if ( pCmdtyName.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <pCmdtyName> is empty");
 		}
 		
 		/*

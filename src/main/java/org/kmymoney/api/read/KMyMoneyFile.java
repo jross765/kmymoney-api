@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Currency;
 import java.util.List;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.currency.ComplexPriceTable;
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.read.hlp.KMyMoneyObject;
@@ -554,8 +555,9 @@ public interface KMyMoneyFile extends KMyMoneyObject {
 	 * @throws InvalidQualifSecCurrIDException 
 	 * @throws InvalidQualifSecCurrTypeException 
 	 */
-	FixedPointNumber getLatestPrice(final KMMQualifSecCurrID secCurrID)
-			throws InvalidQualifSecCurrIDException;
+	FixedPointNumber getLatestPrice(KMMQualifSecCurrID secCurrID);
+
+	BigFraction      getLatestPriceRat(KMMQualifSecCurrID secCurrID);
 
 	// ---------------------------------------------------------------
 

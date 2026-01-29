@@ -17,6 +17,7 @@ import java.util.Currency;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.currency.ComplexPriceTable;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
@@ -953,9 +954,13 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 	}
 
     @Override
-    public FixedPointNumber getLatestPrice(KMMQualifSecCurrID secCurrID)
-	    throws InvalidQualifSecCurrIDException {
+    public FixedPointNumber getLatestPrice(KMMQualifSecCurrID secCurrID) {
     	return prcMgr.getLatestPrice(secCurrID);
+    }
+
+    @Override
+    public BigFraction getLatestPriceRat(KMMQualifSecCurrID secCurrID) {
+    	return prcMgr.getLatestPriceRat(secCurrID);
     }
 
     // ---------------------------------------------------------------
