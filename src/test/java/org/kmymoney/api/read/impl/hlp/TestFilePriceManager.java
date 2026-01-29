@@ -7,20 +7,48 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Currency;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
+import org.kmymoney.api.read.impl.TestKMyMoneyPriceImpl;
+import org.kmymoney.api.read.impl.TestKMyMoneySecurityImpl;
 import org.kmymoney.base.basetypes.complex.KMMPriceID;
 import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMSecID;
 
 import junit.framework.JUnit4TestAdapter;
 
 public class TestFilePriceManager {
 
+	private static final KMMPriceID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
+	private static final KMMPriceID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
+	private static final KMMPriceID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
+	private static final KMMPriceID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
+	private static final KMMPriceID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
+	private static final KMMPriceID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
+
+	private static final KMMPriceID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
+
+	private static final KMMPriceID PRC_14_ID = TestKMyMoneyPriceImpl.PRC_14_ID;
+	private static final KMMPriceID PRC_15_ID = TestKMyMoneyPriceImpl.PRC_15_ID;
+	private static final KMMPriceID PRC_16_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
+
+	private static final KMMPriceID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
+	private static final KMMPriceID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
+	private static final KMMPriceID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
+	
+	// ---
+	
+	private static final KMMSecID SEC_1_ID = TestKMyMoneySecurityImpl.SEC_1_ID;
+	private static final KMMQualifSecID SEC_1_QUALIF_ID = new KMMQualifSecID(SEC_1_ID); 
+	
 	// ---------------------------------------------------------------
 
 	private KMyMoneyFileImplTestHelper kmmFile = null;
@@ -79,7 +107,7 @@ public class TestFilePriceManager {
 	}
 
 	@Test
-	public void test03() throws Exception {
+	public void test03_0() throws Exception {
 		mgr = kmmFile.getPriceManager();
 		
 		// Normal case: Price (pair) exists
@@ -108,6 +136,65 @@ public class TestFilePriceManager {
 		prcID = new KMMPriceID("E000004", "EUR", "2026-01-01");
 		prc = mgr.getPriceByQualifSecCurrIDDate(qualifID, date);
 		assertEquals(null, prc);
+	}
+
+	@Test
+	public void test03_1() throws Exception {
+		mgr = kmmFile.getPriceManager();
+		
+		KMMQualifSecID cmdtyID = new KMMQualifSecID(SEC_1_ID);
+		assertEquals(58.25, mgr.getLatestPrice(cmdtyID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(233,   mgr.getLatestPriceRat(cmdtyID).getNumerator().intValue());
+		assertEquals(4,     mgr.getLatestPriceRat(cmdtyID).getDenominator().intValue());
+	}
+
+	@Test
+	public void test03_2() throws Exception {
+		mgr = kmmFile.getPriceManager();
+		
+		KMMQualifCurrID currID = new KMMQualifCurrID(Currency.getInstance("EUR"));
+		assertEquals(null, mgr.getLatestPrice(currID));    // ::CHECK
+		assertEquals(null, mgr.getLatestPriceRat(currID)); // ::CHECK
+		
+		currID = new KMMQualifCurrID(Currency.getInstance("USD"));
+		assertEquals(0.93, mgr.getLatestPrice(currID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(93,   mgr.getLatestPriceRat(currID).getNumerator().intValue());
+		assertEquals(100,  mgr.getLatestPriceRat(currID).getDenominator().intValue());
+	}
+
+	@Test
+	public void test03_3() throws Exception {
+		mgr = kmmFile.getPriceManager();
+		
+		assertEquals(58.25, mgr.getLatestPrice(SEC_1_QUALIF_ID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(233,   mgr.getLatestPriceRat(SEC_1_QUALIF_ID).getNumerator().intValue());
+		assertEquals(4,     mgr.getLatestPriceRat(SEC_1_QUALIF_ID).getDenominator().intValue());
+
+		assertEquals(null, mgr.getLatestPrice(KMMQualifSecCurrID.Type.CURRENCY, "EUR"));    // ::CHECK
+		assertEquals(null, mgr.getLatestPriceRat(KMMQualifSecCurrID.Type.CURRENCY, "EUR")); // ::CHECK
+		
+		assertEquals(0.93, mgr.getLatestPrice(KMMQualifSecCurrID.Type.CURRENCY, "USD").doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(93,   mgr.getLatestPriceRat(KMMQualifSecCurrID.Type.CURRENCY, "USD").getNumerator().intValue());
+		assertEquals(100,  mgr.getLatestPriceRat(KMMQualifSecCurrID.Type.CURRENCY, "USD").getDenominator().intValue());
+	}
+
+	@Test
+	public void test04() throws Exception {
+		mgr = kmmFile.getPriceManager();
+		
+		KMyMoneyPrice prc = mgr.getPriceByID(PRC_18_ID);
+		assertEquals("CURRENCY:USD", prc.getFromSecCurrQualifID().toString());
+		assertEquals("CURRENCY:EUR", prc.getToCurrencyQualifID().toString());
+		assertEquals(0.93, prc.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(93,   prc.getValueRat().getNumerator().intValue());
+		assertEquals(100,  prc.getValueRat().getDenominator().intValue());
+		
+		prc = mgr.getPriceByID(PRC_5_ID);
+		assertEquals("SECURITY:E000002", prc.getFromSecCurrQualifID().toString());
+		assertEquals("CURRENCY:EUR", prc.getToCurrencyQualifID().toString());
+		assertEquals(58.25, prc.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(233,   prc.getValueRat().getNumerator().intValue());
+		assertEquals(4,     prc.getValueRat().getDenominator().intValue());
 	}
 
 }

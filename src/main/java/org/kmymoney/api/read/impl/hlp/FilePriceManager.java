@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.generated.PRICE;
@@ -41,7 +42,7 @@ public class FilePriceManager {
 
 	public static final DateFormat PRICE_QUOTE_DATE_FORMAT = new SimpleDateFormat(Const.STANDARD_DATE_FORMAT);
 
-	private static final int RECURS_DEPTH_MAX = 5; // ::MAGIC
+	static final int RECURS_DEPTH_MAX = 5; // ::MAGIC
 
 	// ---------------------------------------------------------------
 
@@ -337,36 +338,43 @@ public class FilePriceManager {
 
 	// ---------------------------------------------------------------
 
-	public FixedPointNumber getLatestPrice(final String secCurrIDStr) {
-		if ( secCurrIDStr == null ) {
-			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
-		}
-
-		if ( secCurrIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
-		}
-
-		if ( secCurrIDStr.startsWith(KMMQualifSecCurrID.PREFIX_SECURITY) ) {
-			return getLatestPrice(new KMMQualifSecID(secCurrIDStr));
-		} else {
-			return getLatestPrice(new KMMQualifCurrID(secCurrIDStr));
-		}
+	public FixedPointNumber getLatestPrice(final KMMQualifSecCurrID secCurrID) {
+		return PriceHelper_FP.getLatestPrice(secCurrID, 
+				 kmmFile, prcMap);
 	}
 
-	public FixedPointNumber getLatestPrice(final KMMQualifSecCurrID secCurrID) {
-		if ( secCurrID == null ) {
-			throw new IllegalArgumentException("argument <secCurrID> is null");
-		}
+	public FixedPointNumber getLatestPrice(final Currency curr) {
+		return PriceHelper_FP.getLatestPrice(curr, 
+				kmmFile, prcMap);
+	}
 
-		if ( ! secCurrID.isSet() ) {
-			throw new IllegalArgumentException("argument <secCurrID> is not set");
-		}
-
-		return getLatestPrice(secCurrID, 0);
+	@Deprecated
+	public FixedPointNumber getLatestPrice(final KMMQualifSecCurrID.Type type, final String secCurrIDStr) {
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(type, secCurrIDStr);
+		return PriceHelper_FP.getLatestPrice(secCurrID, 
+				kmmFile, prcMap);
 	}
 
 	// ----------------------------
+	
+	public BigFraction getLatestPriceRat(final KMMQualifSecCurrID secCurrID) {
+		return PriceHelper_BF.getLatestPrice(secCurrID,
+				kmmFile, prcMap);
+	}
 
+	public BigFraction getLatestPriceRat(final Currency curr) {
+		return PriceHelper_BF.getLatestPrice(curr,
+				kmmFile, prcMap);
+	}
+
+	@Deprecated
+	public BigFraction getLatestPriceRat(final KMMQualifSecCurrID.Type type, final String secCurrIDStr) {
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(type, secCurrIDStr);
+		return PriceHelper_BF.getLatestPrice(secCurrID,
+				kmmFile, prcMap);
+	}
+
+	// ---------------------------------------------------------------
 	/**
 	 * @param pCmdtySpace the name space for pCmdtyId
 	 * @param pCmdtyId    the currency-name
