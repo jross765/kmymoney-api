@@ -21,20 +21,20 @@ public class KMyMoneyWritableFileImplTestHelper extends KMyMoneyWritableFileImpl
 	// ---------------------------------------------------------------
 	// For test purposes only
 
-	public org.kmymoney.api.write.impl.hlp.FilePayeeManager getPayeeManager() {
-		return (org.kmymoney.api.write.impl.hlp.FilePayeeManager) pyeMgr;
+	public org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager getPayeeManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager) pyeMgr;
 	}
 
-	public org.kmymoney.api.write.impl.hlp.FileSecurityManager getSecurityManager() {
-		return (org.kmymoney.api.write.impl.hlp.FileSecurityManager) secMgr;
+	public org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager getSecurityManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager) secMgr;
 	}
 
-	public org.kmymoney.api.write.impl.hlp.FileCurrencyManager getCurrencyManager() {
-		return (org.kmymoney.api.write.impl.hlp.FileCurrencyManager) currMgr;
+	public org.kmymoney.api.write.impl.hlp.fil.FileCurrencyManager getCurrencyManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FileCurrencyManager) currMgr;
 	}
 
-	public org.kmymoney.api.write.impl.hlp.FilePriceManager getPriceManager() {
-		return (org.kmymoney.api.write.impl.hlp.FilePriceManager) prcMgr;
+	public org.kmymoney.api.write.impl.hlp.fil.FilePriceManager getPriceManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) prcMgr;
 	}
 
 }

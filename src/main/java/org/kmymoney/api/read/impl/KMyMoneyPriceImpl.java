@@ -140,7 +140,7 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
     
     @Override
     public String getFromCurrencyCode() {
-    	return getFromCurrencyQualifID().getCurrency().getCurrencyCode();
+    	return getFromCurrencyQualifID().getCurrID().get().getCurrencyCode();
     }
 
     @Override

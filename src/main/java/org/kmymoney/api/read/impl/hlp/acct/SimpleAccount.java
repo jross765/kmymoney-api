@@ -1,4 +1,4 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.acct;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -12,6 +12,7 @@ import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
@@ -209,12 +210,12 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
-	public FixedPointNumber getBalance(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
+	public FixedPointNumber getBalance(final LocalDate date, final KMMSecID secID) {
 		return AccountBalanceHelper_FP.getBalance(date, secID, this);
 	}
 
 	@Override
-	public BigFraction getBalanceRat(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
+	public BigFraction getBalanceRat(final LocalDate date, final KMMSecID secID) {
 		return AccountBalanceHelper_BF.getBalance(date, secID, this);
 	}
 

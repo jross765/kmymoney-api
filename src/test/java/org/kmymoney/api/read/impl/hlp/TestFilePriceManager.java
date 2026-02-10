@@ -16,6 +16,7 @@ import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.read.impl.TestKMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.TestKMyMoneySecurityImpl;
+import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
 import org.kmymoney.base.basetypes.complex.KMMPriceID;
 import org.kmymoney.base.basetypes.complex.KMMPricePairID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;

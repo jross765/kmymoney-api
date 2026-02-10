@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.read.KMyMoneyAccount;
@@ -8,7 +8,7 @@ import org.kmymoney.api.write.impl.KMyMoneyWritableFileImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileAccountManager extends org.kmymoney.api.read.impl.hlp.FileAccountManager {
+public class FileAccountManager extends org.kmymoney.api.read.impl.hlp.fil.FileAccountManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileAccountManager.class);
 

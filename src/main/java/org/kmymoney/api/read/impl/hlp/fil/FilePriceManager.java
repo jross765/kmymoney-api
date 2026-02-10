@@ -1,4 +1,4 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.fil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,6 +25,8 @@ import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.KMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.KMyMoneyPricePairImpl;
+import org.kmymoney.api.read.impl.hlp.prc.PriceHelper_BF;
+import org.kmymoney.api.read.impl.hlp.prc.PriceHelper_FP;
 import org.kmymoney.base.basetypes.complex.KMMPriceID;
 import org.kmymoney.base.basetypes.complex.KMMPricePairID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
@@ -42,7 +44,7 @@ public class FilePriceManager {
 
 	public static final DateFormat PRICE_QUOTE_DATE_FORMAT = new SimpleDateFormat(Const.STANDARD_DATE_FORMAT);
 
-	static final int RECURS_DEPTH_MAX = 5; // ::MAGIC
+	public static final int RECURS_DEPTH_MAX = 5; // ::MAGIC
 
 	// ---------------------------------------------------------------
 

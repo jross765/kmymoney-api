@@ -20,7 +20,7 @@ public class TestFilePriceManager {
 
 	private KMyMoneyWritableFileImplTestHelper kmmInFile = null;
 
-	private org.kmymoney.api.write.impl.hlp.FilePriceManager mgr = null;
+	private org.kmymoney.api.write.impl.hlp.fil.FilePriceManager mgr = null;
 
 	// -----------------------------------------------------------------
 

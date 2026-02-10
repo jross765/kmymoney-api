@@ -318,7 +318,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		}
 
 		KMMQualifCurrID oldCurrID = getTradingCurrency();
-		jwsdpPeer.setTradingCurrency(currID.getCurrency().getCurrencyCode());
+		jwsdpPeer.setTradingCurrency(currID.getCurrID().get().getCurrencyCode());
 		getKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();

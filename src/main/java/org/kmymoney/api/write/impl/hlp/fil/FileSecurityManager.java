@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.SECURITY;
 import org.kmymoney.api.read.KMyMoneySecurity;
@@ -8,7 +8,7 @@ import org.kmymoney.api.write.impl.KMyMoneyWritableSecurityImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileSecurityManager extends org.kmymoney.api.read.impl.hlp.FileSecurityManager {
+public class FileSecurityManager extends org.kmymoney.api.read.impl.hlp.fil.FileSecurityManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileSecurityManager.class);
 

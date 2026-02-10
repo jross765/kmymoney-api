@@ -20,7 +20,7 @@ public class TestFileCurrencyManager {
 
 	private KMyMoneyWritableFileImplTestHelper kmmInFile = null;
 
-	private org.kmymoney.api.write.impl.hlp.FileCurrencyManager mgr = null;
+	private org.kmymoney.api.write.impl.hlp.fil.FileCurrencyManager mgr = null;
 
 	// -----------------------------------------------------------------
 

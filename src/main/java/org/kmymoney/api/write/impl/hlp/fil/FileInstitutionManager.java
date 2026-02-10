@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.INSTITUTION;
 import org.kmymoney.api.read.KMyMoneyInstitution;
@@ -8,7 +8,7 @@ import org.kmymoney.api.write.impl.KMyMoneyWritableInstitutionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileInstitutionManager extends org.kmymoney.api.read.impl.hlp.FileInstitutionManager {
+public class FileInstitutionManager extends org.kmymoney.api.read.impl.hlp.fil.FileInstitutionManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileInstitutionManager.class);
 

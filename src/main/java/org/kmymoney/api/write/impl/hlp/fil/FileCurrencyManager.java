@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.CURRENCY;
 import org.kmymoney.api.read.KMyMoneyCurrency;
@@ -8,7 +8,7 @@ import org.kmymoney.api.write.impl.KMyMoneyWritableFileImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileCurrencyManager extends org.kmymoney.api.read.impl.hlp.FileCurrencyManager {
+public class FileCurrencyManager extends org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileCurrencyManager.class);
 

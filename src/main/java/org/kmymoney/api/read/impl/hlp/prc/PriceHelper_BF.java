@@ -1,22 +1,22 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.prc;
 
 import java.time.LocalDate;
 import java.util.Currency;
 import java.util.Map;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
+import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
 import org.kmymoney.base.basetypes.complex.KMMPriceID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xyz.schnorxoborx.base.numbers.FixedPointNumber;
+public class PriceHelper_BF {
 
-public class PriceHelper_FP {
-
-    protected static final Logger LOGGER = LoggerFactory.getLogger(PriceHelper_FP.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(PriceHelper_BF.class);
     
 	// ---------------------------------------------------------------
 
@@ -24,7 +24,7 @@ public class PriceHelper_FP {
     
 	// ---------------------------------------------------------------
 
-    public static FixedPointNumber getLatestPrice(
+    public static BigFraction getLatestPrice(
 			final KMMQualifSecCurrID secCurrID,
 			final KMyMoneyFile kmmFile,
 			final Map<KMMPriceID, KMyMoneyPrice> prcMap) {
@@ -48,7 +48,7 @@ public class PriceHelper_FP {
 							  kmmFile, prcMap, 0);
 	}
 
-    public static FixedPointNumber getLatestPrice(
+    public static BigFraction getLatestPrice(
 			final Currency curr,
 			final KMyMoneyFile kmmFile,
 			final Map<KMMPriceID, KMyMoneyPrice> prcMap) {
@@ -69,7 +69,7 @@ public class PriceHelper_FP {
 	}
 
     /*
-	public static FixedPointNumber getLatestPrice(
+	public static BigFraction getLatestPrice(
 			final KMMQualifSecCurrID.Type type, 
 			final KMyMoneyFile kmmFile,
 			final GncPricedb priceDB,
@@ -97,7 +97,7 @@ public class PriceHelper_FP {
 
 	// ----------------------------
 
-	private static FixedPointNumber getLatestPrice(
+	private static BigFraction getLatestPrice(
 			final KMMQualifSecCurrID secCurrID, 
 			final KMyMoneyFile kmmFile,
 			final Map<KMMPriceID, KMyMoneyPrice> prcMap,
@@ -123,8 +123,8 @@ public class PriceHelper_FP {
 		}
 
 		LocalDate latestDate = null;
-		FixedPointNumber latestQuote = null;
-		FixedPointNumber factor = FixedPointNumber.ONE.copy(); // factor is used if the quote is not to our base-currency
+		BigFraction latestQuote = null;
+		BigFraction factor = BigFraction.ONE; // factor is used if the quote is not to our base-currency
 		final int maxRecursionDepth = RECURS_DEPTH_MAX;
 
 		for ( KMyMoneyPrice prc : prcMap.values() ) {
@@ -177,7 +177,7 @@ public class PriceHelper_FP {
 
 				if ( latestDate == null || latestDate.isBefore(date) ) {
 					latestDate = date;
-					latestQuote = prc.getValue();
+					latestQuote = prc.getValueRat();
 					LOGGER.debug("getLatestPrice: pSecCurrID='" + secCurrID.toString() + "' converted " + latestQuote + " <= " + prc.getValue());
 				}
 
@@ -200,7 +200,7 @@ public class PriceHelper_FP {
 		}
 
 		if ( factor == null ) {
-			factor = FixedPointNumber.ONE.copy();
+			factor = BigFraction.ONE;
 		}
 
 		return factor.multiply(latestQuote);

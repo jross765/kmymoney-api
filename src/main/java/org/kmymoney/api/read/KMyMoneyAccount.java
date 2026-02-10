@@ -371,9 +371,9 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
 
     BigFraction      getBalanceRat(LocalDate date, KMMQualifSecCurrID secCurrID);
 
-    FixedPointNumber getBalance(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
+    FixedPointNumber getBalance(LocalDate date, KMMSecID secID);
 
-    BigFraction      getBalanceRat(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
+    BigFraction      getBalanceRat(LocalDate date, KMMSecID secID);
 
     FixedPointNumber getBalance(LocalDate date, Currency curr);
 

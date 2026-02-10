@@ -144,6 +144,8 @@ public class TestKMyMoneyPriceImpl {
 		assertEquals("2023-11-03", prc.getDateStr());
 		assertEquals(LocalDate.of(2023, 11, 3), prc.getDate());
 		assertEquals(120.0, prc.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(120,   prc.getValueRat().getNumerator().intValue());
+		assertEquals(1,     prc.getValueRat().getDenominator().intValue());
 
 		try {
 			KMMQualifCurrID dummy = prc.getFromCurrencyQualifID(); // illegal call in this context
@@ -186,6 +188,8 @@ public class TestKMyMoneyPriceImpl {
 		assertEquals("2023-11-01", prc.getDateStr());
 		assertEquals(LocalDate.of(2023, 11, 1), prc.getDate());
 		assertEquals(116.5, prc.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(233,   prc.getValueRat().getNumerator().intValue());
+		assertEquals(2,     prc.getValueRat().getDenominator().intValue());
 
 		try {
 			KMMQualifCurrID dummy = prc.getFromCurrencyQualifID(); // illegal call in this context
@@ -225,6 +229,8 @@ public class TestKMyMoneyPriceImpl {
 		assertEquals("2023-12-04", prc.getDateStr());
 		assertEquals(LocalDate.of(2023, 12, 4), prc.getDate());
 		assertEquals(0.92, prc.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(23,   prc.getValueRat().getNumerator().intValue());
+		assertEquals(25,   prc.getValueRat().getDenominator().intValue());
 
 		try {
 			KMMQualifSecID dummy = prc.getFromSecurityQualifID(); // illegal call in this context

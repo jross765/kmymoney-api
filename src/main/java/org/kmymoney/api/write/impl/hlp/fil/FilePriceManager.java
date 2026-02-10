@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.PRICE;
 import org.kmymoney.api.generated.PRICEPAIR;
@@ -15,7 +15,7 @@ import org.kmymoney.base.basetypes.complex.KMMPricePairID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.FilePriceManager {
+public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePriceManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FilePriceManager.class);
 

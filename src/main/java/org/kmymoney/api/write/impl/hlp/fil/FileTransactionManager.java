@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.generated.SPLIT;
@@ -16,7 +16,7 @@ import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.FileTransactionManager {
+public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.FileTransactionManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileTransactionManager.class);
 

@@ -371,7 +371,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     public String getSharesFormatted(final Locale lcl) {
 		NumberFormat nf = getSharesCurrencyFormat(lcl);
 		if ( getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrency());
+			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrID().get());
 			return nf.format(getShares().getBigDecimal());
 		} else {
 			return nf.format(getShares().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().getCode().toString();
@@ -411,7 +411,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     public String getPriceFormatted(Locale lcl) {
 		NumberFormat nf = getPriceCurrencyFormat(lcl);
 		if ( getTransaction().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			nf.setCurrency(new KMMQualifCurrID(getTransaction().getQualifSecCurrID()).getCurrency());
+			nf.setCurrency(new KMMQualifCurrID(getTransaction().getQualifSecCurrID()).getCurrID().get());
 			return nf.format(getPrice().getBigDecimal());
 		} else {
 			return nf.format(getPrice().getBigDecimal()) + " " + getTransaction().getQualifSecCurrID().toString();

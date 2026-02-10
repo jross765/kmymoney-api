@@ -1,12 +1,12 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.acct;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.currency.ComplexPriceTable;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
@@ -17,28 +17,25 @@ import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xyz.schnorxoborx.base.numbers.FixedPointNumber;
-
-public class AccountBalanceHelper_FP
+public class AccountBalanceHelper_BF
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AccountBalanceHelper_FP.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AccountBalanceHelper_BF.class);
 
 	// ---------------------------------------------------------------
 
-	public static FixedPointNumber getBalance(final SimpleAccount acct) {
+	public static BigFraction getBalance(final SimpleAccount acct) {
 		return getBalance(LocalDate.now(), acct);
 	}
 
-
-	public static FixedPointNumber getBalance(final LocalDate date,
-											  final SimpleAccount acct) {
+	public static BigFraction getBalance(final LocalDate date,
+										 final SimpleAccount acct) {
 		return getBalance(date, (List<KMyMoneyTransactionSplit>) null, acct);
 	}
 
 	// The currency will be the one of this account.
-	public static FixedPointNumber getBalance(final LocalDate date, List<KMyMoneyTransactionSplit> after,
+	public static BigFraction getBalance(final LocalDate date, List<KMyMoneyTransactionSplit> after,
 											  final SimpleAccount acct) {
-		FixedPointNumber balance = FixedPointNumber.ZERO.copy();
+		BigFraction balance = BigFraction.ZERO;
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			if ( date != null && 
@@ -50,28 +47,28 @@ public class AccountBalanceHelper_FP
 			}
 	
 			// the currency of the quantity is the one of the account
-			// CAUTION: FixedPointNumber is mutable
+			// CAUTION: BigFraction is immutable
 			if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
-				balance.multiply(splt.getShares());
+				balance = balance.multiply(splt.getSharesRat());
 			} else {
-				balance.add(splt.getShares());
+				balance = balance.add(splt.getSharesRat());
 			}
 		}
 	
 		return balance;
 	}
 
-	public static FixedPointNumber getBalance(final LocalDate date, final KMMQualifSecCurrID secCurrID,
-											  final SimpleAccount acct) {
+	public static BigFraction getBalance(final LocalDate date, final KMMQualifSecCurrID secCurrID,
+										 final SimpleAccount acct) {
 		if ( secCurrID == null ) {
-			throw new IllegalArgumentException("null security/currency ID given");
+			throw new IllegalArgumentException("argument <secCurrID> is null");
 		}
 
 		if ( ! secCurrID.isSet() ) {
-			throw new IllegalArgumentException("unset security/currency ID given");
+			throw new IllegalArgumentException("argument <secCurrID is not set>");
 		}
 
-		FixedPointNumber retval = getBalance(date, acct);
+		BigFraction retval = getBalance(date, acct);
 
 		if ( retval == null ) {
 			LOGGER.error("getBalance: Could not create balance");
@@ -90,18 +87,14 @@ public class AccountBalanceHelper_FP
 			return null;
 		}
 	
-		retval = priceTab.convertToBaseCurrency(retval, secCurrID);
+		retval = priceTab.convertToBaseCurrencyRat(retval, secCurrID);
 		if ( retval == null ) {
-			Collection<String> currList = acct.getKMyMoneyFile().getCurrencyTable()
-					.getCurrencies(acct.getQualifSecCurrID().getType());
 			LOGGER.error("getBalance: Cannot transfer " + "from our currency '"
-					+ acct.getQualifSecCurrID().toString() + "' to the base-currency!" + " \n(we know "
-					+ acct.getKMyMoneyFile().getCurrencyTable().getNameSpaces().size() + " currency-name-spaces and "
-					+ (currList == null ? "no" : "" + currList.size()) + " currencies in our name space)");
+					+ acct.getQualifSecCurrID().toString() + "' to the base-currency!");
 			return null;
 		}
 	
-		retval = priceTab.convertFromBaseCurrency(retval, secCurrID);
+		retval = priceTab.convertFromBaseCurrencyRat(retval, secCurrID);
 		if ( retval == null ) {
 			LOGGER.error("getBalance: Cannot transfer " + "from base-currenty to given currency '"
 					+ secCurrID.toString() + "'!");
@@ -111,24 +104,28 @@ public class AccountBalanceHelper_FP
 		return retval;
 	}
 
-	public static FixedPointNumber getBalance(final LocalDate date, final KMMSecID secID,
-											  final SimpleAccount acct) throws KMMIDNotSetException {
+	public static BigFraction getBalance(final LocalDate date, final KMMSecID secID,
+										 final SimpleAccount acct) {
 		if ( secID == null ) {
-			throw new IllegalArgumentException("argument <secID> is null");
+			throw new IllegalArgumentException("argument <secCurrID> is null");
 		}
 
 		if ( ! secID.isSet() ) {
-			throw new IllegalArgumentException("argument <secID> is not set");
+			throw new IllegalArgumentException("argument <secCurrID is not set>");
 		}
 
-		FixedPointNumber retval = getBalance(date, acct);
-
-		return getBalance(date, new KMMQualifSecCurrID(secID), acct);
+		KMMQualifSecCurrID secCurrID;
+		try {
+			secCurrID = new KMMQualifSecCurrID(secID);
+		} catch (KMMIDNotSetException e) {
+			return null;
+		}
+		return getBalance(date, secCurrID, acct);
 	}
 
-	public static FixedPointNumber getBalance(final LocalDate date, final Currency curr,
-											  final SimpleAccount acct) {
-		FixedPointNumber retval = getBalance(date, acct);
+	public static BigFraction getBalance(final LocalDate date, final Currency curr,
+										 final SimpleAccount acct) {
+		BigFraction retval = getBalance(date, acct);
 
 		if ( retval == null ) {
 			LOGGER.warn("getBalance: Could not create balance");
@@ -136,7 +133,7 @@ public class AccountBalanceHelper_FP
 		}
 
 		if ( curr == null ||
-			 retval.equals(FixedPointNumber.ZERO.copy()) ) {
+			 retval.equals(BigFraction.ZERO) ) {
 			return retval;
 		}
 
@@ -154,14 +151,14 @@ public class AccountBalanceHelper_FP
 			return null;
 		}
 
-		retval = priceTab.convertToBaseCurrency(retval, acct.getQualifSecCurrID());
+		retval = priceTab.convertToBaseCurrencyRat(retval, acct.getQualifSecCurrID());
 		if ( retval == null ) {
 			LOGGER.warn("getBalance: Cannot transfer " + "from our currency '"
 					+ acct.getQualifSecCurrID().toString() + "' to the base-currency!");
 			return null;
 		}
 
-		retval = priceTab.convertFromBaseCurrency(retval, new KMMQualifCurrID(curr));
+		retval = priceTab.convertFromBaseCurrencyRat(retval, new KMMQualifCurrID(curr));
 		if ( retval == null ) {
 			LOGGER.warn("getBalance: Cannot transfer " + "from base-currenty to given currency '"
 					+ curr + "'!");
@@ -171,17 +168,17 @@ public class AccountBalanceHelper_FP
 		return retval;
 	}
 
-	public static FixedPointNumber getBalance(final KMyMoneyTransactionSplit lastSpltIncl,
-											  final SimpleAccount acct) {
-		FixedPointNumber balance = FixedPointNumber.ZERO.copy();
+	public static BigFraction getBalance(final KMyMoneyTransactionSplit lastSpltIncl,
+										 final SimpleAccount acct) {
+		BigFraction balance = BigFraction.ZERO;
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
-				// CAUTION: FixedPointNumber is mutable
+				// CAUTION: BigFraction is immutable
 				if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
-					balance.multiply(splt.getShares());
+					balance = balance.multiply(splt.getSharesRat());
 				} else {
-					balance.add(splt.getShares());
+					balance = balance.add(splt.getSharesRat());
 				}
 	
 				if ( splt == lastSpltIncl ) {
@@ -208,22 +205,22 @@ public class AccountBalanceHelper_FP
 											 final SimpleAccount acct) {
 		NumberFormat cf = NumberFormat.getCurrencyInstance(lcl);
 		cf.setCurrency(acct.getCurrency());
-		return cf.format(getBalance(acct).getBigDecimal());
+		return cf.format(getBalance(acct).bigDecimalValue());
 	}
 
 	// ---------------------------------------------------------------
 
-	public static FixedPointNumber getBalanceRecursive(final SimpleAccount acct) {
+	public static BigFraction getBalanceRecursive(final SimpleAccount acct) {
 		return getBalanceRecursive(LocalDate.now(), acct);
 	}
 
-	public static FixedPointNumber getBalanceRecursive(final LocalDate date,
-													   final SimpleAccount acct) {
+	public static BigFraction getBalanceRecursive(final LocalDate date,
+												  final SimpleAccount acct) {
 		return getBalanceRecursive(date, acct.getQualifSecCurrID(), acct);
 	}
 
-	public static FixedPointNumber getBalanceRecursive(final LocalDate date, final KMMQualifSecCurrID secCurrID,
-													   final SimpleAccount acct) {
+	public static BigFraction getBalanceRecursive(final LocalDate date, final KMMQualifSecCurrID secCurrID,
+												  final SimpleAccount acct) {
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null");
 		}
@@ -235,18 +232,19 @@ public class AccountBalanceHelper_FP
 		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
 			return getBalanceRecursive(date, new KMMQualifCurrID(secCurrID.getCode()).getCurrID().get(), acct);
 		} else {
-			return getBalance(date, secCurrID, acct); // CAUTION: This assumes that under a stock account,
-												      // there are no children (which sounds sensible,
-												      // but there might be special cases)
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return getBalance(date, secID, acct); // CAUTION: This assumes that under a stock account,
+												  // there are no children (which sounds sensible,
+												  // but there might be special cases)
 		}
 	}
 
-	public static FixedPointNumber getBalanceRecursive(final LocalDate date, final Currency curr,
-													   final SimpleAccount acct) {
-		FixedPointNumber retval = getBalance(date, curr, acct);
+	public static BigFraction getBalanceRecursive(final LocalDate date, final Currency curr,
+												  final SimpleAccount acct) {
+		BigFraction retval = getBalance(date, curr, acct);
 
 		if ( retval == null ) {
-			retval = FixedPointNumber.ZERO.copy();
+			retval = BigFraction.ZERO;
 		}
 
 		// CAUTION: As opposed to the sister project JGnuCashLib, the following three lines 
@@ -259,8 +257,12 @@ public class AccountBalanceHelper_FP
 		// So here is another implementation which works for both read- and write-branch:
 		for ( KMyMoneyAccount child : acct.getChildrenRecursive() ) {
 			try {
-				// CAUTION: FixedPointNumber is mutable
-				retval.add( child.getBalance(date, curr) );
+				BigFraction addVal = child.getBalanceRat(date, curr);
+				if ( addVal == null ) {
+					addVal = BigFraction.ZERO;
+				}
+				// CAUTION: BigFraction is immutable
+				retval = retval.add( addVal );
 			} catch ( Exception exc ) {
 				// Yes, it does happen sometimes!
 				LOGGER.error("getBalanceRecursive: Error adding balance for child account " + child.getID());
@@ -271,9 +273,8 @@ public class AccountBalanceHelper_FP
 		return retval;
 	}
 
-	public static FixedPointNumber getBalanceRecursive(final LocalDate date, final KMMSecID secID,
-													   SimpleAccount acct)
-			throws KMMIDNotSetException {
+	public static BigFraction getBalanceRecursive(final LocalDate date, final KMMSecID secID,
+												  final SimpleAccount acct) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
 		}
@@ -285,21 +286,27 @@ public class AccountBalanceHelper_FP
 		// CAUTION: This assumes that under a stock account,
 		// there are no children (which sounds sensible,
 		// but there might be special cases)
-		return getBalance(date, new KMMQualifSecCurrID(KMMQualifSecCurrID.Type.SECURITY, secID.get()), acct); 
+		KMMQualifSecCurrID secCurrID;
+		try {
+			secCurrID = new KMMQualifSecCurrID(KMMQualifSecCurrID.Type.SECURITY, secID.get());
+		} catch (KMMIDNotSetException e) {
+			return null;
+		}
+		return getBalance(date, secCurrID, acct); 
 	}
 
-	public static FixedPointNumber getBalanceRecursive(final KMyMoneyTransactionSplit lastSpltIncl,
-													   final SimpleAccount acct) {
-		FixedPointNumber retval = getBalance(lastSpltIncl, acct);
+	public static BigFraction getBalanceRecursive(final KMyMoneyTransactionSplit lastSpltIncl,
+												  final SimpleAccount acct) {
+		BigFraction retval = getBalance(lastSpltIncl, acct);
 
 		if ( retval == null ) {
-			retval = FixedPointNumber.ZERO.copy();
+			retval = BigFraction.ZERO;
 		}
 
 		for ( KMyMoneyAccount child : acct.getChildren() ) {
 			try {
-				// CAUTION: FixedPointNumber is mutable
-				retval.add(child.getBalanceRecursive(lastSpltIncl));
+				// CAUTION: BigFraction is immutable
+				retval = retval.add( child.getBalanceRecursiveRat(lastSpltIncl) );
 			} catch ( Exception exc ) {
 				// Yes, it does happen sometimes!
 				LOGGER.error("getBalanceRecursive: Error adding balance for child account " + child.getID());
@@ -321,24 +328,24 @@ public class AccountBalanceHelper_FP
 													  final SimpleAccount acct) {
 		NumberFormat cf = NumberFormat.getCurrencyInstance(lcl);
 		cf.setCurrency(acct.getCurrency());
-		return cf.format(getBalanceRecursive(acct).getBigDecimal());
+		return cf.format(getBalanceRecursive(acct).bigDecimalValue());
 	}
 	
 	// ---------------------------------------------------------------
 	// Helpers -- balance pre-computed
 	
-	public static String formatBalance(SimpleAccount acct, FixedPointNumber blnc) {
+	public static String formatBalance(SimpleAccount acct, BigFraction blnc) {
 		Locale lcl = Locale.getDefault();
 		return formatBalance(acct, blnc, lcl);
 	}
 	
-	public static String formatBalance(SimpleAccount acct, FixedPointNumber blnc, Locale lcl) {
+	public static String formatBalance(SimpleAccount acct, BigFraction blnc, Locale lcl) {
 		NumberFormat nf = acct.getCurrencyFormat(lcl);
     	if ( acct.getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
     		nf.setCurrency(Currency.getInstance(acct.getQualifSecCurrID().getCode()));
-    		return nf.format(blnc.getBigDecimal());
+    		return nf.format(blnc.doubleValue());
     	} else {
-    		return nf.format(blnc.getBigDecimal()) + " " + acct.getQualifSecCurrID().getCode().toString();
+    		return nf.format(blnc.doubleValue()) + " " + acct.getQualifSecCurrID().getCode().toString();
     	}
 	}
 

@@ -1,4 +1,4 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.fil;
 
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.slf4j.Logger;

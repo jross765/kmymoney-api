@@ -20,7 +20,7 @@ public class TestFileSecurityManager {
 
 	private KMyMoneyWritableFileImplTestHelper kmmInFile = null;
 
-	private org.kmymoney.api.write.impl.hlp.FileSecurityManager mgr = null;
+	private org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager mgr = null;
 
 	// -----------------------------------------------------------------
 

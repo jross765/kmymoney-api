@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
+import org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager;
+import org.kmymoney.api.read.impl.hlp.fil.FilePayeeManager;
+import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
+import org.kmymoney.api.read.impl.hlp.fil.FileSecurityManager;
 
 public class KMyMoneyFileImplTestHelper extends KMyMoneyFileImpl
 {

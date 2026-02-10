@@ -73,7 +73,7 @@ import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.ObjectCascadeException;
 import org.kmymoney.api.write.hlp.IDManager;
-import org.kmymoney.api.write.impl.hlp.WritingContentHandler;
+import org.kmymoney.api.write.impl.hlp.fil.WritingContentHandler;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMPriceID;
 import org.kmymoney.base.basetypes.complex.KMMPricePairID;
@@ -300,7 +300,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	protected void addTransaction(final KMyMoneyTransactionImpl trx) {
 		getRootElement().getTRANSACTIONS().getTRANSACTION().add(trx.getJwsdpPeer());
 		setModified(true);
-		((org.kmymoney.api.write.impl.hlp.FileTransactionManager) super.trxMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) super.trxMgr)
 			.addTransaction(trx);
 	}
 
@@ -314,18 +314,18 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		LOGGER.debug("loadEntityMgrs: called");
 		
     	// fill prices
-    	prcMgr  = new org.kmymoney.api.write.impl.hlp.FilePriceManager(this);
+    	prcMgr  = new org.kmymoney.api.write.impl.hlp.fil.FilePriceManager(this);
     	loadPriceDatabase(pRootElement, withProgBar);
 
     	// fill maps
     	// CAUTION: The order matters
-		acctMgr = new org.kmymoney.api.write.impl.hlp.FileAccountManager(this);
-		instMgr = new org.kmymoney.api.write.impl.hlp.FileInstitutionManager(this);
-		pyeMgr  = new org.kmymoney.api.write.impl.hlp.FilePayeeManager(this);
-		tagMgr  = new org.kmymoney.api.write.impl.hlp.FileTagManager(this);
-		trxMgr  = new org.kmymoney.api.write.impl.hlp.FileTransactionManager(this, withProgBar);
-		secMgr  = new org.kmymoney.api.write.impl.hlp.FileSecurityManager(this);
-		currMgr = new org.kmymoney.api.write.impl.hlp.FileCurrencyManager(this);
+		acctMgr = new org.kmymoney.api.write.impl.hlp.fil.FileAccountManager(this);
+		instMgr = new org.kmymoney.api.write.impl.hlp.fil.FileInstitutionManager(this);
+		pyeMgr  = new org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager(this);
+		tagMgr  = new org.kmymoney.api.write.impl.hlp.fil.FileTagManager(this);
+		trxMgr  = new org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager(this, withProgBar);
+		secMgr  = new org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager(this);
+		currMgr = new org.kmymoney.api.write.impl.hlp.fil.FileCurrencyManager(this);
 	}
 
 	// ---------------------------------------------------------------
@@ -433,7 +433,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	public KMyMoneyWritableInstitution createWritableInstitution(final String name) {
 		KMyMoneyWritableInstitutionImpl inst = new KMyMoneyWritableInstitutionImpl(this);
 		inst.setName(name);
-		((org.kmymoney.api.write.impl.hlp.FileInstitutionManager) super.instMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileInstitutionManager) super.instMgr)
 			.addInstitution(inst);
 		
 		return inst;
@@ -441,7 +441,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 	@Override
 	public void removeInstitution(KMyMoneyWritableInstitution inst) {
-		((org.kmymoney.api.write.impl.hlp.FileInstitutionManager) super.instMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileInstitutionManager) super.instMgr)
 			.removeInstitution(inst);
 		getRootElement().getINSTITUTIONS().getINSTITUTION().remove(((KMyMoneyWritableInstitutionImpl) inst).getJwsdpPeer());
 		setModified(true);
@@ -471,7 +471,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 		getRootElement().getTRANSACTIONS().getTRANSACTION().remove(((KMyMoneyWritableTransactionImpl) trx).getJwsdpPeer());
 		setModified(true);		
-		((org.kmymoney.api.write.impl.hlp.FileTransactionManager) super.trxMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) super.trxMgr)
 			.removeTransaction(trx);
 	}
 
@@ -481,7 +481,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	@Override
 	public KMyMoneyWritableTransaction createWritableTransaction() {
 		KMyMoneyWritableTransactionImpl trx = new KMyMoneyWritableTransactionImpl(this);
-		((org.kmymoney.api.write.impl.hlp.FileTransactionManager) super.trxMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) super.trxMgr)
 			.addTransaction(trx);
 		
 		return trx;
@@ -499,7 +499,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		}
 
 		// 1) Remove avatar in payee manager
-		((org.kmymoney.api.write.impl.hlp.FilePayeeManager) super.pyeMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager) super.pyeMgr)
 			.removePayee(pye);
 		
 		// 2) Remove payee
@@ -519,7 +519,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		}
 
 		// 1) Remove avatar in tag manager
-		((org.kmymoney.api.write.impl.hlp.FileTagManager) super.tagMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTagManager) super.tagMgr)
 			.removeTag(tag);
 		
 		// 2) Remove payee
@@ -538,7 +538,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			  											 KMMComplAcctID parentID,
 			  											 String name) {
 		KMyMoneyWritableAccountImpl acct = new KMyMoneyWritableAccountImpl(this);
-		((org.kmymoney.api.write.impl.hlp.FileAccountManager) super.acctMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileAccountManager) super.acctMgr)
 			.addAccount(acct);
 		
 		acct.setType(type);
@@ -602,7 +602,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		}
 
 		// 1) Remove avatar in account manager
-		((org.kmymoney.api.write.impl.hlp.FileAccountManager) super.acctMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileAccountManager) super.acctMgr)
 			.removeAccount(acct);
 		
 		// 2) remove account
@@ -817,7 +817,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// @Override
 	public void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt) {
 		// 1) remove avatar in transaction manager
-		((org.kmymoney.api.write.impl.hlp.FileTransactionManager) super.trxMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) super.trxMgr)
 			.removeTransactionSplit(splt);
 		
 		// 2) remove transaction split
@@ -837,7 +837,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 //			}
 //		}
 		
-		((org.kmymoney.api.write.impl.hlp.FileTransactionManager) trxMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) trxMgr)
 			.removeTransactionSplit_raw(splt.getTransactionID(), splt.getID());
 		
 		// 3) remove transaction, if no splits left
@@ -892,7 +892,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	public KMyMoneyWritablePayee createWritablePayee(final String name) {
 		KMyMoneyWritablePayeeImpl pye = new KMyMoneyWritablePayeeImpl(this);
 		pye.setName(name);
-		((org.kmymoney.api.write.impl.hlp.FilePayeeManager) super.pyeMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager) super.pyeMgr)
 			.addPayee(pye);
 		
 		return pye;
@@ -932,7 +932,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	public KMyMoneyWritableTag createWritableTag(final String name) {
 		KMyMoneyWritableTagImpl tag = new KMyMoneyWritableTagImpl(this);
 		tag.setName(name);
-		((org.kmymoney.api.write.impl.hlp.FileTagManager) super.tagMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileTagManager) super.tagMgr)
 			.addTag(tag);
 		
 		return tag;
@@ -984,7 +984,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	public KMyMoneyWritableCurrency createWritableCurrency(String currID, String name) {
 		KMyMoneyWritableCurrencyImpl curr = new KMyMoneyWritableCurrencyImpl(this, Currency.getInstance(currID));
 		curr.setName(name);
-		((org.kmymoney.api.write.impl.hlp.FileCurrencyManager) super.currMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileCurrencyManager) super.currMgr)
 			.addCurrency(curr);
 		
 		return curr;
@@ -1209,7 +1209,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		sec.setType(type);
 	    sec.setCode(code);
 		sec.setName(name);
-		((org.kmymoney.api.write.impl.hlp.FileSecurityManager) super.secMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager) super.secMgr)
 			.addSecurity(sec);
 		
 		return sec;
@@ -1233,7 +1233,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			throw new ObjectCascadeException();
 		}
 
-		((org.kmymoney.api.write.impl.hlp.FileSecurityManager) super.secMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager) super.secMgr)
 			.removeSecurity(sec);
 		
 		getRootElement().getSECURITIES().getSECURITY().remove(((KMyMoneyWritableSecurityImpl) sec).getJwsdpPeer());
@@ -1296,7 +1296,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 		KMyMoneyWritablePricePairImpl prc = new KMyMoneyWritablePricePairImpl(fromSecCurrID, toCurrID, 
 																			  this);
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.addPricePair(prc);
 		
 		return prc;
@@ -1305,7 +1305,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	@Override
 	public KMyMoneyWritablePricePair createWritablePricePair(KMMPricePairID prcPrID) {
 		KMyMoneyWritablePricePairImpl prc = new KMyMoneyWritablePricePairImpl(prcPrID, this);
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.addPricePair(prc);
 		
 		return prc;
@@ -1314,11 +1314,11 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	@Override
 	public void removePricePair(KMyMoneyWritablePricePair prcPr) {
 		// 1) remove avatar in price manager
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.removePricePair(prcPr);
 
 		// 2) remove price pair
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.removePricePair_raw(prcPr.getID());
 	
 		// 3) set 'modified' flag
@@ -1388,7 +1388,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			final LocalDate date) {
 		KMyMoneyWritablePriceImpl prc = new KMyMoneyWritablePriceImpl(prcPr, this);
 		prc.setDate(date);
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.addPrice(prc);
 		
 		return prc;
@@ -1397,11 +1397,11 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	@Override
 	public void removePrice(KMyMoneyWritablePrice prc) {
 		// 1) remove avatar in price manager
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.removePrice(prc);
 		
 		// 2) remove price
-		((org.kmymoney.api.write.impl.hlp.FilePriceManager) super.prcMgr)
+		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.removePrice_raw(prc.getID());
 		
 		// 3) set 'modified' flag

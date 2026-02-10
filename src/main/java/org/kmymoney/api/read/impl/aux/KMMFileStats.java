@@ -1,9 +1,9 @@
 package org.kmymoney.api.read.impl.aux;
 
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
-import org.kmymoney.api.read.impl.hlp.FileStats;
-import org.kmymoney.api.read.impl.hlp.FileStats_Cache;
-import org.kmymoney.api.read.impl.hlp.FileStats_Raw;
+import org.kmymoney.api.read.impl.hlp.fil.FileStats;
+import org.kmymoney.api.read.impl.hlp.fil.FileStats_Cache;
+import org.kmymoney.api.read.impl.hlp.fil.FileStats_Raw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

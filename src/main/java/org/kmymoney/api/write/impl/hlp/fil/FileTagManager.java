@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import org.kmymoney.api.generated.TAG;
 import org.kmymoney.api.read.KMyMoneyTag;
@@ -8,7 +8,7 @@ import org.kmymoney.api.write.impl.KMyMoneyWritableTagImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileTagManager extends org.kmymoney.api.read.impl.hlp.FileTagManager {
+public class FileTagManager extends org.kmymoney.api.read.impl.hlp.fil.FileTagManager {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger(FileTagManager.class);
 
