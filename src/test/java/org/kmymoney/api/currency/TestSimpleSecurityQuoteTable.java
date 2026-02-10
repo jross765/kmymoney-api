@@ -5,12 +5,14 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.io.InputStream;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMSecID;
 
 import junit.framework.JUnit4TestAdapter;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
@@ -59,12 +61,20 @@ public class TestSimpleSecurityQuoteTable {
 		complPriceTab = kmmFile.getCurrencyTable();
 		assertNotEquals(null, complPriceTab);
 
-		simplPriceTab = complPriceTab.getByNamespace(KMMQualifSecCurrID.Type.SECURITY);
+		simplPriceTab = complPriceTab.getTabByType(KMMQualifSecCurrID.Type.SECURITY);
 		assertNotEquals(null, simplPriceTab);
+		
+		assertEquals(3, simplPriceTab.getCodes().size());
 
-		assertEquals(3, simplPriceTab.getCurrencies().size());
-		assertEquals(119.50, simplPriceTab.getConversionFactor("E000001").doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(58.25, simplPriceTab.getConversionFactor("E000002").doubleValue(), ConstTest.DIFF_TOLERANCE);
+		KMMSecID secID = new KMMSecID("E000001");
+		assertEquals(119.50, ((SimpleSecurityQuoteTable) simplPriceTab).getConversionFactor(secID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(239,    ((SimpleSecurityQuoteTable) simplPriceTab).getConversionFactorRat(secID).getNumerator().intValue());
+		assertEquals(2,      ((SimpleSecurityQuoteTable) simplPriceTab).getConversionFactorRat(secID).getDenominator().intValue());
+
+		secID = new KMMSecID("E000002");
+		assertEquals(58.25, ((SimpleSecurityQuoteTable) simplPriceTab).getConversionFactor(secID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(233,   ((SimpleSecurityQuoteTable) simplPriceTab).getConversionFactorRat(secID).getNumerator().intValue());
+		assertEquals(4,     ((SimpleSecurityQuoteTable) simplPriceTab).getConversionFactorRat(secID).getDenominator().intValue());
 	}
 
 	@Test
@@ -72,16 +82,22 @@ public class TestSimpleSecurityQuoteTable {
 		complPriceTab = kmmFile.getCurrencyTable();
 		assertNotEquals(null, complPriceTab);
 
-		simplPriceTab = complPriceTab.getByNamespace(KMMQualifSecCurrID.Type.SECURITY);
+		simplPriceTab = complPriceTab.getTabByType(KMMQualifSecCurrID.Type.SECURITY);
 		assertNotEquals(null, simplPriceTab);
 
-		FixedPointNumber val = new FixedPointNumber("101.0");
-		assertEquals(true, simplPriceTab.convertToBaseCurrency(val, "E000001"));
-		assertEquals(12069.50, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		KMMSecID secID = new KMMSecID("E000001");
+		FixedPointNumber valFP = new FixedPointNumber("101.0");
+		BigFraction      valBF = BigFraction.of(101, 1);
+		assertEquals(12069.50, ((SimpleSecurityQuoteTable) simplPriceTab).convertToBaseCurrency(valFP, secID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(24139,    ((SimpleSecurityQuoteTable) simplPriceTab).convertToBaseCurrencyRat(valBF, secID).getNumerator().intValue());
+		assertEquals(2,        ((SimpleSecurityQuoteTable) simplPriceTab).convertToBaseCurrencyRat(valBF, secID).getDenominator().intValue());
 
-		val = new FixedPointNumber("101.0");
-		assertEquals(true, simplPriceTab.convertToBaseCurrency(val, "E000002"));
-		assertEquals(5883.25, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		secID = new KMMSecID("E000002");
+		valFP = new FixedPointNumber("101.0");
+		valBF = BigFraction.of(101, 1);
+		assertEquals(5883.25, ((SimpleSecurityQuoteTable) simplPriceTab).convertToBaseCurrency(valFP, secID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(23533,   ((SimpleSecurityQuoteTable) simplPriceTab).convertToBaseCurrencyRat(valBF, secID).getNumerator().intValue());
+		assertEquals(4,       ((SimpleSecurityQuoteTable) simplPriceTab).convertToBaseCurrencyRat(valBF, secID).getDenominator().intValue());
 	}
 
 	@Test
@@ -89,15 +105,21 @@ public class TestSimpleSecurityQuoteTable {
 		complPriceTab = kmmFile.getCurrencyTable();
 		assertNotEquals(null, complPriceTab);
 
-		simplPriceTab = complPriceTab.getByNamespace(KMMQualifSecCurrID.Type.SECURITY);
+		simplPriceTab = complPriceTab.getTabByType(KMMQualifSecCurrID.Type.SECURITY);
 		assertNotEquals(null, simplPriceTab);
 
-		FixedPointNumber val = new FixedPointNumber("12069.50");
-		assertEquals(true, simplPriceTab.convertFromBaseCurrency(val, "E000001"));
-		assertEquals(101.0, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		KMMSecID secID = new KMMSecID("E000001");
+		FixedPointNumber valFP = new FixedPointNumber("12069.50");
+		BigFraction      valBF = BigFraction.of(1206950, 100);
+		assertEquals(101.0, ((SimpleSecurityQuoteTable) simplPriceTab).convertFromBaseCurrency(valFP, secID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(101,   ((SimpleSecurityQuoteTable) simplPriceTab).convertFromBaseCurrencyRat(valBF, secID).getNumerator().intValue());
+		assertEquals(1,     ((SimpleSecurityQuoteTable) simplPriceTab).convertFromBaseCurrencyRat(valBF, secID).getDenominator().intValue());
 
-		val = new FixedPointNumber("5883.25");
-		assertEquals(true, simplPriceTab.convertFromBaseCurrency(val, "E000002"));
-		assertEquals(101.0, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		secID = new KMMSecID("E000002");
+		valFP = new FixedPointNumber("5883.25");
+		valBF = BigFraction.of(588325, 100);
+		assertEquals(101.0, ((SimpleSecurityQuoteTable) simplPriceTab).convertFromBaseCurrency(valFP, secID).doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(101,   ((SimpleSecurityQuoteTable) simplPriceTab).convertFromBaseCurrencyRat(valBF, secID).getNumerator().intValue());
+		assertEquals(1,     ((SimpleSecurityQuoteTable) simplPriceTab).convertFromBaseCurrencyRat(valBF, secID).getDenominator().intValue());
 	}
 }

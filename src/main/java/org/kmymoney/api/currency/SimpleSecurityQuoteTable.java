@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +26,19 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 
     /*
      * The two objects map a *non-qualified* security ID (e.g. "E000001")
-     * (*not* the security code (such as "MBG" or "FR0000120644", as opposed to the sister project)) 
+     * (*not* the security code (such as "MBG" or "FR0000120644") 
      * to a factor (in two variants: FixedPointNumber and BigFraction).
      * In order to get the value in the base-currency, the factor is to be multiplied with 
      * an amount of that security.
      */
-    private Map<KMMSecID, FixedPointNumber> mSecID2Factor    = null; // String, because unqualified
-    private Map<KMMSecID, BigFraction>      mSecID2FactorRat = null; // dto.
+    private Map<KMMSecID, FixedPointNumber> secID2Factor    = null; // String, because unqualified
+    private Map<KMMSecID, BigFraction>      secID2FactorRat = null; // dto.
 
     // -----------------------------------------------------------
 
     public SimpleSecurityQuoteTable() {
-    	mSecID2Factor    = new Hashtable<KMMSecID, FixedPointNumber>();
-    	mSecID2FactorRat = new Hashtable<KMMSecID, BigFraction>();
+    	secID2Factor    = new Hashtable<KMMSecID, FixedPointNumber>();
+    	secID2FactorRat = new Hashtable<KMMSecID, BigFraction>();
     }
 
     // -----------------------------------------------------------
@@ -47,9 +48,16 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * @return a factor {@link FixedPointNumber} that is to be multiplied with an
      *         amount of that currency to get the value in the base-currency.
      */
-    @Override
-    public FixedPointNumber getConversionFactor(final String secID) {
-    	return getConversionFactor(new KMMSecID(secID));
+    public FixedPointNumber getConversionFactor(final KMMQualifSecID secID) {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is mot set");
+		}
+
+    	return secID2Factor.get(secID.getSecID());
     }
 
     public FixedPointNumber getConversionFactor(final KMMSecID secID) {
@@ -61,14 +69,21 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is mot set");
 		}
 
-    	return mSecID2Factor.get(secID);
+    	return secID2Factor.get(secID);
     }
 
-    @Override
-    public BigFraction getConversionFactorRat(final String secID) {
-    	return getConversionFactorRat(new KMMSecID(secID));
+    public BigFraction getConversionFactorRat(final KMMQualifSecID secID) {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
+		}
+
+    	return secID2FactorRat.get(secID.getSecID());
     }
-    
+
     public BigFraction getConversionFactorRat(final KMMSecID secID) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
@@ -78,7 +93,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
-    	return mSecID2FactorRat.get(secID);
+    	return secID2FactorRat.get(secID);
     }
 
     // ----------------------------
@@ -89,9 +104,20 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      *                            multiplied with an amount of that currency to get
      *                            the value in the base-currency.
      */
-    @Override
-    public void setConversionFactor(final String secID, final FixedPointNumber factor) {
-    	setConversionFactor(new KMMSecID(secID), factor);
+    public void setConversionFactor(final KMMQualifSecID secID, final FixedPointNumber factor) {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
+		}
+
+		if ( factor == null ) {
+			throw new IllegalArgumentException("argument <factor> is null");
+		}
+
+		setConversionFactor(secID.getSecID(), factor);
     }
 
     public void setConversionFactor(final KMMSecID secID, final FixedPointNumber factor) {
@@ -107,15 +133,26 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <factor> is null");
 		}
 
-		mSecID2Factor.put(secID, factor);
+		secID2Factor.put(secID, factor);
     }
 
     // ----------------------------
 
-	@Override
-	public void setConversionFactorRat(final String secID, final BigFraction factor) {
-		setConversionFactorRat(new KMMSecID(secID), factor);
-	}
+    public void setConversionFactorRat(final KMMQualifSecID secID, final BigFraction factor) {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
+		}
+
+		if ( factor == null ) {
+			throw new IllegalArgumentException("argument <factor> is null");
+		}
+
+		secID2FactorRat.put(secID.getSecID(), factor);
+    }
 
     public void setConversionFactorRat(final KMMSecID secID, final BigFraction factor) {
 		if ( secID == null ) {
@@ -130,7 +167,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <factor> is null");
 		}
 
-		mSecID2FactorRat.put(secID, factor);
+		secID2FactorRat.put(secID, factor);
     }
 
     // ---------------------------------------------------------------
@@ -140,8 +177,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * @param secID the currency to convert to
      * @return false if the conversion is not possible
      */
-    @Override
-    public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final String secID) {
+    public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMQualifSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
@@ -150,13 +186,21 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
-		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secID> is empty");
+		return convertFromBaseCurrency(value, secID.getSecID());
+    }
+
+    public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMSecID secID) {
+		if ( value == null ) {
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 
-        FixedPointNumber factor = getConversionFactor(secID);
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		BigFraction factor = getConversionFactorRat(secID);
         if ( factor == null ) {
-        	LOGGER.error("convertFromBaseCurrency: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
+        	LOGGER.error("convertFromBaseCurrencyRat: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
             return null;
         }
         
@@ -166,7 +210,9 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
         return result;
     }
 
-    public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMSecID secID) {
+    // ----------------------------
+
+	public BigFraction convertFromBaseCurrencyRat(final BigFraction value, final KMMQualifSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
@@ -179,33 +225,13 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
-        return convertFromBaseCurrency(value, secID);
-    }
-
-    // ----------------------------
-
-	@Override
-	public BigFraction convertFromBaseCurrencyRat(final BigFraction value, final String secID) {
-		if ( value == null ) {
-			throw new IllegalArgumentException("argument <value> is null");
-		}
-
-		if ( secID == null ) {
-			throw new IllegalArgumentException("argument <secID> is null");
-		}
-
-		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secID> is empty");
-		}
-
 		BigFraction factor = getConversionFactorRat(secID);
         if ( factor == null ) {
         	LOGGER.error("convertFromBaseCurrencyRat: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
             return null;
         }
         
-        // CAUTION: immutable
-        return value.divide(factor);
+        return convertFromBaseCurrencyRat(value, secID.getSecID());
 	}
 
 	public BigFraction convertFromBaseCurrencyRat(final BigFraction value, final KMMSecID secID) {
@@ -221,7 +247,14 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
-        return convertFromBaseCurrencyRat(value, secID);
+		BigFraction factor = getConversionFactorRat(secID);
+        if ( factor == null ) {
+        	LOGGER.error("convertFromBaseCurrencyRat: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
+            return null;
+        }
+        
+        // CAUTION: immutable
+        return value.divide(factor);
 	}
 
     // ----------------------------
@@ -231,8 +264,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * @param secID the security's ID
      * @return false if the conversion is not possible
      */
-    @Override
-    public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final String secID) {
+    public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final KMMQualifSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
@@ -241,8 +273,8 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
-		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secID> is empty");
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
 		FixedPointNumber factor = getConversionFactor(secID);
@@ -251,10 +283,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			return null;
 		}
 		
-        // CAUTION: mutable
-        FixedPointNumber result = value.copy();
-        result.multiply(factor);
-		return result;
+        return convertToBaseCurrency(value, secID.getSecID());
     }
 
     public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final KMMSecID secID) {
@@ -270,13 +299,21 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
-		return convertToBaseCurrency(value, secID);
+		FixedPointNumber factor = getConversionFactor(secID);
+		if ( factor == null ) {
+        	LOGGER.error("convertToBaseCurrency: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
+			return null;
+		}
+		
+        // CAUTION: mutable
+        FixedPointNumber result = value.copy();
+        result.multiply(factor);
+		return result;
     }
 
     // ----------------------------
 
-	@Override
-	public BigFraction convertToBaseCurrencyRat(final BigFraction value, final String secID) {
+	public BigFraction convertToBaseCurrencyRat(final BigFraction value, final KMMQualifSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
@@ -285,18 +322,17 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
-		if ( secID.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secID> is empty");
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
 		BigFraction factor = getConversionFactorRat(secID);
 		if ( factor == null ) {
-        	LOGGER.error("convertToBaseCurrencyRat: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
-            return null;
+        	LOGGER.error("convertToBaseCurrency: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
+			return null;
 		}
 		
-        // CAUTION: immutable
-		return value.multiply(factor);
+		return convertToBaseCurrencyRat(factor, secID.getSecID());
 	}
 
 	public BigFraction convertToBaseCurrencyRat(final BigFraction value, final KMMSecID secID) {
@@ -312,7 +348,14 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
-		return convertToBaseCurrencyRat(value, secID);
+		BigFraction factor = getConversionFactorRat(secID);
+		if ( factor == null ) {
+        	LOGGER.error("convertToBaseCurrency: Cannot get conversion factor for value = " + value + " and code = '" + secID + "'");
+			return null;
+		}
+		
+        // CAUTION: immutable
+		return value.multiply(factor);
 	}
 
     // ---------------------------------------------------------------
@@ -322,12 +365,12 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      */
     @Override
     public List<String> getCodes() {
-		if ( mSecID2Factor == null ) {
+		if ( secID2Factor == null ) {
 			throw new IllegalStateException("table is not set");
 		}
 
 		ArrayList<String> result = new ArrayList<String>();
-    	for ( KMMSecID key : mSecID2Factor.keySet() ) {
+    	for ( KMMSecID key : secID2Factor.keySet() ) {
     		result.add(key.toString());
     	}
     	
@@ -339,13 +382,13 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      */
     @Override
     public void clear() {
-		if ( mSecID2Factor == null ||
-			 mSecID2FactorRat == null ) {
+		if ( secID2Factor == null ||
+			 secID2FactorRat == null ) {
 			throw new IllegalStateException("table is not set");
 		}
 
-        mSecID2Factor.clear();
-        mSecID2FactorRat.clear();
+        secID2Factor.clear();
+        secID2FactorRat.clear();
     }
 
     // ---------------------------------------------------------------
@@ -354,14 +397,14 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
     public String toString() {
     	String result = "SimpleSecurityQuoteTable: [\n";
 	
-    	result += "No. of entries (FP): " + mSecID2Factor.size() + "\n";
-    	result += "No. of entries (BF): " + mSecID2FactorRat.size() + "\n";
+    	result += "No. of entries (FP): " + secID2Factor.size() + "\n";
+    	result += "No. of entries (BF): " + secID2FactorRat.size() + "\n";
 	
     	result += "Entries:\n";
-    	for ( KMMSecID secID : mSecID2Factor.keySet() ) {
+    	for ( KMMSecID secID : secID2Factor.keySet() ) {
     		result += " - " + secID + ";";
-    		result += mSecID2Factor.get(secID) + ";";
-    		result += mSecID2FactorRat.get(secID) + "\n";
+    		result += secID2Factor.get(secID) + ";";
+    		result += secID2FactorRat.get(secID) + "\n";
     	}
 	
     	result += "]";

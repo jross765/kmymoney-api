@@ -59,9 +59,9 @@ public class TestComplexPriceTable {
 		complPriceTab = kmmFile.getCurrencyTable();
 		assertNotEquals(null, complPriceTab);
 
-		assertEquals(2, complPriceTab.getNameSpaces().size());
+		assertEquals(2, complPriceTab.getTabTypes().size());
 
-		List<KMMQualifSecCurrID.Type> nameSpaceList = complPriceTab.getNameSpaces();
+		List<KMMQualifSecCurrID.Type> nameSpaceList = complPriceTab.getTabTypes();
 		assertEquals(KMMQualifSecCurrID.Type.CURRENCY, nameSpaceList.get(0));
 		assertEquals(KMMQualifSecCurrID.Type.SECURITY, nameSpaceList.get(1));
 	}
@@ -85,12 +85,10 @@ public class TestComplexPriceTable {
 		assertNotEquals(null, complPriceTab);
 
 		FixedPointNumber val = new FixedPointNumber("101.0");
-		assertEquals(true, complPriceTab.convertToBaseCurrency(val, new KMMQualifSecID("E000001")));
-		assertEquals(12069.50, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(12069.50, complPriceTab.convertToBaseCurrency(val, new KMMQualifSecID("E000001")).doubleValue(), ConstTest.DIFF_TOLERANCE);
 
 		val = new FixedPointNumber("101.0");
-		assertEquals(true, complPriceTab.convertToBaseCurrency(val, new KMMQualifSecID("E000002")));
-		assertEquals(5883.25, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(5883.25, complPriceTab.convertToBaseCurrency(val, new KMMQualifSecID("E000002")).doubleValue(), ConstTest.DIFF_TOLERANCE);
 	}
 
 	@Test
@@ -99,11 +97,9 @@ public class TestComplexPriceTable {
 		assertNotEquals(null, complPriceTab);
 
 		FixedPointNumber val = new FixedPointNumber("12069.50");
-		assertEquals(true, complPriceTab.convertFromBaseCurrency(val, new KMMQualifSecID("E000001")));
-		assertEquals(101.0, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(101.0, complPriceTab.convertFromBaseCurrency(val, new KMMQualifSecID("E000001")).doubleValue(), ConstTest.DIFF_TOLERANCE);
 
 		val = new FixedPointNumber("5883.25");
-		assertEquals(true, complPriceTab.convertFromBaseCurrency(val, new KMMQualifSecID("E000002")));
-		assertEquals(101.0, val.doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(101.0, complPriceTab.convertFromBaseCurrency(val, new KMMQualifSecID("E000002")).doubleValue(), ConstTest.DIFF_TOLERANCE);
 	}
 }

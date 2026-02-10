@@ -11,6 +11,9 @@ import java.util.Map;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
+import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +27,8 @@ public class ComplexPriceTable implements Serializable {
 	// ---------------------------------------------------------------
 
 	public interface ComplexPriceTableChangeListener {
-		void conversionFactorChanged(final String currency, final FixedPointNumber factor);
-		void conversionFactorChanged(final String currency, final BigFraction factor);
+		void conversionFactorChanged(final String secCurrIDStr, final FixedPointNumber factor);
+		void conversionFactorChanged(final String secCurrIDStr, final BigFraction factor);
 	}
 
 	// -----------------------------------------------------------
@@ -41,8 +44,8 @@ public class ComplexPriceTable implements Serializable {
 	public ComplexPriceTable() {
 		secCurrType2PrcTab = new HashMap<KMMQualifSecCurrID.Type, SimplePriceTable>();
 
-		addForNameSpace(KMMQualifSecCurrID.Type.CURRENCY, new SimpleCurrencyExchRateTable());
-		addForNameSpace(KMMQualifSecCurrID.Type.SECURITY, new SimpleSecurityQuoteTable());
+		addTabForType(KMMQualifSecCurrID.Type.CURRENCY);
+		addTabForType(KMMQualifSecCurrID.Type.SECURITY);
 	}
 
 	// -----------------------------------------------------------
@@ -63,13 +66,13 @@ public class ComplexPriceTable implements Serializable {
 		listeners.remove(listener);
 	}
 
-	protected void firePriceTableChanged(final String code, final FixedPointNumber factor) {
-		if ( code == null ) {
-			throw new IllegalArgumentException("argument <code> is null");
+	protected void firePriceTableChanged(final String secCurrIDStr, final FixedPointNumber factor) {
+		if ( secCurrIDStr == null ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( secCurrIDStr.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
 		}
 		
 		if ( factor == null ) {
@@ -82,25 +85,25 @@ public class ComplexPriceTable implements Serializable {
 		// (KMyMoney issues warnings, but tolerates them).
 		// ==> No exception, but only warning 
 		if ( factor.compareTo(FixedPointNumber.ZERO) <= 0 ) {
-			LOGGER.error("firePriceTableChanged: Encountered factor <= 0 for currency '" + code + "': " + factor);
+			LOGGER.error("firePriceTableChanged: Encountered factor <= 0 for currency '" + secCurrIDStr + "': " + factor);
 			return;
-			// throw new IllegalArgumentException("argument <factor> must be > 0");
+			// throw new IllegalArgumentException("argument <factor> is <= 0");
 		}
 		
 		if ( listeners != null ) {
 			for ( ComplexPriceTableChangeListener listener : listeners ) {
-				listener.conversionFactorChanged(code, factor);
+				listener.conversionFactorChanged(secCurrIDStr, factor);
 			}
 		}
 	}
 
-	protected void firePriceTableChanged(final String code, final BigFraction factor) {
-		if ( code == null ) {
-			throw new IllegalArgumentException("argument <code> is null");
+	protected void firePriceTableChanged(final String secCurrIDStr, final BigFraction factor) {
+		if ( secCurrIDStr == null ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( secCurrIDStr.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
 		}
 		
 		if ( factor == null ) {
@@ -113,14 +116,14 @@ public class ComplexPriceTable implements Serializable {
 		// (KMyMoney issues warnings, but tolerates them).
 		// ==> No exception, but only warning 
 		if ( factor.compareTo(BigFraction.ZERO) <= 0 ) {
-			LOGGER.error("firePriceTableChanged: Encountered factor <= 0 for currency '" + code + "': " + factor);
+			LOGGER.error("firePriceTableChanged: Encountered factor <= 0 for currency '" + secCurrIDStr + "': " + factor);
 			return;
-			// throw new IllegalArgumentException("argument <factor> must be > 0");
+			// throw new IllegalArgumentException("argument <factor> is <= 0");
 		}
 		
 		if ( listeners != null ) {
 			for ( ComplexPriceTableChangeListener listener : listeners ) {
-				listener.conversionFactorChanged(code, factor);
+				listener.conversionFactorChanged(secCurrIDStr, factor);
 			}
 		}
 	}
@@ -193,48 +196,65 @@ public class ComplexPriceTable implements Serializable {
 	//
 	// -------------------------------------------------------
 
-	/**
-	 * Add a new name space with no conversion-factors.<br/>
-	 * Will not overwrite an existing name space.
-	 *
-	 * @param nameSpace the new nameSpace to add.
-	 */
-	public void addForNameSpace(final KMMQualifSecCurrID.Type nameSpace) {
-		if ( secCurrType2PrcTab.keySet().contains(nameSpace) ) {
-			return;
-		}
-
-		if ( nameSpace == KMMQualifSecCurrID.Type.CURRENCY ) {
+	public void addTabForType(final KMMQualifSecCurrID.Type type) {
+		if ( type == KMMQualifSecCurrID.Type.CURRENCY ) {
 			SimpleCurrencyExchRateTable table = new SimpleCurrencyExchRateTable();
-			table.clear();
-			addForNameSpace(nameSpace, table);
-		} else if ( nameSpace == KMMQualifSecCurrID.Type.SECURITY ) {
+			addTabForType(type, table, false);
+		} else {
 			SimpleSecurityQuoteTable table = new SimpleSecurityQuoteTable();
-			table.clear();
-			addForNameSpace(nameSpace, table);
+			addTabForType(type, table, false);
 		}
 	}
 
-	/**
-	 * Add a new name space with an initial set of conversion-factors.
-	 *
-	 * @param nameSpace the new nameSpace to add.
-	 * @param table     an initial set of conversion-factors.
-	 */
-	public void addForNameSpace(final KMMQualifSecCurrID.Type nameSpace, final SimplePriceTable table) {
-		secCurrType2PrcTab.put(nameSpace, table);
-		LOGGER.debug("addForNameSpace: Added new table for name space '" + nameSpace + "'");
+	public void addTabForType(final KMMQualifSecCurrID.Type type, final SimplePriceTable table, boolean clear) {
+		if ( table == null ) {
+			throw new IllegalArgumentException("argument <table> is null");
+		}
+
+		if ( secCurrType2PrcTab == null ) {
+			throw new IllegalStateException("Meta table is not set"); 
+		}
+		
+		if ( secCurrType2PrcTab.keySet().contains(type) ) {
+			return;
+		}
+
+		if ( clear ) {
+			secCurrType2PrcTab.clear();
+			LOGGER.debug("addTabForType: Cleared table for type " + type);
+		}
+		
+		secCurrType2PrcTab.put(type, table);
+		LOGGER.debug("addTabForType: Added new table for type " + type);
+	}
+
+	public List<KMMQualifSecCurrID.Type> getTabTypes() {
+		if ( secCurrType2PrcTab == null ) {
+			throw new IllegalStateException("Meta table is not set"); 
+		}
+		
+		ArrayList<KMMQualifSecCurrID.Type> result = new ArrayList<KMMQualifSecCurrID.Type>(secCurrType2PrcTab.keySet());
+		Collections.sort(result);
+		return result;
+	}
+
+	protected SimplePriceTable getTabByType(final KMMQualifSecCurrID.Type type) {
+		if ( secCurrType2PrcTab == null ) {
+			throw new IllegalStateException("Meta table is not set"); 
+		}
+		
+		return secCurrType2PrcTab.get(type);
 	}
 
 	// ---------------------------------------------------------------
 
 	/**
-	 * @param nameSpace 
+	 * @param type 
 	 * @param code 
 	 * @return the factor to convert the price specified by the name-space-code-pair
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
-	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID.Type nameSpace, final String code) {
+	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID.Type type, final String code) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
@@ -243,12 +263,15 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <code> is empty");
 		}
 
-		SimplePriceTable table = getByNamespace(nameSpace);
-		if ( table == null ) {
-			return null;
+		if ( type == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMQualifCurrID currID = new KMMQualifCurrID(code);
+			return getConversionFactor(currID);
+		} else if ( type == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMQualifSecID secID = new KMMQualifSecID(code);
+			return getConversionFactor(secID);
 		}
-
-		return table.getConversionFactor(code);
+		
+		return null; // Compiler happy
 	}
 
 	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID secCurrID) {
@@ -260,7 +283,21 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrID> is not set");
 		}
 
-		return getConversionFactor(secCurrID.getType(), secCurrID.getCode());
+		SimplePriceTable table = getTabByType(secCurrID.getType());
+		if ( table == null ) {
+        	LOGGER.error("getConversionFactor: Cannot get simple conversion table for security/currency ID " + secCurrID);
+			return null;
+		}
+
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			return ((SimpleCurrencyExchRateTable) table).getConversionFactor(currID);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return ((SimpleSecurityQuoteTable) table).getConversionFactor(secID);
+		}
+		
+		return null; // Compiler happy
 	}
 
 	public FixedPointNumber getConversionFactor(final Currency curr) {
@@ -274,7 +311,7 @@ public class ComplexPriceTable implements Serializable {
 
 	// ----------------------------
 
-	public BigFraction getConversionFactorRat(final KMMQualifSecCurrID.Type nameSpace, final String code) {
+	public BigFraction getConversionFactorRat(final KMMQualifSecCurrID.Type type, final String code) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
@@ -282,13 +319,14 @@ public class ComplexPriceTable implements Serializable {
 		if ( code.trim().equals("") ) {
 			throw new IllegalArgumentException("argument <code> is empty");
 		}
-
-		SimplePriceTable table = getByNamespace(nameSpace);
-		if ( table == null ) {
-			return null;
+		
+		if ( type == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMQualifCurrID currID = new KMMQualifCurrID(code);
+			return getConversionFactorRat(currID);
+		} else {
+			KMMQualifSecID secID = new KMMQualifSecID(code);
+			return getConversionFactorRat(secID);
 		}
-
-		return table.getConversionFactorRat(code);
 	}
 
 	public BigFraction getConversionFactorRat(final KMMQualifSecCurrID secCurrID) {
@@ -300,7 +338,21 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrID> is not set");
 		}
 
-		return getConversionFactorRat(secCurrID.getType(), secCurrID.getCode());
+		SimplePriceTable table = getTabByType(secCurrID.getType());
+		if ( table == null ) {
+        	LOGGER.error("getConversionFactorRat: Cannot get simple conversion table for security/currency ID " + secCurrID);
+			return null;
+		}
+
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			return ((SimpleCurrencyExchRateTable) table).getConversionFactorRat(currID);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return ((SimpleSecurityQuoteTable) table).getConversionFactorRat(secID);
+		}
+		
+		return null; // Compiler happy
 	}
 
 	public BigFraction getConversionFactorRat(final Currency curr) {
@@ -317,14 +369,13 @@ public class ComplexPriceTable implements Serializable {
 	/**
 	 * If the nameSpace does not exist yet, it is created.
 	 * 
-	 * @param nameSpace 
+	 * @param type 
 	 * @param code 
 	 * @param factor 
 	 *
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
-	public void setConversionFactor(final KMMQualifSecCurrID.Type nameSpace, final String code,
-			final FixedPointNumber factor) {
+	public void setConversionFactor(final KMMQualifSecCurrID.Type type, final String code, final FixedPointNumber factor) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
@@ -332,32 +383,23 @@ public class ComplexPriceTable implements Serializable {
 		if ( code.trim().equals("") ) {
 			throw new IllegalArgumentException("argument <code> is empty");
 		}
-
-		if ( factor == null ) {
-		    throw new IllegalArgumentException("argument <factor> is null");
+		
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(type, code);
+		setConversionFactor(secCurrID, factor);
+	}
+	
+	@Deprecated
+	public void setConversionFactor(final String secCurrIDStr, final FixedPointNumber factor) {
+		if ( secCurrIDStr == null ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		// CAUTION: One might think that this check is a good idea.
-		// In fact, it is not, because it actually happens in real-life
-		// KMyMoney files that you will have null-price entries.
-		// (KMyMoney issues warnings, but tolerates them).
-		// ==> No exception, but only warning 
-		if ( factor.compareTo(FixedPointNumber.ZERO) <= 0 ) {
-			LOGGER.error("setConversionFactor: Encountered factor <= 0 for currency/security '" + nameSpace + ":" + code + "': " + factor);
-			return;
-			// throw new IllegalArgumentException("argument <factor> must be > 0");
+		if ( secCurrIDStr.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
 		}
 
-		SimplePriceTable table = getByNamespace(nameSpace);
-		if ( table == null ) {
-			addForNameSpace(nameSpace);
-			table = getByNamespace(nameSpace);
-		}
-
-		table.setConversionFactor(code, factor);
-		table.setConversionFactorRat(code, factor.toBigFraction());
-
-		firePriceTableChanged(code, factor);
+		KMMQualifSecCurrID secCurrID = KMMQualifSecCurrID.parse(secCurrIDStr);
+		setConversionFactor(secCurrID, factor);
 	}
 
 	public void setConversionFactor(final KMMQualifSecCurrID secCurrID, final FixedPointNumber factor) {
@@ -369,12 +411,87 @@ public class ComplexPriceTable implements Serializable {
 		    throw new IllegalArgumentException("argument <secCurrID> is not set");
 		}
 	
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			setConversionFactor(currID, factor);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			setConversionFactor(secID, factor);
+		}
+
+		firePriceTableChanged(secCurrID.toString(), factor);
+	}
+	
+	public void setConversionFactor(final KMMSecID secID, final FixedPointNumber factor) {
+		if ( secID == null ) {
+		    throw new IllegalArgumentException("argument <secID> is null");
+		}
+	
+		if ( ! secID.isSet() ) {
+		    throw new IllegalArgumentException("argument <secID> is not set");
+		}
+	
+		if ( factor == null ) {
+		    throw new IllegalArgumentException("argument <factor> is null");
+		}
+
+		// CAUTION: One might think that this check is a good idea.
+		// In fact, it is not, because it actually happens in real-life
+		// KMyMoney files that you will have null-price entries.
+		// (KMyMoney issues warnings, but tolerates them).
+		// ==> No exception, but only warning 
+		if ( factor.compareTo(FixedPointNumber.ZERO) <= 0 ) {
+			LOGGER.error("setConversionFactor: Encountered factor <= 0 for security '" + secID + "': " + factor);
+			return;
+			// throw new IllegalArgumentException("argument <factor> must be > 0");
+		}
+
+		SimplePriceTable table = getTabByType(KMMQualifSecCurrID.Type.SECURITY);
+		if ( table == null ) {
+        	LOGGER.error("setConversionFactor: Cannot get simple conversion table for security/currency ID " + secID);
+			return;
+		}
+
+		((SimpleSecurityQuoteTable) table).setConversionFactor(secID, factor);
+		((SimpleSecurityQuoteTable) table).setConversionFactorRat(secID, factor.toBigFraction());
+
+		firePriceTableChanged(secID.toString(), factor);
+	}
+	
+	public void setConversionFactor(final KMMCurrID currID, final FixedPointNumber factor) {
+		if ( currID == null ) {
+		    throw new IllegalArgumentException("argument <currID> is null");
+		}
+	
+		if ( ! currID.isSet() ) {
+		    throw new IllegalArgumentException("argument <currID> is not set");
+		}
+	
 		if ( factor == null ) {
 		    throw new IllegalArgumentException("argument <factor> is null");
 		}
 	
-		setConversionFactor(secCurrID.getType(), secCurrID.getCode(),
-			            factor);
+		// CAUTION: One might think that this check is a good idea.
+		// In fact, it is not, because it actually happens in real-life
+		// KMyMoney files that you will have null-price entries.
+		// (KMyMoney issues warnings, but tolerates them).
+		// ==> No exception, but only warning 
+		if ( factor.compareTo(FixedPointNumber.ZERO) <= 0 ) {
+			LOGGER.error("setConversionFactor: Encountered factor <= 0 for currency '" + currID + "': " + factor);
+			return;
+			// throw new IllegalArgumentException("argument <factor> must be > 0");
+		}
+
+		SimplePriceTable table = getTabByType(KMMQualifSecCurrID.Type.CURRENCY);
+		if ( table == null ) {
+        	LOGGER.error("setConversionFactor: Cannot get simple conversion table for currency ID " + currID);
+			return;
+		}
+
+		((SimpleCurrencyExchRateTable) table).setConversionFactor(currID, factor);
+		((SimpleCurrencyExchRateTable) table).setConversionFactorRat(currID, factor.toBigFraction());
+
+		firePriceTableChanged(currID.toString(), factor);
 	}
 	
 	public void setConversionFactor(final Currency curr, final FixedPointNumber factor) {
@@ -392,7 +509,7 @@ public class ComplexPriceTable implements Serializable {
 	
 	// ----------------------------
 
-	public void setConversionFactorRat(final KMMQualifSecCurrID.Type nameSpace, final String code,
+	public void setConversionFactorRat(final KMMQualifSecCurrID.Type type, final String code,
 			final BigFraction factor) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
@@ -401,28 +518,23 @@ public class ComplexPriceTable implements Serializable {
 		if ( code.trim().equals("") ) {
 			throw new IllegalArgumentException("argument <code> is empty");
 		}
+		
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(type, code);
+		setConversionFactorRat(secCurrID, factor);
+	}
 
-		if ( factor == null ) {
-		    throw new IllegalArgumentException("argument <factor> is null");
+	@Deprecated
+	public void setConversionFactorRat( final String secCurrIDStr, final BigFraction factor) {
+		if ( secCurrIDStr == null ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
+		}
+
+		if ( secCurrIDStr.trim().equals("") ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
 		}
 		
-		// ::TODO ::CHECK
-		// In the sister project, we had to remove this check (cf. comment there).
-		// What about GnuCash?
-		if ( factor.compareTo(BigFraction.ZERO) <= 0 ) {
-			throw new IllegalArgumentException("argument <factor> must be > 0");
-		}
-
-		SimplePriceTable table = getByNamespace(nameSpace);
-		if ( table == null ) {
-			addForNameSpace(nameSpace);
-			table = getByNamespace(nameSpace);
-		}
-
-		table.setConversionFactor(code, FixedPointNumber.of(factor));
-		table.setConversionFactorRat(code, factor);
-
-		firePriceTableChanged(code, factor);
+		KMMQualifSecCurrID secCurrID = KMMQualifSecCurrID.parse(secCurrIDStr);
+		setConversionFactorRat(secCurrID, factor);
 	}
 
 	public void setConversionFactorRat(final KMMQualifSecCurrID secCurrID, final BigFraction factor) {
@@ -434,14 +546,81 @@ public class ComplexPriceTable implements Serializable {
 		    throw new IllegalArgumentException("argument <secCurrID> is not set");
 		}
 	
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			setConversionFactorRat(currID, factor);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			setConversionFactorRat(secID, factor);
+		}
+
+		firePriceTableChanged(secCurrID.toString(), factor);
+	}
+	
+	public void setConversionFactorRat(final KMMSecID secID, final BigFraction factor) {
+		if ( secID == null ) {
+		    throw new IllegalArgumentException("argument <secID> is null");
+		}
+	
+		if ( ! secID.isSet() ) {
+		    throw new IllegalArgumentException("argument <secID> is not set");
+		}
+	
 		if ( factor == null ) {
 		    throw new IllegalArgumentException("argument <factor> is null");
 		}
 	
-		setConversionFactorRat(secCurrID.getType(), secCurrID.getCode(),
-			            factor);
+		// ::TODO ::CHECK
+		// In the sister project, we had to remove this check (cf. comment there).
+		// What about GnuCash?
+		if ( factor.compareTo(BigFraction.ZERO) <= 0 ) {
+			throw new IllegalArgumentException("argument <factor> must be > 0");
+		}
+
+		SimplePriceTable table = getTabByType(KMMQualifSecCurrID.Type.SECURITY);
+		if ( table == null ) {
+        	LOGGER.error("setConversionFactorRat: Cannot get simple conversion table for security ID " + secID);
+			return;
+		}
+
+		((SimpleSecurityQuoteTable) table).setConversionFactor(secID, FixedPointNumber.of(factor));
+		((SimpleSecurityQuoteTable) table).setConversionFactorRat(secID, factor);
+
+		firePriceTableChanged(secID.toString(), factor);
 	}
+
+	public void setConversionFactorRat(final KMMCurrID currID, final BigFraction factor) {
+		if ( currID == null ) {
+		    throw new IllegalArgumentException("argument <secID> is null");
+		}
 	
+		if ( ! currID.isSet() ) {
+		    throw new IllegalArgumentException("argument <secID> is not set");
+		}
+	
+		if ( factor == null ) {
+		    throw new IllegalArgumentException("argument <factor> is null");
+		}
+	
+		// ::TODO ::CHECK
+		// In the sister project, we had to remove this check (cf. comment there).
+		// What about GnuCash?
+		if ( factor.compareTo(BigFraction.ZERO) <= 0 ) {
+			throw new IllegalArgumentException("argument <factor> must be > 0");
+		}
+
+		SimplePriceTable table = getTabByType(KMMQualifSecCurrID.Type.SECURITY);
+		if ( table == null ) {
+        	LOGGER.error("setConversionFactorRat: Cannot get simple conversion table for security ID " + currID);
+			return;
+		}
+
+		((SimpleCurrencyExchRateTable) table).setConversionFactor(currID, FixedPointNumber.of(factor));
+		((SimpleCurrencyExchRateTable) table).setConversionFactorRat(currID, factor);
+
+		firePriceTableChanged(currID.toString(), factor);
+	}
+
 	public void setConversionFactorRat(final Currency curr, final BigFraction factor) {
 		if ( curr == null ) {
 		    throw new IllegalArgumentException("argument <curr> is null");
@@ -476,13 +655,21 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrID> is null"); 
 		}
 		
-		SimplePriceTable table = getByNamespace(secCurrID.getType());
+		SimplePriceTable table = getTabByType(secCurrID.getType());
 		if ( table == null ) {
         	LOGGER.error("convertFromBaseCurrency: Cannot get simple conversion table for value = " + pValue + " and code = '" + secCurrID + "'");
 			return null;
 		}
 
-		return table.convertFromBaseCurrency(pValue, secCurrID.getCode());
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			return ((SimpleCurrencyExchRateTable) table).convertFromBaseCurrency(pValue, currID);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return ((SimpleSecurityQuoteTable) table).convertFromBaseCurrency(pValue, secID);
+		}
+		
+		return null; // Compiler happy
 	}
 
 	public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber pValue, final Currency curr) {
@@ -511,13 +698,21 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrID> is not set"); 
 		}
 		
-		SimplePriceTable table = getByNamespace(secCurrID.getType());
+		SimplePriceTable table = getTabByType(secCurrID.getType());
 		if ( table == null ) {
         	LOGGER.error("convertFromBaseCurrencyRat: Cannot get simple conversion table for value = " + pValue + " and code = '" + secCurrID + "'");
 			return null;
 		}
 
-		return table.convertFromBaseCurrencyRat(pValue, secCurrID.getCode());
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			return ((SimpleCurrencyExchRateTable) table).convertFromBaseCurrencyRat(pValue, currID);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return ((SimpleSecurityQuoteTable) table).convertFromBaseCurrencyRat(pValue, secID);
+		}
+		
+		return null; // Compiler happy
 	}
 	
 	public BigFraction convertFromBaseCurrencyRat(final BigFraction pValue, final Currency curr) {
@@ -547,13 +742,21 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrID> is not set"); 
 		}
 		
-		SimplePriceTable table = getByNamespace(secCurrID.getType());
+		SimplePriceTable table = getTabByType(secCurrID.getType());
 		if ( table == null ) {
         	LOGGER.error("convertToBaseCurrency: Cannot get simple conversion table for value = " + pValue + " and code = '" + secCurrID + "'");
 			return null;
 		}
 
-		return table.convertToBaseCurrency(pValue, secCurrID.getCode());
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			return ((SimpleCurrencyExchRateTable) table).convertToBaseCurrency(pValue, currID);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return ((SimpleSecurityQuoteTable) table).convertToBaseCurrency(pValue, secID);
+		}
+		
+		return null; // Compiler happy
 	}
 
 	public FixedPointNumber convertToBaseCurrency(final FixedPointNumber pValue, final Currency curr) {
@@ -571,8 +774,9 @@ public class ComplexPriceTable implements Serializable {
 	// ----------------------------
 
 	public BigFraction convertToBaseCurrencyRat(final BigFraction pValue, final KMMQualifSecCurrID secCurrID) {
-		if ( pValue == null )
+		if ( pValue == null ) {
 			throw new IllegalArgumentException("argument <pValue> is null");
+		}
 
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null"); 
@@ -582,13 +786,21 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrID> is not set"); 
 		}
 		
-		SimplePriceTable table = getByNamespace(secCurrID.getType());
+		SimplePriceTable table = getTabByType(secCurrID.getType());
 		if ( table == null ) {
         	LOGGER.error("convertToBaseCurrencyRat: Cannot get simple conversion table for value = " + pValue + " and code = '" + secCurrID + "'");
 			return null;
 		}
 
-		return table.convertToBaseCurrencyRat(pValue, secCurrID.getCode());
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			KMMCurrID currID = new KMMCurrID(secCurrID.getCode());
+			return ((SimpleCurrencyExchRateTable) table).convertToBaseCurrencyRat(pValue, currID);
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			return ((SimpleSecurityQuoteTable) table).convertToBaseCurrencyRat(pValue, secID);
+		}
+		
+		return null; // Compiler happy
 	}
 	
 	public BigFraction convertToBaseCurrencyRat(final BigFraction pValue, final Currency curr) {
@@ -606,26 +818,12 @@ public class ComplexPriceTable implements Serializable {
 
 	// ---------------------------------------------------------------
 
-	public List<KMMQualifSecCurrID.Type> getNameSpaces() {
-		ArrayList<KMMQualifSecCurrID.Type> result = new ArrayList<KMMQualifSecCurrID.Type>(secCurrType2PrcTab.keySet());
-		Collections.sort(result);
-		return result;
-	}
-
-	/**
-	 * @param type
-	 * @return
-	 */
-	protected SimplePriceTable getByNamespace(KMMQualifSecCurrID.Type type) {
-		return secCurrType2PrcTab.get(type);
-	}
-
 	/**
 	 * @param tyoe
 	 * @return 
 	 */
-	public List<String> getCurrencies(final KMMQualifSecCurrID.Type tyoe) {
-		SimplePriceTable table = getByNamespace(tyoe);
+	public List<String> getCodes(final KMMQualifSecCurrID.Type tyoe) {
+		SimplePriceTable table = getTabByType(tyoe);
 		if ( table == null ) {
 			return new ArrayList<String>();
 		}
@@ -639,8 +837,12 @@ public class ComplexPriceTable implements Serializable {
 	 * @see SimplePriceTable#clear()
 	 */
 	public void clear() {
-		for ( KMMQualifSecCurrID.Type nameSpace : secCurrType2PrcTab.keySet() ) {
-			secCurrType2PrcTab.get(nameSpace).clear();
+		if ( secCurrType2PrcTab == null ) {
+			throw new IllegalStateException("Meta table is not set"); 
+		}
+		
+		for ( KMMQualifSecCurrID.Type type : secCurrType2PrcTab.keySet() ) {
+			secCurrType2PrcTab.get(type).clear();
 		}
 
 		secCurrType2PrcTab.clear();
@@ -652,12 +854,12 @@ public class ComplexPriceTable implements Serializable {
 	public String toString() {
 		String result = "ComplexPriceTable [\n";
 
-		for ( KMMQualifSecCurrID.Type nameSpace : getNameSpaces() ) {
-			if ( nameSpace != KMMQualifSecCurrID.Type.UNSET ) {
+		for ( KMMQualifSecCurrID.Type type : getTabTypes() ) {
+			if ( type != KMMQualifSecCurrID.Type.UNSET ) {
 				result += "=======================================\n";
-				result += "Name space: " + nameSpace + "\n";
+				result += "Name space: " + type + "\n";
 				result += "=======================================\n";
-				result += getByNamespace(nameSpace).toString() + "\n";
+				result += getTabByType(type).toString() + "\n";
 			}
 		}
 
