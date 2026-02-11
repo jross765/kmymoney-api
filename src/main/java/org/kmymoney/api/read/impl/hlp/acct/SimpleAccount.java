@@ -17,6 +17,7 @@ import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
@@ -217,6 +218,18 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	@Override
 	public BigFraction getBalanceRat(final LocalDate date, final KMMSecID secID) {
 		return AccountBalanceHelper_BF.getBalance(date, secID, this);
+	}
+
+	// ---
+
+	@Override
+	public FixedPointNumber getBalance(final LocalDate date, final KMMCurrID currID) {
+		return AccountBalanceHelper_FP.getBalance(date, currID, this);
+	}
+
+	@Override
+	public BigFraction getBalanceRat(final LocalDate date, final KMMCurrID currID) {
+		return AccountBalanceHelper_BF.getBalance(date, currID, this);
 	}
 
 	// ---

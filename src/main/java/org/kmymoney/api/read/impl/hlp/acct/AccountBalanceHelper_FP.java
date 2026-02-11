@@ -11,6 +11,7 @@ import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
@@ -122,6 +123,21 @@ public class AccountBalanceHelper_FP
 		} catch (KMMIDNotSetException e) {
 			return null;
 		}
+		return getBalance(date, secCurrID, acct);
+	}
+
+	public static FixedPointNumber getBalance(final LocalDate date, final KMMCurrID currID,
+			  final SimpleAccount acct) {
+		if ( currID == null ) {
+			throw new IllegalArgumentException("argument <currID> is null");
+		}
+
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
+		}
+
+		KMMQualifSecCurrID secCurrID;
+		secCurrID = new KMMQualifSecCurrID(currID);
 		return getBalance(date, secCurrID, acct);
 	}
 

@@ -16,6 +16,7 @@ import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
@@ -374,6 +375,10 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
     FixedPointNumber getBalance(LocalDate date, KMMSecID secID);
 
     BigFraction      getBalanceRat(LocalDate date, KMMSecID secID);
+
+    FixedPointNumber getBalance(LocalDate date, KMMCurrID currID);
+
+    BigFraction      getBalanceRat(LocalDate date, KMMCurrID currID);
 
     FixedPointNumber getBalance(LocalDate date, Currency curr);
 
