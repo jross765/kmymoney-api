@@ -385,6 +385,7 @@ public interface KMyMoneyFile extends KMyMoneyObject {
 	 * @param secIDStr
 	 * @return
 	 */
+	@Deprecated
 	KMyMoneySecurity getSecurityByID(String secIDStr);
 
 	/**
@@ -399,6 +400,7 @@ public interface KMyMoneyFile extends KMyMoneyObject {
 	 * @throws InvalidQualifSecCurrIDException
 	 * @throws InvalidQualifSecCurrTypeException
 	 */
+	@Deprecated
 	KMyMoneySecurity getSecurityByQualifID(String qualifID)
 			throws InvalidQualifSecCurrIDException;
 
