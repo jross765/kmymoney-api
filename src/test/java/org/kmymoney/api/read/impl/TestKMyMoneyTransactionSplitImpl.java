@@ -89,18 +89,18 @@ public class TestKMyMoneyTransactionSplitImpl {
 		assertEquals(null, splt.getAction());
 		
 		assertEquals(10000.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(10000, splt.getValueRat().getNumerator().longValue());
-		assertEquals(1, splt.getValueRat().getDenominator().longValue());
+		assertEquals(10000,    splt.getValueRat().getNumerator().longValue());
+		assertEquals(1,        splt.getValueRat().getDenominator().longValue());
 		assertEquals("10.000,00 €", splt.getValueFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(10000.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(10000, splt.getSharesRat().getNumerator().longValue());
-		assertEquals(1, splt.getSharesRat().getDenominator().longValue());
+		assertEquals(10000,    splt.getSharesRat().getNumerator().longValue());
+		assertEquals(1,        splt.getSharesRat().getDenominator().longValue());
 		assertEquals("10.000,00 €", splt.getSharesFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(1.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(1, splt.getPriceRat().getNumerator().longValue());
-		assertEquals(1, splt.getPriceRat().getDenominator().longValue());
+		assertEquals(1,    splt.getPriceRat().getNumerator().longValue());
+		assertEquals(1,    splt.getPriceRat().getDenominator().longValue());
 		assertEquals("1,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals("", splt.getMemo());

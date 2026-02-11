@@ -121,18 +121,18 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(null, splt.getAction());
 		
 		assertEquals(10000.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(10000, splt.getValueRat().getNumerator().longValue());
-		assertEquals(1, splt.getValueRat().getDenominator().longValue());
+		assertEquals(10000,    splt.getValueRat().getNumerator().longValue());
+		assertEquals(1,        splt.getValueRat().getDenominator().longValue());
 		assertEquals("10.000,00 €", splt.getValueFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(10000.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(10000, splt.getSharesRat().getNumerator().longValue());
-		assertEquals(1, splt.getSharesRat().getDenominator().longValue());
+		assertEquals(10000,    splt.getSharesRat().getNumerator().longValue());
+		assertEquals(1,        splt.getSharesRat().getDenominator().longValue());
 		assertEquals("10.000,00 €", splt.getSharesFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(1.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(1, splt.getPriceRat().getNumerator().longValue());
-		assertEquals(1, splt.getPriceRat().getDenominator().longValue());
+		assertEquals(1,    splt.getPriceRat().getNumerator().longValue());
+		assertEquals(1,    splt.getPriceRat().getDenominator().longValue());
 		assertEquals("1,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals("", splt.getMemo());
@@ -150,19 +150,19 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(KMyMoneyTransactionSplit.Action.BUY_SHARES, splt.getAction());
 		
 		assertEquals(1800.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(1800, splt.getValueRat().getNumerator().longValue());
-		assertEquals(1, splt.getValueRat().getDenominator().longValue());
+		assertEquals(1800,    splt.getValueRat().getNumerator().longValue());
+		assertEquals(1,       splt.getValueRat().getDenominator().longValue());
 		assertEquals("1.800,00 €", splt.getValueFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(15.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(15, splt.getSharesRat().getNumerator().longValue());
-		assertEquals(1, splt.getSharesRat().getDenominator().longValue());
+		assertEquals(15,    splt.getSharesRat().getNumerator().longValue());
+		assertEquals(1,     splt.getSharesRat().getDenominator().longValue());
 		// ::TODO: That's not exactly what we want...
 		assertEquals("15 E000001", splt.getSharesFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(120.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals(120, splt.getPriceRat().getNumerator().longValue());
-		assertEquals(1, splt.getPriceRat().getDenominator().longValue());
+		assertEquals(120,    splt.getPriceRat().getNumerator().longValue());
+		assertEquals(1,      splt.getPriceRat().getDenominator().longValue());
 		assertEquals("120,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals("", splt.getMemo());
@@ -266,6 +266,10 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		// output file, then re-read from it, and whether is is what
 		// we expect it is.
 
+		// Change value; other variant, diff. value
+		splt.setValue(new FixedPointNumber("-123.55"));
+		splt.setShares(new FixedPointNumber("-67.9001"));
+		
 		File outFile = folder.newFile(ConstTest.KMM_FILENAME_OUT);
 		// System.err.println("Outfile for TestKMyMoneyWritableCustomerImpl.test01_1: '"
 		// + outFile.getPath() + "'");
@@ -312,8 +316,18 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(TRX_01_ID, splt.getTransactionID()); // unchanged
 		assertEquals(ACCT_2_ID, splt.getAccountID()); // changed
 		assertEquals(null, splt.getAction()); // unchanged
-		assertEquals(-123.45, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE); // changed
-		assertEquals(-67.8901, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE); // changed
+		
+		// Caution: value differs from that in test02_1_check_memory() on purpose
+		// Cf. change before saving in test02_1().
+		assertEquals(-123.55, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE); // changed
+		assertEquals(-2471,   splt.getValueRat().getNumerator().intValue()); // changed
+		assertEquals(20,      splt.getValueRat().getDenominator().intValue()); // changed
+		
+		// Dto.
+		assertEquals(-67.9001, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE); // changed
+		assertEquals(-679001,  splt.getSharesRat().getNumerator().intValue()); // changed
+		assertEquals(10000,    splt.getSharesRat().getDenominator().intValue()); // changed
+		
 		assertEquals("Alle meine Entchen", splt.getMemo()); // changed
 		assertEquals("<%$@üb234/xy&>", splt.getNumber()); // changed
 //		assertEquals(null, splt.getUserDefinedAttributeKeys()); // unchanged
