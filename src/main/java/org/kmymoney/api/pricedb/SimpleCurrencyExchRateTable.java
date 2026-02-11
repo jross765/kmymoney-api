@@ -1,4 +1,4 @@
-package org.kmymoney.api.currency;
+package org.kmymoney.api.pricedb;
 
 import java.io.Serializable;
 import java.util.ArrayList;

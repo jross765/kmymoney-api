@@ -22,7 +22,7 @@ module kmymoney.api {
 	
 	// ----------------------------
 	
-	exports org.kmymoney.api.currency;
+	exports org.kmymoney.api.pricedb;
 	
 	exports org.kmymoney.api.read;
 	exports org.kmymoney.api.read.aux;

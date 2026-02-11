@@ -8,8 +8,8 @@ import java.util.Currency;
 import java.util.List;
 
 import org.apache.commons.numbers.fraction.BigFraction;
-import org.kmymoney.api.currency.ComplexPriceTable;
 import org.kmymoney.api.generated.KMYMONEYFILE;
+import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.hlp.KMyMoneyObject;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;

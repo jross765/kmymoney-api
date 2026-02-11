@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.numbers.fraction.BigFraction;
-import org.kmymoney.api.currency.ComplexPriceTable;
+import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;

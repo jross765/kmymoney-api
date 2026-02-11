@@ -19,13 +19,13 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
-import org.kmymoney.api.currency.ComplexPriceTable;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.PAIR;
 import org.kmymoney.api.generated.PRICEPAIR;
 import org.kmymoney.api.generated.PRICES;
+import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMMSecCurr;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyCurrency;

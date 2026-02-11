@@ -1,4 +1,4 @@
-package org.kmymoney.api.currency;
+package org.kmymoney.api.pricedb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
+import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
