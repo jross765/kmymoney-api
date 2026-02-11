@@ -109,7 +109,6 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyWritableFileImpl.class);
 
 	// ::MAGIC
-	private static final int HEX = 16;
 	private static final String CODEPAGE = "UTF-8";
 
 	// ---------------------------------------------------------------
