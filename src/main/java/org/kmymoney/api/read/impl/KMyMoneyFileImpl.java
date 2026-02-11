@@ -41,7 +41,6 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.aux.KMMFileMetaInfo;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
-import org.kmymoney.api.read.impl.hlp.NamespaceRemoverReader;
 import org.kmymoney.api.read.impl.hlp.fil.FileAccountManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileInstitutionManager;
@@ -50,6 +49,7 @@ import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileSecurityManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileTagManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileTransactionManager;
+import org.kmymoney.api.read.impl.hlp.fil.NamespaceRemoverReader;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
@@ -801,6 +801,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     @Override
+	@Deprecated
     public KMyMoneySecurity getSecurityByID(final String idStr) {
     	return secMgr.getSecurityByID(idStr);
     }
@@ -819,6 +820,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     @Override
+	@Deprecated
     public KMyMoneySecurity getSecurityByQualifID(final String qualifIDStr) {
     	return secMgr.getSecurityByQualifID(qualifIDStr);
     }
