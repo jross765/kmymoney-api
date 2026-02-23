@@ -383,7 +383,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		
 		if ( isCurrencyMatching() ) {
 			String oldValue = getJwsdpPeer().getShares();
-			getJwsdpPeer().setShares(n.toKMyMoneyString());
+			getJwsdpPeer().setValue(n.toKMyMoneyString());
 			if ( old == null || !old.equals(n.toKMyMoneyString()) ) {
 				if ( helper.getPropertyChangeSupport() != null ) {
 					helper.getPropertyChangeSupport().firePropertyChange("value", new FixedPointNumber(oldValue), n);
