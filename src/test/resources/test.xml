@@ -3,10 +3,10 @@
 <KMYMONEY-FILE>
   <FILEINFO>
     <CREATION_DATE date="2023-10-14"/>
-    <LAST_MODIFIED_DATE date="2025-10-03T11:25:34+02:00"/>
+    <LAST_MODIFIED_DATE date="2026-02-25T10:45:54+01:00"/>
     <VERSION id="1"/>
-    <FIXVERSION id="9"/>
-    <APPVERSION id="5.2.1-c9bd024"/>
+    <FIXVERSION id="10"/>
+    <APPVERSION id="5.2.1-98bdf80"/>
   </FILEINFO>
   <USER name="John Doe" email="">
     <ADDRESS street="" city="" state="" zip="" telephone="" country="" county="" zipcode="" postcode=""/>
@@ -110,6 +110,7 @@
         <SUBACCOUNT id="A000003"/>
         <SUBACCOUNT id="A000004"/>
         <SUBACCOUNT id="A000005"/>
+        <SUBACCOUNT id="A000075"/>
       </SUBACCOUNTS>
     </ACCOUNT>
     <ACCOUNT id="A000003" parentaccount="A000002" lastreconciled="" lastmodified="2023-12-09" institution="" opened="2023-10-14" number="" type="3" name="Bargeld" description="" currency="EUR">
@@ -290,6 +291,11 @@
     </ACCOUNT>
     <ACCOUNT id="A000073" parentaccount="A000072" lastreconciled="" lastmodified="" institution="" opened="1900-01-01" number="" type="13" name="Provision" description="" currency="EUR"/>
     <ACCOUNT id="A000074" parentaccount="A000062" lastreconciled="" lastmodified="" institution="" opened="2025-04-12" number="" type="15" name="DE000BASF111 BASF SE" description="" currency="E000003"/>
+    <ACCOUNT id="A000075" parentaccount="A000002" lastreconciled="" lastmodified="" institution="" opened="2026-01-01" number="" type="1" name="Giro DB alt" description="" currency="EUR">
+      <KEYVALUEPAIRS>
+        <PAIR key="mm-closed" value="yes"/>
+      </KEYVALUEPAIRS>
+    </ACCOUNT>
   </ACCOUNTS>
   <TRANSACTIONS>
     <TRANSACTION id="T000000000000000001" postdate="2023-01-01" memo="" entrydate="2023-11-03" commodity="EUR">
@@ -416,7 +422,7 @@
     </TRANSACTION>
   </TRANSACTIONS>
   <KEYVALUEPAIRS>
-    <PAIR key="LastModificationDate" value="2025-10-03T11:25:34+02:00"/>
+    <PAIR key="LastModificationDate" value="2026-02-25T10:45:54+01:00"/>
     <PAIR key="kmm-baseCurrency" value="EUR"/>
     <PAIR key="kmm-id" value="{1f7ec5d2-f982-48eb-9ae3-22095e2362ee}"/>
   </KEYVALUEPAIRS>

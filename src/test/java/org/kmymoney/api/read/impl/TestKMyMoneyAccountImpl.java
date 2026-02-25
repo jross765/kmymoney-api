@@ -23,12 +23,13 @@ import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyAccountImpl {
-	public static final KMMComplAcctID ACCT_1_ID = new KMMComplAcctID("A000004"); // Asset:Girokonto
-	public static final KMMComplAcctID ACCT_2_ID = new KMMComplAcctID("A000062"); // Asset:Finanzanlagen::Depot RaiBa
-	public static final KMMComplAcctID ACCT_3_ID = new KMMComplAcctID("A000049"); // Fremdkapital
-	public static final KMMComplAcctID ACCT_4_ID = new KMMComplAcctID("A000064"); // Aktiva:Depots:Depot RaiBa:DE0007100000 Mercedes-Benz
-	public static final KMMComplAcctID ACCT_8_ID = new KMMComplAcctID("A000063"); // Aktiva:Depots:Depot RaiBa:DE0007164600 SAP
-	public static final KMMComplAcctID ACCT_9_ID = new KMMComplAcctID("A000046"); // Ausgabe:Wohnen:Nebenkosten:Gas
+	public static final KMMComplAcctID ACCT_1_ID  = new KMMComplAcctID("A000004"); // Anlagen:Barvermögen:Giro RaiBa
+	public static final KMMComplAcctID ACCT_2_ID  = new KMMComplAcctID("A000062"); // Anlagen:Finanzanlagen::Depot RaiBa
+	public static final KMMComplAcctID ACCT_3_ID  = new KMMComplAcctID("A000049"); // Fremdkapital
+	public static final KMMComplAcctID ACCT_4_ID  = new KMMComplAcctID("A000064"); // Anlagen:Finanzanlagen:Depot RaiBa:DE0007100000 Mercedes-Benz Group AG
+	public static final KMMComplAcctID ACCT_8_ID  = new KMMComplAcctID("A000063"); // Anlagen:Finanzanlagen:Depot RaiBa:DE0007164600 SAP
+	public static final KMMComplAcctID ACCT_9_ID  = new KMMComplAcctID("A000046"); // Ausgabe:Wohnen:Nebenkosten:Gas
+	public static final KMMComplAcctID ACCT_15_ID = new KMMComplAcctID("A000075"); // Anlagen:Barvermögen:Giro DB alt
 
 	// Top-level accounts
 	public static final KMMComplAcctID ACCT_10_ID = KMMComplAcctID.get(KMMComplAcctID.Top.ASSET);
@@ -470,4 +471,12 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(0, acct.getTransactions().size());
 	}
 
+    @Test
+    public void test02() throws Exception {
+    	acct = kmmFile.getAccountByID(ACCT_15_ID);
+    	assertNotEquals(null, acct);
+
+    	assertEquals(ACCT_15_ID, acct.getID());
+    	assertEquals(true, acct.isClosed());
+    }
 }
