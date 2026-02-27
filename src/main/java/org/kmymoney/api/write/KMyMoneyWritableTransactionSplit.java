@@ -6,6 +6,7 @@ import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 
 import xyz.schnorxoborx.base.beanbase.IllegalTransactionSplitActionException;
@@ -41,6 +42,8 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @see #setAccount(KMyMoneyAccount)
 	 */
 	void setAccountID(KMMComplAcctID acctID);
+
+	void setAccountID(KMMAcctID acctID);
 
 	/**
 	 * Does not convert the quantity to another currency if the new account has
@@ -120,6 +123,8 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @see #getPrice()
 	 */
 	void setPrice(FixedPointNumber prc);
+	
+	void setPrice(BigFraction prc);
 	
 	/**
 	 * 

@@ -18,6 +18,7 @@ import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.slf4j.Logger;
@@ -256,12 +257,38 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <acctID> is null");
 		}
 		
+		if ( ! acctID.isSet() ) {
+			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
+		
 		String old = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
 		jwsdpPeer.setAccount(acctID.toString());
 		((KMyMoneyWritableFile) getWritableKMyMoneyFile()).setModified(true);
 
 		if ( old == null || 
-			 ! old.equals(acctID) ) {
+			 ! old.equals(acctID.toString()) ) {
+			if ( helper.getPropertyChangeSupport() != null ) {
+				helper.getPropertyChangeSupport().firePropertyChange("accountID", old, acctID.toString());
+			}
+		}
+	}
+
+	@Override
+	public void setAccountID(final KMMAcctID acctID) {
+		if ( acctID == null ) {
+			throw new IllegalArgumentException("argument <acctID> is null");
+		}
+		
+		if ( ! acctID.isSet() ) {
+			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
+		
+		String old = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
+		jwsdpPeer.setAccount(acctID.toString());
+		((KMyMoneyWritableFile) getWritableKMyMoneyFile()).setModified(true);
+
+		if ( old == null || 
+			 ! old.equals(acctID.toString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("accountID", old, acctID.toString());
 			}
@@ -447,6 +474,23 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
 		
 		if ( old == null || !old.equals(prc.toKMyMoneyString()) ) {
+			if ( helper.getPropertyChangeSupport() != null ) {
+				helper.getPropertyChangeSupport().firePropertyChange("price", new FixedPointNumber(old), prc);
+			}
+		}
+	}
+
+	@Override
+	public void setPrice(final BigFraction prc) {
+		if ( prc == null ) {
+			throw new IllegalArgumentException("argument <prc> is null");
+		}
+		
+		String old = getJwsdpPeer().getPrice();
+		jwsdpPeer.setPrice(prc.toString());
+		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		
+		if ( old == null || !old.equals(prc.toString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("price", new FixedPointNumber(old), prc);
 			}
