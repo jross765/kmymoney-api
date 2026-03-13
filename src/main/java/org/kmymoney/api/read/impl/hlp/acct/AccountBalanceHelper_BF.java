@@ -190,14 +190,15 @@ public class AccountBalanceHelper_BF
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
-				// CAUTION: BigFraction is immutable
 				if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
+					// CAUTION: BigFraction is immutable
 					balance = balance.multiply(splt.getSharesRat());
 				} else {
+					// CAUTION: BigFraction is immutable
 					balance = balance.add(splt.getSharesRat());
 				}
 	
-				if ( splt == lastSpltIncl ) {
+				if ( splt.getQualifID().equals( lastSpltIncl.getQualifID() ) ) {
 					break;
 				}
 			} catch ( Exception exc ) {

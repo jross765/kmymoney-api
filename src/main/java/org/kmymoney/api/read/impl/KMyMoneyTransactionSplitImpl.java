@@ -474,17 +474,16 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 				return c;
 			}
 
-			if ( !otherSplt.getQualifID().equals(getQualifID()) ) {
+			if ( ! otherSplt.getQualifID().equals(getQualifID()) ) {
 				return otherSplt.getID().compareTo(getID());
 			}
 
 			if ( otherSplt != this ) {
-				System.err.println("Duplicate transaction-split-id!! " + otherSplt.getQualifID() + "["
+				LOGGER.error("compareTo: Duplicate transaction-split-id! " + otherSplt.getQualifID() + "["
 						+ otherSplt.getClass().getName() + "] and " + getQualifID() + "[" + getClass().getName() + "]\n"
 						+ "split0=" + otherSplt.toString() + "\n" + "split1=" + toString() + "\n");
 				IllegalStateException x = new IllegalStateException("DEBUG");
 				x.printStackTrace();
-
 			}
 
 			return 0;

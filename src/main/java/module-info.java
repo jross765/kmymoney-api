@@ -9,10 +9,9 @@ module kmymoney.api {
 	// ----------------------------
 	
 	// The following already marked as "transitive" in "schnorxoborx.schnorxolib":
+	requires transitive commons.configuration;
 	requires transitive org.apache.commons.numbers.core;
 	requires transitive org.apache.commons.numbers.fraction;
-	requires transitive commons.configuration;
-	requires transitive org.apache.commons.cli;
 	requires transitive me.tongfei.progressbar;
 	
 	// Already drawn from "kmymoney.base":

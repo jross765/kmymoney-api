@@ -1,6 +1,6 @@
 # Technical Aspects
 The test file has been generated with 
-KMyMoney V. 5.2.1.
+KMyMoney V. 5.2.2.
 
 When you change the `test.xml` file, please save it in *uncompressed* XML format 
 (by convention, compressed 

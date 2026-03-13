@@ -298,7 +298,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
      */
     @Override
     public List<KMyMoneyTransactionSplit> getTransactionSplits() {
-    	if (mySplitsNeedSorting) {
+    	if ( mySplitsNeedSorting ) {
     		Collections.sort(mySplits);
     		mySplitsNeedSorting = false;
     	}

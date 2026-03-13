@@ -192,14 +192,15 @@ public class AccountBalanceHelper_FP
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
-				// CAUTION: FixedPointNumber is mutable
 				if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
+					// CAUTION: FixedPointNumber is mutable
 					balance.multiply(splt.getShares());
 				} else {
+					// CAUTION: FixedPointNumber is mutable
 					balance.add(splt.getShares());
 				}
 	
-				if ( splt == lastSpltIncl ) {
+				if ( splt.getQualifID().equals( lastSpltIncl.getQualifID() ) ) {
 					break;
 				}
 			} catch ( Exception exc ) {
@@ -323,7 +324,7 @@ public class AccountBalanceHelper_FP
 		for ( KMyMoneyAccount child : acct.getChildren() ) {
 			try {
 				// CAUTION: FixedPointNumber is mutable
-				retval.add(child.getBalanceRecursive(lastSpltIncl));
+				retval.add( child.getBalanceRecursive(lastSpltIncl) );
 			} catch ( Exception exc ) {
 				// Yes, it does happen sometimes!
 				LOGGER.error("getBalanceRecursive: Error adding balance for child account " + child.getID());
