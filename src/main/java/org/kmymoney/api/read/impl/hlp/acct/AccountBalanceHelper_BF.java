@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMyMoneyAccount;
+import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
@@ -187,7 +188,7 @@ public class AccountBalanceHelper_BF
 	public static BigFraction getBalance(final KMyMoneyTransactionSplit lastSpltIncl,
 										 final SimpleAccount acct) {
 		BigFraction balance = BigFraction.ZERO;
-		
+	
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
 			try {
 				if ( splt.getAction() == KMyMoneyTransactionSplit.Action.SPLIT_SHARES ) {
@@ -220,9 +221,27 @@ public class AccountBalanceHelper_BF
 
 	public static String getBalanceFormatted(final Locale lcl,
 											 final SimpleAccount acct) {
-		NumberFormat cf = NumberFormat.getCurrencyInstance(lcl);
-		cf.setCurrency(acct.getCurrency());
-		return cf.format(getBalance(acct).bigDecimalValue());
+		KMMQualifSecCurrID secCurrID = acct.getQualifSecCurrID();
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			NumberFormat nf = NumberFormat.getCurrencyInstance(lcl);
+			nf.setCurrency(acct.getCurrency());
+			return nf.format(getBalance(acct).bigDecimalValue());
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			KMyMoneySecurity sec = acct.getKMyMoneyFile().getSecurityByID(secID);
+			String secSymb = "(sec-symbol)";
+			if ( sec.getSymbol() != null ) {
+				secSymb = sec.getSymbol();
+			} else if ( sec.getCode() != null ) {
+				secSymb = sec.getCode();
+			} else {
+				secSymb = sec.toString();
+			}
+			NumberFormat nf = NumberFormat.getNumberInstance(lcl);
+			return ( nf.format(getBalance(acct).bigDecimalValue()) + " " + secSymb );
+		}
+		
+		return "ERROR";
 	}
 
 	// ---------------------------------------------------------------
@@ -343,9 +362,27 @@ public class AccountBalanceHelper_BF
 
 	public static String getBalanceRecursiveFormatted(final Locale lcl,
 													  final SimpleAccount acct) {
-		NumberFormat cf = NumberFormat.getCurrencyInstance(lcl);
-		cf.setCurrency(acct.getCurrency());
-		return cf.format(getBalanceRecursive(acct).bigDecimalValue());
+		KMMQualifSecCurrID secCurrID = acct.getQualifSecCurrID();
+		if ( secCurrID.getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
+			NumberFormat cf = NumberFormat.getCurrencyInstance(lcl);
+			cf.setCurrency(acct.getCurrency());
+			return cf.format(getBalanceRecursive(acct).bigDecimalValue());
+		} else if ( secCurrID.getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+			KMMSecID secID = new KMMSecID(secCurrID.getCode());
+			KMyMoneySecurity sec = acct.getKMyMoneyFile().getSecurityByID(secID);
+			String secSymb = "(sec-symbol)";
+			if ( sec.getSymbol() != null ) {
+				secSymb = sec.getSymbol();
+			} else if ( sec.getCode() != null ) {
+				secSymb = sec.getCode();
+			} else {
+				secSymb = sec.toString();
+			}
+			NumberFormat nf = NumberFormat.getNumberInstance(lcl);
+			return nf.format(getBalance(acct).bigDecimalValue()) + " " + secSymb;
+		}
+		
+		return "ERROR";
 	}
 	
 	// ---------------------------------------------------------------
