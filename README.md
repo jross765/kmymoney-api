@@ -14,29 +14,48 @@ file.
 
 * Under normal circumstances, you cannot compile it on its own (at least not without further preparation), but instead, you should clone it together with the other repos and use the parent repo's build-script.
 
-* This repository contains no history before V. 1.7 (cf. notes in parent repo).
+* This repository contains no history before V. 0.8 (cf. notes in parent repo).
 
 ## Major Changes 
 ### V. 0.8.1 &rarr; 0.9
 
-* Introduced important add-on: exact numbers / computations, as opposed to current implementation 
+There have been some major changes in this release:
+
+* Introduced important add-on: *exact* numbers / computations, as opposed to current implementation 
   based on class `FixedPointNumber` in `SchnorxoLib`, which allows for high/arbitrary-precision 
   computations, but not for exact ones).
     
   (Based on `SchnorxoLib` V. 0.2 and
-  class `BigFraction` in Apache Commons Numbers. ==> new dependency)
+  class `BigFraction` in Apache Commons Numbers. ⇒ new dependency)
+
+  That applies to *all* classes returning or receiving values -- they
+  now basically are all available in two variants throughout the lib.
     
    * Package "`read`":
      * `KMyMoneyTrxSplit(Impl)`: New methods `getValueRat()`, `getSharesRat()` and `getPriceRat()`
 
        ("rat" for "rational number") that return the according values as
        fractions / rational numbers.
+
      * `KMyMoneyAccount(Impl)`, `KMyMoneyTransaction(Impl)`: new methods `getBalanceXYZRat()`
 
        (symmetric to already existing ones) that return balance of account / transaction as *exactly computed* number (i.e., as fraction).
+
+      * Etc., many instances throughout the lib.
+
     * Package "`write`": accordingly.
     * Package "`currency`":
-       * ::TODO: Introduce BigFraction in package "currency"
+       * Renamed to "`pricedb`" (old name was misleading).
+       * Introduced `BigFraction` variants. 
+
+         As `FixedPointNumber` is mutable and the old implementation 
+         of this package's methods were based on this fact, the 
+         interfaces and implementation had to be changed 
+         (`BigFraction` is immutable).
+
+       * Other major changes in implementation (incl. logic); went from 
+         "one table per name space" to "one table per commodity type",
+         as well as better (though not perfect) type safety.
        * Small improvements
 
 * `KMyMoneyAccount(Impl)`: Method `isClosed()`.
@@ -46,9 +65,12 @@ file.
    * Computing recursive account balance (general).
    * ComplexPriceTable: Accepting factor
 
-* `KMyMoney(Writable)Transaction(Impl)`: Moved code to new module "API Specialized Entities".
+* `KMyMoney(Writable)Transaction(Impl)`: Moved parts of code to new module "API Specialized Entities".
  
 * Loading files now shows progress bars for the parts that typically take longer: Price-DB and transactions (optional, off by default).
+
+* Not-so-small changes in interfaces and extensive refactoring under the hood 
+  (primarily induced by introduction of "`BigFraction`" variants of methods, cf. above).
 
 * Various small improvements here and there.
 
