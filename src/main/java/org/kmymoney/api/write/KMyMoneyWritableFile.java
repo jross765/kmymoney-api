@@ -32,9 +32,7 @@ import xyz.schnorxoborx.base.beanbase.TooManyEntriesFoundException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
- * Extension of KMyMoneyFile that allows writing. <br/>
- * All the instances for accounts,... it returns can be assumed
- * to implement the respective *Writable-interfaces.
+ * Extension of KMyMoneyFile that allows writing.
  *
  * @see KMyMoneyFile
  */
@@ -56,18 +54,6 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
 	boolean isModified();
 
 	/**
-	 * The value is guaranteed not to be later than then the maximum of the current
-	 * system-time and the modification-time in the file at the time of the last
-	 * (full) read or sucessful write operation.
-	 * <br> 
-	 * It is thus suitable to detect if the file has been modified outside of this library.
-	 * 
-	 * @return the time in ms (compatible with File.lastModified) of the last
-	 *         write-operation
-	 */
-	long getLastWriteTime();
-
-	/**
 	 * @param pB true if this file has been modified.
 	 * @see {@link #isModified()}
 	 */
@@ -83,6 +69,20 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
 	void writeFile(File file) throws IOException;
 
 	void writeFile(File file, CompressMode compMode) throws IOException;
+
+	/**
+	 * The value is guaranteed not to be later than then the maximum of the current
+	 * system-time and the modification-time in the file at the time of the last
+	 * (full) read or successful write operation.
+	 * <br> 
+	 * It is thus suitable to detect if the file has been modified outside of this library.
+	 * 
+	 * @return the time in ms (compatible with File.lastModified) of the last
+	 *         write-operation
+	 */
+	long getLastWriteTime();
+
+    // ---------------------------------------------------------------
 
 	/**
 	 * @return the underlying JAXB-element
@@ -118,6 +118,19 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
 	// ---------------------------------------------------------------
 
 	/**
+	 * @param acctID 
+	 * @param id the id of the account to fetch
+	 * @return A modifiable version of the account or null of not found.
+	 * 
+	 * @see #getAccountByID(KMMAcctID)
+	 * @see #getAccountByID(KMMComplAcctID)
+	 */
+	KMyMoneyWritableAccount getWritableAccountByID(KMMComplAcctID acctID);
+
+	KMyMoneyWritableAccount getWritableAccountByNameUniq(String name, boolean qualif)
+	    throws NoEntryFoundException, TooManyEntriesFoundException;
+
+	/**
 	 * @param name the name to look for
 	 * @return A modifiable version of the account.
 	 * 
@@ -146,16 +159,6 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
 	Collection<KMyMoneyWritableAccount> getWritableAccountsByTypeAndName(KMyMoneyAccount.Type type, String expr, 
 																		 boolean qualif, boolean relaxed);
 	
-	/**
-	 * @param acctID 
-	 * @param id the id of the account to fetch
-	 * @return A modifiable version of the account or null of not found.
-	 * 
-	 * @see #getAccountByID(KMMAcctID)
-	 * @see #getAccountByID(KMMComplAcctID)
-	 */
-	KMyMoneyWritableAccount getWritableAccountByID(KMMComplAcctID acctID);
-
 	/**
 	 * 
 	 * @param acctID

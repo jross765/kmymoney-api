@@ -755,6 +755,12 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	}
 
 	@Override
+	public KMyMoneyWritableAccount getWritableAccountByNameUniq(String name, boolean qualif)
+			throws NoEntryFoundException, TooManyEntriesFoundException {
+		return (KMyMoneyWritableAccount) super.getAccountByNameUniq(name, qualif);
+	}
+
+	@Override
 	public KMyMoneyWritableAccount getWritableAccountByID(final KMMAcctID acctID) {
 		if ( acctID == null ) {
 			throw new IllegalArgumentException("argument <acctID> is null");
