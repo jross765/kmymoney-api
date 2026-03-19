@@ -112,7 +112,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		jwsdpSec.setPp(BigInteger.valueOf(Const.SEC_PP_DEFAULT));
 		jwsdpSec.setSaf(BigInteger.valueOf(Const.SEC_SAF_DEFAULT));
 		jwsdpSec.setTradingMarket(null);
-		jwsdpSec.setTradingCurrency(file.getDefaultCurrencyID());
+		jwsdpSec.setTradingCurrency(file.getDefaultCurrencyIDStr());
 		
 		// ::TODO: Key-value pair for ISIN
 

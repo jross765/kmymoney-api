@@ -202,7 +202,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		}
 
 		{
-			jwsdpTrx.setCommodity(file.getDefaultCurrencyID());
+			jwsdpTrx.setCommodity(file.getDefaultCurrencyIDStr());
 		}
 
 		{

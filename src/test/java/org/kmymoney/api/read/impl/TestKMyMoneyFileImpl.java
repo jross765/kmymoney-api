@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.kmymoney.api.Const;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
 
@@ -118,13 +119,23 @@ public class TestKMyMoneyFileImpl {
 	}
 
 	// ---------------------------------------------------------------
+
+	@Test
+	public void test20() {
+		// ::TODO: Eben nicht (i. Ggs. zur Schwester): 
+		// assertEquals(KMMQualifSecCurrID.Type.CURRENCY + ":" + Const.DEFAULT_CURRENCY, kmmFile.getDefaultCurrencyID().toString());
+		assertEquals(Const.DEFAULT_CURRENCY, kmmFile.getDefaultCurrencyID().toString());
+		assertEquals(Const.DEFAULT_CURRENCY, kmmFile.getDefaultCurrencyIDStr());
+	}
+
+	// ---------------------------------------------------------------
 	// The following test cases seem trivial, obvious, superfluous. 
 	// I am not so sure about that. I cannot exactly provide a reason
 	// right now, but my gut and my experience tell me that these tests
 	// are not that trivial and redundant as they seem to be.
 
 	@Test
-	public void test09() throws Exception {
+	public void test23() throws Exception {
 		assertEquals(kmmFile.toString(), kmmFile2.toString());
 		// Does not work:
 		// assertEquals(kmmFileStats, kmmFileStats2);

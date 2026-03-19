@@ -23,6 +23,7 @@ import org.kmymoney.api.read.impl.TestKMyMoneyAccountImpl;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.write.KMyMoneyWritableAccount;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -577,7 +578,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = 
 				kmmInFile
 					.createWritableAccount(KMyMoneyAccount.Type.EXPENSE,
-										   Currency.getInstance(kmmInFile.getDefaultCurrencyID()),
+										   Currency.getInstance(kmmInFile.getDefaultCurrencyIDStr()),
 										   ACCT_13_ID,
 										   "Various expenses");
 		acct.setInstitutionID(INST_2_ID);
@@ -613,7 +614,9 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals("Various expenses", acct.getName());
 		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
 		assertEquals(ACCT_13_ID, acct.getParentAccountID());
-		assertEquals(kmmInFile.getDefaultCurrencyID(), acct.getQualifSecCurrID().getCode());
+		assertEquals("CURRENCY:EUR", acct.getQualifSecCurrID().toString());
+		assertEquals(KMMQualifSecCurrID.Type.CURRENCY + ":" + kmmInFile.getDefaultCurrencyID().toString(), acct.getQualifSecCurrID().toString());
+		assertEquals(kmmInFile.getDefaultCurrencyIDStr(), acct.getQualifSecCurrID().getCode());
 		assertEquals("All the stuff that does not fit into the other expenses accounts", acct.getMemo());
 	}
 
@@ -632,7 +635,8 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals("Various expenses", acct.getName());
 		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
 		assertEquals(ACCT_13_ID, acct.getParentAccountID());
-		assertEquals(kmmInFile.getDefaultCurrencyID(), acct.getQualifSecCurrID().getCode());
+		assertEquals(KMMQualifSecCurrID.Type.CURRENCY + ":" + kmmInFile.getDefaultCurrencyID().toString(), acct.getQualifSecCurrID().toString());
+		assertEquals(kmmInFile.getDefaultCurrencyIDStr(), acct.getQualifSecCurrID().getCode());
 		assertEquals("All the stuff that does not fit into the other expenses accounts", acct.getMemo());
 	}
 
@@ -645,7 +649,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = 
 				kmmInFile
 					.createWritableAccount(KMyMoneyAccount.Type.LIABILITY,
-										   Currency.getInstance(kmmInFile.getDefaultCurrencyID()),
+										   Currency.getInstance(kmmInFile.getDefaultCurrencyIDStr()),
 										   ACCT_3_ID,
 										   "SNAF");
 		acct.setMemo("Stuff never accounted for");
@@ -741,7 +745,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct1 = 
 				kmmInFile
 					.createWritableAccount(KMyMoneyAccount.Type.LIABILITY,
-										   Currency.getInstance(kmmInFile.getDefaultCurrencyID()),
+										   Currency.getInstance(kmmInFile.getDefaultCurrencyIDStr()),
 										   ACCT_3_ID,
 										   "SNAF");
 		acct1.setMemo("Stuff never accounted for");
@@ -749,7 +753,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct2 = 
 				kmmInFile
 					.createWritableAccount(KMyMoneyAccount.Type.CHECKING,
-										   Currency.getInstance(kmmInFile.getDefaultCurrencyID()),
+										   Currency.getInstance(kmmInFile.getDefaultCurrencyIDStr()),
 										   ACCT_2_ID,
 										   "BAHAMAS SECRET");
 		acct2.setMemo("My very VERY secret account on the Bahamas");
@@ -757,7 +761,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct3 = 
 				kmmInFile
 					.createWritableAccount(KMyMoneyAccount.Type.CASH,
-										   Currency.getInstance(kmmInFile.getDefaultCurrencyID()),
+										   Currency.getInstance(kmmInFile.getDefaultCurrencyIDStr()),
 										   ACCT_1_ID,
 										   "Bug-Out Cash");
 		acct3.setMemo("My hopefully secret cash wallet for crises");

@@ -60,6 +60,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
@@ -267,31 +268,35 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     /**
-     * Use a heuristic to determine the defaultcurrency-id. If we cannot find one,
-     * we default to EUR.<br/>
-     * Comodity-stace is fixed as "ISO4217" .
-     *
-     * @return the default-currency to use.
+     * {@inheritDoc}
      */
-    public String getDefaultCurrencyID() {
+    public KMMCurrID getDefaultCurrencyID() {
 		KMYMONEYFILE root = getRootElement();
 		if ( root == null ) {
-			return Const.DEFAULT_CURRENCY;
+			return new KMMCurrID( Const.DEFAULT_CURRENCY );
 		}
 
 		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
 		if ( kvpList == null ) {
-			return Const.DEFAULT_CURRENCY;
+			return new KMMCurrID( Const.DEFAULT_CURRENCY );
 		}
 
 		for ( PAIR kvp : kvpList.getPAIR() ) {
 			if ( kvp.getKey().equals("kmm-baseCurrency") ) { // ::MAGIC
-				return kvp.getValue();
+				return new KMMCurrID( kvp.getValue() );
 			}
 		}
 
 		// not found
-		return Const.DEFAULT_CURRENCY;
+		return new KMMCurrID( Const.DEFAULT_CURRENCY );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Deprecated
+    public String getDefaultCurrencyIDStr() {
+    	return getDefaultCurrencyID().get().toString();
     }
 
     // ---------------------------------------------------------------
@@ -915,6 +920,10 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	return prcMgr.getPriceByCurrDate(curr, date);
     }
 	
+    public KMyMoneyPrice getPriceByCurrIDDate(final KMMCurrID currID, final LocalDate date) {
+    	return prcMgr.getPriceByQualifCurrIDDate(new KMMQualifCurrID(currID), date);
+    }
+	
     public KMyMoneyPrice getPriceByQualifCurrIDDate(final KMMQualifCurrID currID, final LocalDate date) {
     	return prcMgr.getPriceByQualifCurrIDDate(currID, date);
     }
@@ -1045,7 +1054,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 //  		                               getDefaultCurrencyID(), 
 //  		                               new FixedPointNumber(1));
 	
-		String baseCurrency = getDefaultCurrencyID();
+		String baseCurrency = getDefaultCurrencyIDStr();
 	
 		for ( PRICEPAIR jwsdpPrcPr : priceDB.getPRICEPAIR() ) {
 			String fromSecCurr = jwsdpPrcPr.getFrom();
@@ -1090,7 +1099,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 //  		                               getDefaultCurrencyID(), 
 //  		                               new FixedPointNumber(1));
 	
-		String baseCurrency = getDefaultCurrencyID();
+		String baseCurrency = getDefaultCurrencyIDStr();
 	
 		for ( PRICEPAIR jwsdpPrcPr : ProgressBar.wrap(priceDB.getPRICEPAIR(), "Price DB") ) {
 			String fromSecCurr = jwsdpPrcPr.getFrom();

@@ -171,7 +171,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		jwsdpAcct.setType(KMyMoneyAccount.Type.ASSET.getCodeBig());
 		jwsdpAcct.setName("UNNAMED");
 		jwsdpAcct.setDescription("no description yet");
-		jwsdpAcct.setCurrency(file.getDefaultCurrencyID());
+		jwsdpAcct.setCurrency(file.getDefaultCurrencyIDStr());
 
 		file.getRootElement().getACCOUNTS().getACCOUNT().add(jwsdpAcct);
 		file.setModified(true);
