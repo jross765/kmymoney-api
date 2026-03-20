@@ -64,6 +64,7 @@ import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
+import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
@@ -651,6 +652,11 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 		return trxMgr.getTransactionSplitByID(spltID);
     }
 
+	@Override
+	public KMyMoneyTransactionSplit getTransactionSplitByID(KMMTrxID trxID, KMMSpltID spltID) {
+		return getTransactionSplitByID(new KMMQualifSpltID(trxID, spltID));
+	}
+
     @Override
     public KMyMoneyTransactionSplit getTransactionSplitByAcctIDAndTrxID(final KMMAcctID acctID, final KMMTrxID trxID) {
 		if ( acctID == null ) {
@@ -952,6 +958,11 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 	@Override
 	public List<KMyMoneyPrice> getPricesByCurr(final Currency curr) {
 		return prcMgr.getPricesByCurr(curr);
+	}
+
+	@Override
+	public List<KMyMoneyPrice> getPricesByCurrID(KMMCurrID currID) {
+		return getPricesByQualifCurrID(new KMMQualifCurrID(currID));
 	}
 
 	@Override

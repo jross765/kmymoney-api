@@ -10,6 +10,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
+import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 public interface KMyMoneyFile_TrxSplt {
@@ -63,6 +64,8 @@ public interface KMyMoneyFile_TrxSplt {
      * @see #getTransactionSplits()
      */
 	KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID);
+
+	KMyMoneyTransactionSplit getTransactionSplitByID(KMMTrxID trxID, KMMSpltID spltID);
 
 	KMyMoneyTransactionSplit getTransactionSplitByAcctIDAndTrxID(KMMAcctID acctID, KMMTrxID trxID);
 

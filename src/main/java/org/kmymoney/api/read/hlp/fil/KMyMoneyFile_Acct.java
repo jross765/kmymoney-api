@@ -124,12 +124,11 @@ public interface KMyMoneyFile_Acct {
     List<KMyMoneyAccount> getAccountsByTypeAndName(KMyMoneyAccount.Type type, String acctName, 
     											   boolean qualif, boolean relaxed);
 
-
     /**
-	 * @return all accounts
-	 */
-	List<KMyMoneyAccount> getAccounts();
-	
+     * @return all accounts
+     */
+    List<KMyMoneyAccount> getAccounts();
+
     /**
      * THERE IS NO ROOT ACCOUNT!
      * 

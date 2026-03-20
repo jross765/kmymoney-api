@@ -31,6 +31,7 @@ public interface KMyMoneyFile_Prc {
 	/**
 	 * @return all price pairs defined in the book
 	 */
+	// ::TODO: Change Collection --> List
 	Collection<KMyMoneyPricePair> getPricePairs();
 
 	// ---------------------------------------------------------------
@@ -73,9 +74,11 @@ public interface KMyMoneyFile_Prc {
 	
 	// ---
 	
-	List<KMyMoneyPrice> getPricesByCurr(Currency curr);
-	
+	List<KMyMoneyPrice> getPricesByCurrID(KMMCurrID currID);
+
 	List<KMyMoneyPrice> getPricesByQualifCurrID(KMMQualifCurrID currID);
+
+	List<KMyMoneyPrice> getPricesByCurr(Currency curr);
 	
 	// ---
 	
