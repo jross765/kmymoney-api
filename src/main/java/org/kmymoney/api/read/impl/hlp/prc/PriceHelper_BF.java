@@ -1,12 +1,15 @@
 package org.kmymoney.api.read.impl.hlp.prc;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Currency;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
+import org.kmymoney.api.read.impl.KMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
 import org.kmymoney.base.basetypes.complex.KMMPriceID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
@@ -178,6 +181,20 @@ public class PriceHelper_BF {
 		}
 
 		return factor.multiply(latestQuote);
+	}
+
+	// ---------------------------------------------------------------
+	// Helpers -- balance pre-computed
+	
+	public static String formatValue(KMyMoneyPriceImpl prc, BigFraction val) {
+		Locale lcl = Locale.getDefault();
+		return formatValue(prc, val, lcl);
+	}
+	
+	public static String formatValue(KMyMoneyPriceImpl prc, BigFraction val, Locale lcl) {
+		NumberFormat nf = prc.getToCurrencyFormat(lcl);
+		nf.setCurrency(Currency.getInstance(prc.getToCurrencyQualifID().getCode()));
+		return nf.format(val.doubleValue());
 	}
 
 }

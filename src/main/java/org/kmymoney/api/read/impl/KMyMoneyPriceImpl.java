@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
+import java.util.Locale;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -165,6 +166,15 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
     	return parent.getToCurrency();
     }
 
+	public Currency getToCurrency2() {
+		if ( getToCurrencyQualifID().getType() != KMMQualifSecCurrID.Type.CURRENCY ) {
+			throw new IllegalStateException("Price security/currency is not of type " + KMMQualifSecCurrID.Type.CURRENCY);
+		}
+
+		String kmmCurrID = getToCurrencyQualifID().getCode();
+		return Currency.getInstance(kmmCurrID);
+	}
+
     // ---------------------------------------------------------------
     
     /**
@@ -249,10 +259,17 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
 		return BigFraction.parse(jwsdpPeer.getPrice());
     }
 
-    @Override
-    public String getValueFormatted() {
-    	return getCurrencyFormat().format(getValue());
-    }
+	@Override
+	public String getValueFormatted() {
+		Locale lcl = Locale.getDefault();
+		return getValueFormatted(lcl);
+	}
+
+	public String getValueFormatted(final Locale lcl) {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(lcl);
+		nf.setCurrency(getToCurrency2());
+		return nf.format(getValue().getBigDecimal());
+	}
 
     // -----------------------------------------------------------------
 
@@ -274,6 +291,20 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
 		}
 		
 		return ("" + hashCode()).compareTo("" + otherPrc.hashCode());
+	}
+	
+    // -----------------------------------------------------------------
+
+	public NumberFormat getToCurrencyFormat() {
+		return getToCurrencyFormat(Locale.getDefault());
+	}
+	
+	public NumberFormat getToCurrencyFormat(Locale lcl) {
+		currencyFormat = NumberFormat.getCurrencyInstance(lcl);
+		Currency curr = getToCurrency2();
+		currencyFormat.setCurrency(curr);
+
+		return currencyFormat;
 	}
 	
     // -----------------------------------------------------------------

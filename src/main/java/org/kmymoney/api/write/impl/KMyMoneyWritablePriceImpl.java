@@ -365,8 +365,9 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 
     @Override
     public void setValue(FixedPointNumber val) {
-		if ( val == null )
+		if ( val == null ) {
 			throw new IllegalArgumentException("argument <val> is null");
+		}
 
 		FixedPointNumber oldVal = getValue();
 
@@ -418,10 +419,12 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 		result += ", source='" + getSource() + "'";
 
 		try {
-			result += ", value=" + getValueFormatted() + "]";
+			result += ", value=" + getValueFormatted();
 		} catch (Exception e) {
-			result += ", value=" + "ERROR" + "]";
+			result += ", value=" + "ERROR";
 		}
+
+		result += "]";
 
 		return result;
     }

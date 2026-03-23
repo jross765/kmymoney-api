@@ -1006,7 +1006,9 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	 * @param pCmdtyName         common name of the new currency
 	 */
 	// ::TODO: ::CHECK: Is this method really needed? If not, get rid of it.
+        // If needed, then:
 	// ::TODO: Improve interface / provide variants
+	// ::TODO: Change impl -- it cannot work like this, is too much "gnugash-y".
 	@Override
 	public void addCurrency(
 			final String pCmdtySpace,
@@ -1018,11 +1020,11 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		if ( pCmdtySpace == null ) {
 			throw new IllegalArgumentException("argument <pCmdtySpace> is null");
 		}
-		
+
 		if ( pCmdtySpace.trim().equals("") ) {
 			throw new IllegalArgumentException("argument <pCmdtySpace> is empty");
 		}
-		
+
 		if ( pCmdtyID == null ) {
 			throw new IllegalArgumentException("argument <pCmdtyID> is null");
 		}
@@ -1030,7 +1032,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		if ( pCmdtyID.trim().equals("") ) {
 			throw new IllegalArgumentException("argument <pCmdtyID> is empty");
 		}
-		
+
 		if ( conversionFactor == null ) {
 			throw new IllegalArgumentException("argument <conversionFactor> is null");
 		}
