@@ -144,7 +144,7 @@ public class PriceHelper_BF {
 											kmmFile, prcMap, 
 											depth + 1);
 				} else {
-					if ( ! toCurr.getCode().equals( kmmFile.getDefaultCurrencyID() ) ) {
+					if ( ! toCurr.getCode().equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
 						if ( depth > maxRecursionDepth ) {
 							LOGGER.warn("getLatestPrice: Ignoring price-quote that is not in " + kmmFile.getDefaultCurrencyID() +
 									" but in '" + toCurr + "'");

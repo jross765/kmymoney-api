@@ -146,7 +146,7 @@ public class PriceHelper_FP {
 											depth + 1);
 				} else {
 					// is currency
-					if ( ! toCurr.getCode().equals( kmmFile.getDefaultCurrencyID() ) ) {
+					if ( ! toCurr.getCode().equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
 						if ( depth > maxRecursionDepth ) {
 							LOGGER.warn("getLatestPrice: Ignoring price-quote that is not in default currency " + kmmFile.getDefaultCurrencyID() +
 									" but in '" + toCurr.toString() + "'");

@@ -32,6 +32,8 @@ import org.kmymoney.base.basetypes.complex.KMMPricePairID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
+import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -276,10 +278,49 @@ public class FilePriceManager {
 	// developers?). Just make sure to keep the clean variant.
 	
 	private KMyMoneyPrice getPriceByQualifSecCurrIDDate_Var2(final KMMQualifSecCurrID qualifID, final LocalDate date) {
-		KMMQualifCurrID toCurrID = new KMMQualifCurrID(Const.DEFAULT_CURRENCY);
+		KMMPricePairID prcPrID = new KMMPricePairID(qualifID, new KMMQualifCurrID( kmmFile.getDefaultCurrencyID() ) );
+		KMyMoneyPricePair prcPr = kmmFile.getPricePairByID(prcPrID);
+		
+		KMMQualifCurrID toCurrID = null;
+		// CAUTION: We cannot assume that all prices for all securities/currencies
+		// are stored in the KMM file's default currency. This is why we first have
+		// to check.
+		if ( prcPr != null ) {
+			// Simple case: Prices for this security/currency are stored in the KMM file's default currency.
+			toCurrID = new KMMQualifCurrID(kmmFile.getDefaultCurrencyID());
+		} else {
+			// Not so simple case: Prices for this security/currency are NOT stored in the KMM file's default currency.
+			// That, in turn, means (not necessarily in theory, but in practice):
+			// qualifID is of type SECURITY.
+			KMMSecID secID = new KMMSecID(qualifID.getCode());
+			try {
+				if ( getSecurityCurr(secID) == null ) {
+					return null; // yes, relevant!
+				} else {
+					toCurrID = new KMMQualifCurrID(getSecurityCurr(secID));
+				}
+			} catch (KMMIDNotSetException e) {
+				LOGGER.error("getPriceByQualifSecCurrIDDate_Var2: Could not get security's currency: " + secID);
+				return null;
+			}
+		}
+
 		KMMPriceID prcID = new KMMPriceID(qualifID, toCurrID, date); 
 		
 		return getPriceByID(prcID);
+	}
+	
+	// ::TODO: Make that part of the interface
+	public KMMCurrID getSecurityCurr(final KMMSecID secID) throws KMMIDNotSetException {
+		for ( KMyMoneyPricePair prcPr : kmmFile.getPricePairs() ) {
+			if ( prcPr.getFromSecCurrQualifID().getType() == KMMQualifSecCurrID.Type.SECURITY ) {
+				if ( prcPr.getFromSecurityQualifID().getCode().equals( secID.get() ) ) {
+					return prcPr.getToCurrency().getQualifID().getCurrID(); 
+				}
+			}
+		}
+		
+		return null; // Compiler happy
 	}
 	
 	// ---------------------------------------------------------------
@@ -437,7 +478,7 @@ public class FilePriceManager {
 				}
 
 				// BEGIN core
-				if ( !toCurr.getCode().equals(kmmFile.getDefaultCurrencyID()) ) {
+				if ( !toCurr.getCode().equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
 					if ( depth > maxRecursionDepth ) {
 						LOGGER.warn("getLatestPrice: Ignoring price-quote that is not in "
 								+ kmmFile.getDefaultCurrencyID() + " but in '" + toCurr + "'");
@@ -555,7 +596,7 @@ public class FilePriceManager {
 						factor = getLatestPrice(new KMMQualifSecID(toCurr), depth + 1);
 					} else {
 						// is currency
-						if ( !toCurr.equals(kmmFile.getDefaultCurrencyID()) ) {
+						if ( !toCurr.equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
 							if ( depth > maxRecursionDepth ) {
 								LOGGER.warn("getLatestPrice_readAfresh: Ignoring price-quote that is not in "
 										+ kmmFile.getDefaultCurrencyID() + " but in '" + toCurr + "'");
