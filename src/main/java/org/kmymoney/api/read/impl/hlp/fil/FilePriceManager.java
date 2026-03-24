@@ -278,26 +278,28 @@ public class FilePriceManager {
 	// developers?). Just make sure to keep the clean variant.
 	
 	private KMyMoneyPrice getPriceByQualifSecCurrIDDate_Var2(final KMMQualifSecCurrID qualifID, final LocalDate date) {
-		KMMPricePairID prcPrID = new KMMPricePairID(qualifID, new KMMQualifCurrID( kmmFile.getDefaultCurrencyID() ) );
-		KMyMoneyPricePair prcPr = kmmFile.getPricePairByID(prcPrID);
-		
-		KMMQualifCurrID toCurrID = null;
 		// CAUTION: We cannot assume that all prices for all securities/currencies
 		// are stored in the KMM file's default currency. This is why we first have
 		// to check.
+		KMMPricePairID prcPrID = new KMMPricePairID(qualifID, new KMMQualifCurrID( kmmFile.getDefaultCurrencyID() ) );
+		KMyMoneyPricePair prcPr = kmmFile.getPricePairByID(prcPrID);
+		KMMQualifCurrID toCurrID = null;
 		if ( prcPr != null ) {
 			// Simple case: Prices for this security/currency are stored in the KMM file's default currency.
+			LOGGER.debug("getPriceByQualifSecCurrIDDate_Var2: Currency of security/currency " + qualifID + " is default currency.");
 			toCurrID = new KMMQualifCurrID(kmmFile.getDefaultCurrencyID());
 		} else {
 			// Not so simple case: Prices for this security/currency are NOT stored in the KMM file's default currency.
 			// That, in turn, means (not necessarily in theory, but in practice):
 			// qualifID is of type SECURITY.
+			LOGGER.debug("getPriceByQualifSecCurrIDDate_Var2: Currency of security/currency " + qualifID + " is NOT default currency.");
 			KMMSecID secID = new KMMSecID(qualifID.getCode());
 			try {
 				if ( getSecurityCurr(secID) == null ) {
 					return null; // yes, relevant!
 				} else {
 					toCurrID = new KMMQualifCurrID(getSecurityCurr(secID));
+					LOGGER.debug("getPriceByQualifSecCurrIDDate_Var2: Prices for security " + secID + " are stored in " + toCurrID);
 				}
 			} catch (KMMIDNotSetException e) {
 				LOGGER.error("getPriceByQualifSecCurrIDDate_Var2: Could not get security's currency: " + secID);
