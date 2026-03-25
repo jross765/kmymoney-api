@@ -5,6 +5,7 @@ import java.io.PrintStream;
 
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.pricedb.ComplexPriceTable;
+import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
 import org.kmymoney.api.read.hlp.KMyMoneyObject;
 import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Acct;
 import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Curr;
@@ -30,7 +31,8 @@ public interface KMyMoneyFile extends KMyMoneyObject,
 									  KMyMoneyFile_Sec,
 									  KMyMoneyFile_Curr,
 									  KMyMoneyFile_Prc,
-									  KMyMoneyFile_Tag
+									  KMyMoneyFile_Tag,
+									  HasUserDefinedAttributes 
 {
 
 	/**

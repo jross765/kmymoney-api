@@ -22,7 +22,6 @@ import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.generated.ObjectFactory;
-import org.kmymoney.api.generated.PAIR;
 import org.kmymoney.api.generated.PRICEPAIR;
 import org.kmymoney.api.generated.PRICES;
 import org.kmymoney.api.pricedb.ComplexPriceTable;
@@ -40,6 +39,7 @@ import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.aux.KMMFileMetaInfo;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
+import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.api.read.impl.hlp.fil.FileAccountManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager;
@@ -272,24 +272,11 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
      * {@inheritDoc}
      */
     public KMMCurrID getDefaultCurrencyID() {
-		KMYMONEYFILE root = getRootElement();
-		if ( root == null ) {
-			return new KMMCurrID( Const.DEFAULT_CURRENCY );
-		}
-
-		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
-		if ( kvpList == null ) {
-			return new KMMCurrID( Const.DEFAULT_CURRENCY );
-		}
-
-		for ( PAIR kvp : kvpList.getPAIR() ) {
-			if ( kvp.getKey().equals("kmm-baseCurrency") ) { // ::MAGIC
-				return new KMMCurrID( kvp.getValue() );
-			}
-		}
-
-		// not found
-		return new KMMCurrID( Const.DEFAULT_CURRENCY );
+    	try {
+    		return new KMMCurrID( getUserDefinedAttribute("kmm-baseCurrency") );
+    	} catch ( Exception exc ) {
+    		return new KMMCurrID( Const.DEFAULT_CURRENCY );
+    	}
     }
     
     /**
@@ -1190,6 +1177,46 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	return this;
     }
     
+	// -----------------------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getUserDefinedAttribute(final String aName) {
+		KMYMONEYFILE root = getRootElement();
+		if ( root == null ) {
+			return null;
+		}
+
+		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
+		if ( kvpList == null ) {
+			return null;
+		}
+
+		return HasUserDefinedAttributesImpl
+				.getUserDefinedAttributeCore(kvpList, aName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<String> getUserDefinedAttributeKeys() {
+		KMYMONEYFILE root = getRootElement();
+		if ( root == null ) {
+			return null;
+		}
+
+		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
+		if ( kvpList == null ) {
+			return null;
+		}
+
+		return HasUserDefinedAttributesImpl
+				.getUserDefinedAttributeKeysCore(kvpList);
+	}
+
     // ---------------------------------------------------------------
     // Helpers for class FileStats_Cache
     

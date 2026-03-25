@@ -307,7 +307,7 @@ public class FilePriceManager {
 			}
 		}
 
-		KMMPriceID prcID = new KMMPriceID(qualifID, toCurrID, date); 
+		KMMPriceID prcID = new KMMPriceID(qualifID, toCurrID, date);
 		
 		return getPriceByID(prcID);
 	}

@@ -156,6 +156,21 @@ public class TestKMyMoneyWritableFileImpl {
 	}
 
 	// -----------------------------------------------------------------
+
+	@Test
+	public void test01_10() throws Exception {
+		assertEquals("EUR", kmmInFile.getDefaultCurrencyID().toString());
+		assertEquals("EUR", kmmInFile.getDefaultCurrencyIDStr());
+	}
+
+	@Test
+	public void test01_11() throws Exception {
+		assertTrue(kmmInFile.getUserDefinedAttribute("LastModificationDate").startsWith("202"));
+		assertEquals("EUR", kmmInFile.getUserDefinedAttribute("kmm-baseCurrency"));
+		assertTrue(kmmInFile.getUserDefinedAttribute("kmm-id").startsWith("{1f7ec"));
+	}
+
+	// -----------------------------------------------------------------
 	// PART 2: Modify existing objects
 	// -----------------------------------------------------------------
 	// Check whether the KMyMoneyWritableFile objects returned by
