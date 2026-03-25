@@ -215,7 +215,7 @@ public class KMyMoneyPricePairImpl extends KMyMoneyObjectImpl
     }
 
     public String toStringShort() {
-    	return getFromSecCurrStr() + ";" + getToCurrStr();
+    	return getFromSecCurrStr() + ":" + getToCurrStr();
     }
 
     public String toStringLong() {
