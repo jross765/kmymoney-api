@@ -8,8 +8,8 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.impl.KMyMoneyPricePairImpl;
 import org.kmymoney.api.write.KMyMoneyWritablePrice;
 import org.kmymoney.api.write.KMyMoneyWritablePricePair;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -21,9 +21,9 @@ public interface KMyMoneyWritableFile_Prc {
 	 * @param prcPrID 
 	 * @return A modifiable version of the transaction.
 	 * 
-	 * @see #getPricePairByID(KMMPricePairID)
+	 * @see #getPricePairByID(KMMPrcPrID)
 	 */
-	KMyMoneyWritablePricePair getWritablePricePairByID(KMMPricePairID prcPrID);
+	KMyMoneyWritablePricePair getWritablePricePairByID(KMMPrcPrID prcPrID);
 	
 	/**
 	 * @see KMyMoneyFile#getPricePairs()
@@ -47,7 +47,7 @@ public interface KMyMoneyWritableFile_Prc {
 	 * @param prcPrID 
 	 * @return a new price pair with no splits that is already added to this file
 	 */
-	KMyMoneyWritablePricePair createWritablePricePair(KMMPricePairID prcPrID);
+	KMyMoneyWritablePricePair createWritablePricePair(KMMPrcPrID prcPrID);
 
 	/**
 	 *
@@ -61,9 +61,9 @@ public interface KMyMoneyWritableFile_Prc {
 	 * @param prcID 
 	 * @return A modifiable version of the transaction.
 	 * 
-	 * @see #getPriceByID(KMMPriceID)
+	 * @see #getPriceByID(KMMPrcID)
 	 */
-	KMyMoneyWritablePrice getWritablePriceByID(KMMPriceID prcID);
+	KMyMoneyWritablePrice getWritablePriceByID(KMMPrcID prcID);
 	
 	/**
 	 * 

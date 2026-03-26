@@ -11,7 +11,7 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.impl.KMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -31,7 +31,7 @@ public class PriceHelper_BF {
     public static BigFraction getLatestPrice(
 			final KMMQualifSecCurrID secCurrID,
 			final KMyMoneyFile kmmFile,
-			final Map<KMMPriceID, KMyMoneyPrice> prcMap) {
+			final Map<KMMPrcID, KMyMoneyPrice> prcMap) {
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null");
 		}
@@ -55,7 +55,7 @@ public class PriceHelper_BF {
     public static BigFraction getLatestPrice(
 			final Currency curr,
 			final KMyMoneyFile kmmFile,
-			final Map<KMMPriceID, KMyMoneyPrice> prcMap) {
+			final Map<KMMPrcID, KMyMoneyPrice> prcMap) {
 		if ( curr == null ) {
 			throw new IllegalArgumentException("argument <curr> is null");
 		}
@@ -77,7 +77,7 @@ public class PriceHelper_BF {
 	private static BigFraction getLatestPrice(
 			final KMMQualifSecCurrID secCurrID, 
 			final KMyMoneyFile kmmFile,
-			final Map<KMMPriceID, KMyMoneyPrice> prcMap,
+			final Map<KMMPrcID, KMyMoneyPrice> prcMap,
 			final int depth) {
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null");

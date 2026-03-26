@@ -8,7 +8,7 @@ import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.api.write.hlp.KMyMoneyWritablePricePairCore;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
@@ -33,7 +33,7 @@ public interface KMyMoneyWritablePrice extends KMyMoneyPrice,
 	 * @see #getParentPricePair()
 	 * @see #getParentPricePairID()
 	 */
-    void setParentPricePairID(KMMPricePairID prcPrID);
+    void setParentPricePairID(KMMPrcPrID prcPrID);
 	
     /**
      * 

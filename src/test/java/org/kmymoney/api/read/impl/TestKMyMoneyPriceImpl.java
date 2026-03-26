@@ -19,7 +19,7 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPrice.Source;
 import org.kmymoney.api.read.KMyMoneySecurity;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -28,22 +28,22 @@ import org.kmymoney.base.basetypes.simple.KMMSecID;
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyPriceImpl {
-	public static final KMMPriceID PRC_1_ID = new KMMPriceID("E000001", "EUR", "2023-11-03"); // SAP/EUR
-	public static final KMMPriceID PRC_2_ID = new KMMPriceID("E000001", "EUR", "2023-11-07"); // SAP/EUR
-	public static final KMMPriceID PRC_3_ID = new KMMPriceID("E000002", "EUR", "2023-10-27"); // MBG/EUR
-	public static final KMMPriceID PRC_4_ID = new KMMPriceID("E000002", "EUR", "2023-11-01"); // MBG/EUR
-	public static final KMMPriceID PRC_5_ID = new KMMPriceID("E000002", "EUR", "2024-06-01"); // MBG/EUR
-	public static final KMMPriceID PRC_6_ID = new KMMPriceID("USD", "EUR", "2023-12-04");
+	public static final KMMPrcID PRC_1_ID = new KMMPrcID("E000001", "EUR", "2023-11-03"); // SAP/EUR
+	public static final KMMPrcID PRC_2_ID = new KMMPrcID("E000001", "EUR", "2023-11-07"); // SAP/EUR
+	public static final KMMPrcID PRC_3_ID = new KMMPrcID("E000002", "EUR", "2023-10-27"); // MBG/EUR
+	public static final KMMPrcID PRC_4_ID = new KMMPrcID("E000002", "EUR", "2023-11-01"); // MBG/EUR
+	public static final KMMPrcID PRC_5_ID = new KMMPrcID("E000002", "EUR", "2024-06-01"); // MBG/EUR
+	public static final KMMPrcID PRC_6_ID = new KMMPrcID("USD", "EUR", "2023-12-04");
 
-	public static final KMMPriceID PRC_12_ID = new KMMPriceID("E000001", "EUR", "2012-03-05"); // SAP/EUR
+	public static final KMMPrcID PRC_12_ID = new KMMPrcID("E000001", "EUR", "2012-03-05"); // SAP/EUR
 
-	public static final KMMPriceID PRC_14_ID = new KMMPriceID("E000003", "EUR", "2023-04-01"); // BASF/EUR
-	public static final KMMPriceID PRC_15_ID = new KMMPriceID("E000003", "EUR", "2023-07-01"); // BASF/EUR
-	public static final KMMPriceID PRC_16_ID = new KMMPriceID("E000003", "EUR", "2023-10-01"); // BASF/EUR
+	public static final KMMPrcID PRC_14_ID = new KMMPrcID("E000003", "EUR", "2023-04-01"); // BASF/EUR
+	public static final KMMPrcID PRC_15_ID = new KMMPrcID("E000003", "EUR", "2023-07-01"); // BASF/EUR
+	public static final KMMPrcID PRC_16_ID = new KMMPrcID("E000003", "EUR", "2023-10-01"); // BASF/EUR
 
-	public static final KMMPriceID PRC_17_ID = new KMMPriceID("USD", "EUR", "2023-12-01");
-	public static final KMMPriceID PRC_18_ID = new KMMPriceID("USD", "EUR", "2024-01-01");
-	public static final KMMPriceID PRC_19_ID = new KMMPriceID("USD", "EUR", "2023-11-01");
+	public static final KMMPrcID PRC_17_ID = new KMMPrcID("USD", "EUR", "2023-12-01");
+	public static final KMMPrcID PRC_18_ID = new KMMPrcID("USD", "EUR", "2024-01-01");
+	public static final KMMPrcID PRC_19_ID = new KMMPrcID("USD", "EUR", "2023-11-01");
 	
 	// SAP SE
 	public static final KMMSecID SEC_2_ID    = TestKMyMoneySecurityImpl.SEC_2_ID;

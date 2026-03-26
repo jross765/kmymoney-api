@@ -6,8 +6,8 @@ import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.hlp.KMyMoneyPricePairCore;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
@@ -77,7 +77,7 @@ public interface KMyMoneyPrice extends Comparable<KMyMoneyPrice>,
      * @throws InvalidQualifSecCurrIDException
      * @throws InvalidQualifSecCurrTypeException
      */
-    KMMPriceID getID() throws InvalidQualifSecCurrIDException;
+    KMMPrcID getID() throws InvalidQualifSecCurrIDException;
     
     /**
      * @return Returns the parent price pair object (essentially the pair ("from-security/currency",
@@ -87,7 +87,7 @@ public interface KMyMoneyPrice extends Comparable<KMyMoneyPrice>,
      * 
      * @see #getParentPricePair()
      */
-    KMMPricePairID getParentPricePairID() throws InvalidQualifSecCurrIDException;
+    KMMPrcPrID getParentPricePairID() throws InvalidQualifSecCurrIDException;
 	
     /**
      * @return Returns the parent price pair object.

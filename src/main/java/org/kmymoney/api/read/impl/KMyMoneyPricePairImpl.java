@@ -12,7 +12,7 @@ import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -55,13 +55,13 @@ public class KMyMoneyPricePairImpl extends KMyMoneyObjectImpl
     // -----------------------------------------------------------
     
     @Override
-    public KMMPricePairID getID() {
+    public KMMPrcPrID getID() {
     	if ( jwsdpPeer.getFrom() == null ||
     		 jwsdpPeer.getTo() == null ) {
     		throw new IllegalStateException("from-sec-curr and/or to-curr of JWSDP peer is/are null");
     	}
     	
-    	return new KMMPricePairID(jwsdpPeer.getFrom(), jwsdpPeer.getTo());
+    	return new KMMPrcPrID(jwsdpPeer.getFrom(), jwsdpPeer.getTo());
     }
 
     // -----------------------------------------------------------

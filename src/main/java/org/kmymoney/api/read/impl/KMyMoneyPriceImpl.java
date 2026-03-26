@@ -19,8 +19,8 @@ import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -81,14 +81,14 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
     // -----------------------------------------------------------
     
     @Override
-    public KMMPriceID getID() {
-    	return new KMMPriceID(parent.getFromSecCurrStr(),
+    public KMMPrcID getID() {
+    	return new KMMPrcID(parent.getFromSecCurrStr(),
     						  parent.getToCurrStr(),
     						  DATE_FORMAT.format(getDate()));
     }
 
     @Override
-    public KMMPricePairID getParentPricePairID() {
+    public KMMPrcPrID getParentPricePairID() {
     	return parent.getID();
     }
 

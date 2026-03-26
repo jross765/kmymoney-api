@@ -10,8 +10,8 @@ import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -26,7 +26,7 @@ public interface KMyMoneyFile_Prc {
 	 * @param prcPrID id of a price pair
 	 * @return the identified price pair or null
 	 */
-	KMyMoneyPricePair getPricePairByID(KMMPricePairID prcPrID);
+	KMyMoneyPricePair getPricePairByID(KMMPrcPrID prcPrID);
 
 	/**
 	 * @return all price pairs defined in the book
@@ -40,7 +40,7 @@ public interface KMyMoneyFile_Prc {
 	 * @param prcID id of a price
 	 * @return the identified price or null
 	 */
-	KMyMoneyPrice getPriceByID(KMMPriceID prcID);
+	KMyMoneyPrice getPriceByID(KMMPrcID prcID);
 
 	// ---
 	

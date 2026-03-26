@@ -17,8 +17,8 @@ import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.read.impl.TestKMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.TestKMyMoneySecurityImpl;
 import org.kmymoney.api.read.impl.hlp.fil.FilePriceManager;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -28,22 +28,22 @@ import junit.framework.JUnit4TestAdapter;
 
 public class TestFilePriceManager {
 
-	private static final KMMPriceID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
-	private static final KMMPriceID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
-	private static final KMMPriceID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
-	private static final KMMPriceID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
-	private static final KMMPriceID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
-	private static final KMMPriceID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
+	private static final KMMPrcID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
+	private static final KMMPrcID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
+	private static final KMMPrcID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
+	private static final KMMPrcID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
+	private static final KMMPrcID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
+	private static final KMMPrcID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
 
-	private static final KMMPriceID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
+	private static final KMMPrcID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
 
-	private static final KMMPriceID PRC_14_ID = TestKMyMoneyPriceImpl.PRC_14_ID;
-	private static final KMMPriceID PRC_15_ID = TestKMyMoneyPriceImpl.PRC_15_ID;
-	private static final KMMPriceID PRC_16_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
+	private static final KMMPrcID PRC_14_ID = TestKMyMoneyPriceImpl.PRC_14_ID;
+	private static final KMMPrcID PRC_15_ID = TestKMyMoneyPriceImpl.PRC_15_ID;
+	private static final KMMPrcID PRC_16_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
 
-	private static final KMMPriceID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
-	private static final KMMPriceID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
-	private static final KMMPriceID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
+	private static final KMMPrcID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
+	private static final KMMPrcID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
+	private static final KMMPrcID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
 	
 	// ---
 	
@@ -102,7 +102,7 @@ public class TestFilePriceManager {
 		mgr = kmmFile.getPriceManager();
 		
 		Collection<KMyMoneyPrice> prcColl = mgr.getPrices();
-		KMMPriceID prcID = new KMMPriceID("E000001", "EUR", "2023-11-03");
+		KMMPrcID prcID = new KMMPrcID("E000001", "EUR", "2023-11-03");
 		KMyMoneyPrice prc = mgr.getPriceByID(prcID);
 		assertTrue(prcColl.contains(prc));
 	}
@@ -113,9 +113,9 @@ public class TestFilePriceManager {
 		
 		// Normal case: Price (pair) exists
 		KMMQualifSecCurrID qualifID = new KMMQualifSecCurrID(KMMQualifSecCurrID.Type.SECURITY, "E000003");
-		KMMPricePairID prcPrID = new KMMPricePairID("E000003", "EUR");
+		KMMPrcPrID prcPrID = new KMMPrcPrID("E000003", "EUR");
 		LocalDate date = LocalDate.parse("2023-12-01");
-		KMMPriceID prcID = new KMMPriceID("E000003", "EUR", "2023-12-01");
+		KMMPrcID prcID = new KMMPrcID("E000003", "EUR", "2023-12-01");
 		KMyMoneyPrice prc = mgr.getPriceByQualifSecCurrIDDate(qualifID, date);
 		assertNotEquals(null, prc);
 		assertEquals(prcID, prc.getID());
@@ -124,17 +124,17 @@ public class TestFilePriceManager {
 		KMyMoneyPricePair prcPr = kmmFile.getPricePairByID(prcPrID);
 		assertNotEquals(null, prcPr);
 		date = LocalDate.parse("2026-01-08");
-		prcID = new KMMPriceID("E000003", "EUR", "2026-01-08");
+		prcID = new KMMPrcID("E000003", "EUR", "2026-01-08");
 		prc = mgr.getPriceByQualifSecCurrIDDate(qualifID, date);
 		assertEquals(null, prc);
 		
 		// Price pair does not exist ==> getPriceByQualifSecCurrIDDate() returns null:
 		qualifID = new KMMQualifSecCurrID(KMMQualifSecCurrID.Type.SECURITY, "E000004");
-		prcPrID = new KMMPricePairID("E000004", "EUR");
+		prcPrID = new KMMPrcPrID("E000004", "EUR");
 		prcPr = kmmFile.getPricePairByID(prcPrID);
 		assertEquals(null, prcPr);
 		date = LocalDate.parse("2026-01-01");
-		prcID = new KMMPriceID("E000004", "EUR", "2026-01-01");
+		prcID = new KMMPrcID("E000004", "EUR", "2026-01-01");
 		prc = mgr.getPriceByQualifSecCurrIDDate(qualifID, date);
 		assertEquals(null, prc);
 	}

@@ -75,8 +75,8 @@ import org.kmymoney.api.write.ObjectCascadeException;
 import org.kmymoney.api.write.hlp.IDManager;
 import org.kmymoney.api.write.impl.hlp.fil.WritingContentHandler;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -1250,7 +1250,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// ---------------------------------------------------------------
 
 	@Override
-	public KMyMoneyWritablePricePair getWritablePricePairByID(KMMPricePairID prcPrID) {
+	public KMyMoneyWritablePricePair getWritablePricePairByID(KMMPrcPrID prcPrID) {
 		if ( prcPrID == null ) {
 			throw new IllegalArgumentException("argument <prcPrID> is null");
 		}
@@ -1310,7 +1310,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	}
 
 	@Override
-	public KMyMoneyWritablePricePair createWritablePricePair(KMMPricePairID prcPrID) {
+	public KMyMoneyWritablePricePair createWritablePricePair(KMMPrcPrID prcPrID) {
 		KMyMoneyWritablePricePairImpl prc = new KMyMoneyWritablePricePairImpl(prcPrID, this);
 		((org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) super.prcMgr)
 			.addPricePair(prc);
@@ -1335,7 +1335,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// ---------------------------------------------------------------
 
 	@Override
-	public KMyMoneyWritablePrice getWritablePriceByID(KMMPriceID prcID) {
+	public KMyMoneyWritablePrice getWritablePriceByID(KMMPrcID prcID) {
 		if ( prcID == null ) {
 			throw new IllegalArgumentException("argument <prcID> is null");
 		}

@@ -1,6 +1,6 @@
 package org.kmymoney.api.write;
 
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.api.write.hlp.KMyMoneyWritablePricePairCore;
@@ -27,6 +27,6 @@ public interface KMyMoneyWritablePricePair extends KMyMoneyPricePair,
 	 * 
 	 * @see #getID()
 	 */
-	void setID(KMMPricePairID prcPr);
+	void setID(KMMPrcPrID prcPr);
 	
 }

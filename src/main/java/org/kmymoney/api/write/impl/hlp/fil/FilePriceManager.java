@@ -10,8 +10,8 @@ import org.kmymoney.api.write.KMyMoneyWritablePricePair;
 import org.kmymoney.api.write.impl.KMyMoneyWritableFileImpl;
 import org.kmymoney.api.write.impl.KMyMoneyWritablePriceImpl;
 import org.kmymoney.api.write.impl.KMyMoneyWritablePricePairImpl;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +144,7 @@ public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePri
 
 	// ----------------------------
 	
-	public void removePricePair_raw(final KMMPricePairID prcPairID) {
+	public void removePricePair_raw(final KMMPrcPrID prcPairID) {
 		for ( int i = 0; i < priceDB.getPRICEPAIR().size(); i++ ) {
 			PRICEPAIR jwsdpPrcPr = priceDB.getPRICEPAIR().get(i); 
 			if ( jwsdpPrcPr.getFrom().equals(prcPairID.getFromSecCurr().getCode()) &&
@@ -155,12 +155,12 @@ public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePri
 		}
 	}
 
-	public void removePrice_raw(final KMMPriceID prcID) {
+	public void removePrice_raw(final KMMPrcID prcID) {
 		removePrice_raw(prcID, true);
 	}
 	
-	public void removePrice_raw(final KMMPriceID prcID, boolean withPrcPr) {
-		KMMPricePairID prcPrID = prcID.getPricePairID();
+	public void removePrice_raw(final KMMPrcID prcID, boolean withPrcPr) {
+		KMMPrcPrID prcPrID = prcID.getPricePairID();
 		PRICEPAIR jwsdpPrcPr = getPricePair_raw(prcPrID);
 		for ( int i = 0; i < jwsdpPrcPr.getPRICE().size(); i++ ) {
 			PRICE jwsdpPrc = jwsdpPrcPr.getPRICE().get(i); 

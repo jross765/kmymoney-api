@@ -25,7 +25,7 @@ import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritablePrice;
 import org.kmymoney.api.write.KMyMoneyWritablePricePair;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -257,14 +257,14 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     
     // ---------------------------------------------------------------
 
-    public void setParentPricePairID(KMMPricePairID prcPrID) {
+    public void setParentPricePairID(KMMPrcPrID prcPrID) {
 		if ( prcPrID == null )
 			throw new IllegalArgumentException("null price pair ID given");
 
 		if ( ! prcPrID.isSet() )
 			throw new IllegalArgumentException("unset price pair ID given");
 
-		KMMPricePairID oldPrcPrID = getParentPricePairID();
+		KMMPrcPrID oldPrcPrID = getParentPricePairID();
 
 		getWritableParentPricePair().setID(prcPrID);
 		getWritableKMyMoneyFile().setModified(true);

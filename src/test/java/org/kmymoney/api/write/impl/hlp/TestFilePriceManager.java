@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyPrice;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -68,7 +68,7 @@ public class TestFilePriceManager {
 		mgr = kmmInFile.getPriceManager();
 		
 		Collection<KMyMoneyPrice> prcColl = mgr.getPrices();
-		KMMPriceID prcID = new KMMPriceID("E000001", "EUR", "2023-11-03");
+		KMMPrcID prcID = new KMMPrcID("E000001", "EUR", "2023-11-03");
 		KMyMoneyPrice prc = mgr.getPriceByID(prcID);
 		assertTrue(prcColl.contains(prc));
 	}

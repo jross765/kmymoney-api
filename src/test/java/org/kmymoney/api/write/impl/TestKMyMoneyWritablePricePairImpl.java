@@ -23,8 +23,8 @@ import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.TestKMyMoneyPricePairImpl;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.write.KMyMoneyWritablePricePair;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -32,14 +32,14 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyWritablePricePairImpl {
-	private static final KMMPricePairID PRCPR_1_ID = TestKMyMoneyPricePairImpl.PRCPR_1_ID;
-	private static final KMMPricePairID PRCPR_2_ID = TestKMyMoneyPricePairImpl.PRCPR_2_ID;
-	private static final KMMPricePairID PRCPR_3_ID = TestKMyMoneyPricePairImpl.PRCPR_3_ID;
-	private static final KMMPricePairID PRCPR_4_ID = TestKMyMoneyPricePairImpl.PRCPR_4_ID;
+	private static final KMMPrcPrID PRCPR_1_ID = TestKMyMoneyPricePairImpl.PRCPR_1_ID;
+	private static final KMMPrcPrID PRCPR_2_ID = TestKMyMoneyPricePairImpl.PRCPR_2_ID;
+	private static final KMMPrcPrID PRCPR_3_ID = TestKMyMoneyPricePairImpl.PRCPR_3_ID;
+	private static final KMMPrcPrID PRCPR_4_ID = TestKMyMoneyPricePairImpl.PRCPR_4_ID;
 	
-	private static final KMMPriceID PRC_1_ID = TestKMyMoneyPricePairImpl.PRC_1_ID;
-	private static final KMMPriceID PRC_2_ID = TestKMyMoneyPricePairImpl.PRC_2_ID;
-	private static final KMMPriceID PRC_12_ID = TestKMyMoneyPricePairImpl.PRC_12_ID;
+	private static final KMMPrcID PRC_1_ID = TestKMyMoneyPricePairImpl.PRC_1_ID;
+	private static final KMMPrcID PRC_2_ID = TestKMyMoneyPricePairImpl.PRC_2_ID;
+	private static final KMMPrcID PRC_12_ID = TestKMyMoneyPricePairImpl.PRC_12_ID;
 
 	// -----------------------------------------------------------------
 
@@ -54,7 +54,7 @@ public class TestKMyMoneyWritablePricePairImpl {
 
 	KMMQualifCurrID currID1 = null;
 
-	private KMMPricePairID newID = null;
+	private KMMPrcPrID newID = null;
 
 	// https://stackoverflow.com/questions/11884141/deleting-file-and-directory-in-junit
 	@SuppressWarnings("exports")
@@ -99,7 +99,7 @@ public class TestKMyMoneyWritablePricePairImpl {
 
 		currID1 = new KMMQualifCurrID("USD");
 
-		newID = new KMMPricePairID(new KMMQualifCurrID("EUR"), new KMMQualifCurrID("EUR")); // dummy
+		newID = new KMMPrcPrID(new KMMQualifCurrID("EUR"), new KMMQualifCurrID("EUR")); // dummy
 	}
 
 	// -----------------------------------------------------------------
@@ -320,7 +320,7 @@ public class TestKMyMoneyWritablePricePairImpl {
 		// KMyMoneyPricePair prcPr = kmmOutFile.getPricePairByID(PRCPR_1_ID);
 		KMyMoneyPricePair prcPr = kmmOutFile.getPricePairByID(PRCPR_1_ID);
 		assertEquals(null, prcPr); // sic
-		prcPr = kmmOutFile.getPricePairByID(new KMMPricePairID("BRL", "SGD"));
+		prcPr = kmmOutFile.getPricePairByID(new KMMPrcPrID("BRL", "SGD"));
 		assertNotEquals(null, prcPr);
 
 		// Cf. comment in test02_1_check_memory()
@@ -346,7 +346,7 @@ public class TestKMyMoneyWritablePricePairImpl {
 
 		KMMQualifCurrID fromCurr = new KMMQualifCurrID("CNY");  
 		KMMQualifCurrID toCurr = new KMMQualifCurrID("JPY");  
-		KMMPricePairID prcPrID = new KMMPricePairID(fromCurr, toCurr);  
+		KMMPrcPrID prcPrID = new KMMPrcPrID(fromCurr, toCurr);  
 		KMyMoneyWritablePricePair prcPr = kmmInFile.createWritablePricePair(prcPrID);
 		newID.set(prcPr.getID());
 

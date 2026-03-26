@@ -17,8 +17,8 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.read.KMyMoneySecurity;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -26,21 +26,21 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyPricePairImpl {
-	public static final KMMPricePairID PRCPR_1_ID = new KMMPricePairID("E000001", "EUR"); // SAP/EUR
-	public static final KMMPricePairID PRCPR_2_ID = new KMMPricePairID("E000002", "EUR"); // MBG/EUR
-	public static final KMMPricePairID PRCPR_3_ID = new KMMPricePairID("USD", "EUR");
-	public static final KMMPricePairID PRCPR_4_ID = new KMMPricePairID("E000003", "EUR"); // BASF/EUR
+	public static final KMMPrcPrID PRCPR_1_ID = new KMMPrcPrID("E000001", "EUR"); // SAP/EUR
+	public static final KMMPrcPrID PRCPR_2_ID = new KMMPrcPrID("E000002", "EUR"); // MBG/EUR
+	public static final KMMPrcPrID PRCPR_3_ID = new KMMPrcPrID("USD", "EUR");
+	public static final KMMPrcPrID PRCPR_4_ID = new KMMPrcPrID("E000003", "EUR"); // BASF/EUR
 
-	public static final KMMPriceID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
-	public static final KMMPriceID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
-	public static final KMMPriceID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
-	public static final KMMPriceID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
-	public static final KMMPriceID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
-	public static final KMMPriceID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
-	public static final KMMPriceID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
-	public static final KMMPriceID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
-	public static final KMMPriceID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
-	public static final KMMPriceID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
+	public static final KMMPrcID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
+	public static final KMMPrcID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
+	public static final KMMPrcID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
+	public static final KMMPrcID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
+	public static final KMMPrcID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
+	public static final KMMPrcID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
+	public static final KMMPrcID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
+	public static final KMMPrcID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
+	public static final KMMPrcID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
+	public static final KMMPrcID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
 
 	// -----------------------------------------------------------------
 

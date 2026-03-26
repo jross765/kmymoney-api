@@ -27,8 +27,8 @@ import org.kmymoney.api.read.impl.KMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.KMyMoneyPricePairImpl;
 import org.kmymoney.api.read.impl.hlp.prc.PriceHelper_BF;
 import org.kmymoney.api.read.impl.hlp.prc.PriceHelper_FP;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -53,8 +53,8 @@ public class FilePriceManager {
 	protected KMyMoneyFileImpl kmmFile;
 
 	protected PRICES                                 priceDB  = null;
-	protected Map<KMMPricePairID, KMyMoneyPricePair> prcPrMap = null;
-	protected Map<KMMPriceID, KMyMoneyPrice>         prcMap   = null;
+	protected Map<KMMPrcPrID, KMyMoneyPricePair> prcPrMap = null;
+	protected Map<KMMPrcID, KMyMoneyPrice>         prcMap   = null;
 
 	// ---------------------------------------------------------------
 
@@ -66,15 +66,15 @@ public class FilePriceManager {
 	// ---------------------------------------------------------------
 
 	private void init(final KMYMONEYFILE pRootElement) {
-		prcPrMap = new HashMap<KMMPricePairID, KMyMoneyPricePair>();
-		prcMap   = new HashMap<KMMPriceID, KMyMoneyPrice>();
+		prcPrMap = new HashMap<KMMPrcPrID, KMyMoneyPricePair>();
+		prcMap   = new HashMap<KMMPrcID, KMyMoneyPrice>();
 
 		initPriceDB(pRootElement);
 		List<PRICEPAIR> prcPrList = priceDB.getPRICEPAIR();
 		for ( PRICEPAIR jwsdpPrcPr : prcPrList ) {
 			String fromCurr = jwsdpPrcPr.getFrom();
 			String toCurr = jwsdpPrcPr.getTo();
-			KMMPricePairID currPair = new KMMPricePairID(fromCurr, toCurr);
+			KMMPrcPrID currPair = new KMMPrcPrID(fromCurr, toCurr);
 			KMyMoneyPricePair pricePair = createPricePair(jwsdpPrcPr);
 			prcPrMap.put(currPair, pricePair);
 			for ( PRICE jwsdpPrc : jwsdpPrcPr.getPRICE() ) {
@@ -82,7 +82,7 @@ public class FilePriceManager {
 				if ( cal != null ) {
 					LocalDate date = LocalDate.of(cal.getYear(), cal.getMonth(), cal.getDay());
 					String dateStr = date.toString();
-					KMMPriceID priceID = new KMMPriceID(fromCurr, toCurr, dateStr);
+					KMMPrcID priceID = new KMMPrcID(fromCurr, toCurr, dateStr);
 					KMyMoneyPriceImpl price = createPrice(pricePair, jwsdpPrc);
 					prcMap.put(priceID, price);
 				} else {
@@ -119,7 +119,7 @@ public class FilePriceManager {
 	
 	// ----------------------------
 
-	public KMyMoneyPricePair getPricePairByID(KMMPricePairID prcPrID) {
+	public KMyMoneyPricePair getPricePairByID(KMMPrcPrID prcPrID) {
 		if ( prcPrID == null ) {
 			throw new IllegalArgumentException("argument <prcPrID> is null");
 		}
@@ -138,7 +138,7 @@ public class FilePriceManager {
 		// return prcPrMap.get(prcPrID);
 		
 		// Instead:
-		for ( KMMPricePairID elt : prcPrMap.keySet() ) {
+		for ( KMMPrcPrID elt : prcPrMap.keySet() ) {
 			if ( elt.toString().equals(prcPrID.toString()) ) { // <-- important: toString()
 				return prcPrMap.get(elt);
 			}
@@ -161,7 +161,7 @@ public class FilePriceManager {
 
 	// ----------------------------
 
-	public KMyMoneyPrice getPriceByID(KMMPriceID prcID) {
+	public KMyMoneyPrice getPriceByID(KMMPrcID prcID) {
 		if ( prcID == null ) {
 			throw new IllegalArgumentException("argument <prcID> is null");
 		}
@@ -281,7 +281,7 @@ public class FilePriceManager {
 		// CAUTION: We cannot assume that all prices for all securities/currencies
 		// are stored in the KMM file's default currency. This is why we first have
 		// to check.
-		KMMPricePairID prcPrID = new KMMPricePairID(qualifID, new KMMQualifCurrID( kmmFile.getDefaultCurrencyID() ) );
+		KMMPrcPrID prcPrID = new KMMPrcPrID(qualifID, new KMMQualifCurrID( kmmFile.getDefaultCurrencyID() ) );
 		KMyMoneyPricePair prcPr = kmmFile.getPricePairByID(prcPrID);
 		KMMQualifCurrID toCurrID = null;
 		if ( prcPr != null ) {
@@ -307,7 +307,7 @@ public class FilePriceManager {
 			}
 		}
 
-		KMMPriceID prcID = new KMMPriceID(qualifID, toCurrID, date);
+		KMMPrcID prcID = new KMMPrcID(qualifID, toCurrID, date);
 		
 		return getPriceByID(prcID);
 	}
@@ -661,7 +661,7 @@ public class FilePriceManager {
 		return result;
 	}
 
-	protected PRICEPAIR getPricePair_raw(final KMMPricePairID prcPairID) {
+	protected PRICEPAIR getPricePair_raw(final KMMPrcPrID prcPairID) {
 		for ( PRICEPAIR jwsdpPrcPr : getPricePairs_raw() ) {
 			if ( jwsdpPrcPr.getFrom().equals(prcPairID.getFromSecCurr().getCode()) &&
 				 jwsdpPrcPr.getTo().equals(prcPairID.getToCurr().getCode()) ) {
@@ -675,7 +675,7 @@ public class FilePriceManager {
 	// ----------------------------
 	
 	@SuppressWarnings("unused")
-	private List<PRICE> getPrices_raw(final KMMPricePairID prcPairID) {
+	private List<PRICE> getPrices_raw(final KMMPrcPrID prcPairID) {
 		List<PRICE> result = new ArrayList<PRICE>();
 
 		PRICEPAIR prcPr = getPricePair_raw(prcPairID);
@@ -686,8 +686,8 @@ public class FilePriceManager {
 		return result;
 	}
 
-	protected PRICE getPrice_raw(final KMMPriceID prcID) {
-		KMMPricePairID prcPrID = prcID.getPricePairID();
+	protected PRICE getPrice_raw(final KMMPrcID prcID) {
+		KMMPrcPrID prcPrID = prcID.getPricePairID();
 		PRICEPAIR jwsdpPrcPr = getPricePair_raw(prcPrID);
 		for ( PRICE jwsdpPrc : jwsdpPrcPr.getPRICE() ) {
 			if ( jwsdpPrc.getDate().toString().equals(prcID.getDateStr()) ) {

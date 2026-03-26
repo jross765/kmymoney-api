@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * Anyway: this fact is the reason why we here have a price object pseudo-ID: 
  * The tuple ( from-currency, to-currency, date ).
  */
-public class KMMPriceID extends org.kmymoney.base.basetypes.complex.KMMPriceID
+public class KMMPriceID extends org.kmymoney.base.basetypes.complex.KMMPrcID
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(KMMPriceID.class);
 

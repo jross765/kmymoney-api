@@ -30,8 +30,8 @@ import org.kmymoney.api.read.impl.TestKMyMoneyPriceImpl;
 import org.kmymoney.api.read.impl.TestKMyMoneyPricePairImpl;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.write.KMyMoneyWritablePrice;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -41,22 +41,22 @@ import junit.framework.JUnit4TestAdapter;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 public class TestKMyMoneyWritablePriceImpl {
-	private static final KMMPriceID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
-	private static final KMMPriceID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
-	private static final KMMPriceID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
-	private static final KMMPriceID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
-	private static final KMMPriceID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
-	private static final KMMPriceID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
+	private static final KMMPrcID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
+	private static final KMMPrcID PRC_2_ID = TestKMyMoneyPriceImpl.PRC_2_ID;
+	private static final KMMPrcID PRC_3_ID = TestKMyMoneyPriceImpl.PRC_3_ID;
+	private static final KMMPrcID PRC_4_ID = TestKMyMoneyPriceImpl.PRC_4_ID;
+	private static final KMMPrcID PRC_5_ID = TestKMyMoneyPriceImpl.PRC_5_ID;
+	private static final KMMPrcID PRC_6_ID = TestKMyMoneyPriceImpl.PRC_6_ID;
 
-	private static final KMMPriceID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
+	private static final KMMPrcID PRC_12_ID = TestKMyMoneyPriceImpl.PRC_12_ID;
 
-	private static final KMMPriceID PRC_14_ID = TestKMyMoneyPriceImpl.PRC_14_ID;
-	private static final KMMPriceID PRC_15_ID = TestKMyMoneyPriceImpl.PRC_15_ID;
-	private static final KMMPriceID PRC_16_ID = TestKMyMoneyPriceImpl.PRC_16_ID;
+	private static final KMMPrcID PRC_14_ID = TestKMyMoneyPriceImpl.PRC_14_ID;
+	private static final KMMPrcID PRC_15_ID = TestKMyMoneyPriceImpl.PRC_15_ID;
+	private static final KMMPrcID PRC_16_ID = TestKMyMoneyPriceImpl.PRC_16_ID;
 
-	private static final KMMPriceID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
-	private static final KMMPriceID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
-	private static final KMMPriceID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
+	private static final KMMPrcID PRC_17_ID = TestKMyMoneyPriceImpl.PRC_17_ID;
+	private static final KMMPrcID PRC_18_ID = TestKMyMoneyPriceImpl.PRC_18_ID;
+	private static final KMMPrcID PRC_19_ID = TestKMyMoneyPriceImpl.PRC_19_ID;
 	
 	// SAP SE
 	private static final KMMSecID SEC_2_ID    = TestKMyMoneyPriceImpl.SEC_2_ID;
@@ -68,9 +68,9 @@ public class TestKMyMoneyWritablePriceImpl {
 	
 	
 	
-	private static final KMMPricePairID PRCPR_1_ID = TestKMyMoneyPricePairImpl.PRCPR_1_ID;
-	private static final KMMPricePairID PRCPR_2_ID = TestKMyMoneyPricePairImpl.PRCPR_2_ID;
-	private static final KMMPricePairID PRCPR_3_ID = TestKMyMoneyPricePairImpl.PRCPR_3_ID;
+	private static final KMMPrcPrID PRCPR_1_ID = TestKMyMoneyPricePairImpl.PRCPR_1_ID;
+	private static final KMMPrcPrID PRCPR_2_ID = TestKMyMoneyPricePairImpl.PRCPR_2_ID;
+	private static final KMMPrcPrID PRCPR_3_ID = TestKMyMoneyPricePairImpl.PRCPR_3_ID;
 
 	// -----------------------------------------------------------------
 
@@ -85,7 +85,7 @@ public class TestKMyMoneyWritablePriceImpl {
 
 	KMMQualifCurrID currID1 = null;
 
-	private KMMPriceID newID = null;
+	private KMMPrcID newID = null;
 
 	// https://stackoverflow.com/questions/11884141/deleting-file-and-directory-in-junit
 	@SuppressWarnings("exports")
@@ -130,7 +130,7 @@ public class TestKMyMoneyWritablePriceImpl {
 
 		currID1 = new KMMQualifCurrID("USD");
 
-		newID = new KMMPriceID("EUR", "EUR", "1970-01-01"); // dummy
+		newID = new KMMPrcID("EUR", "EUR", "1970-01-01"); // dummy
 	}
 
 	// -----------------------------------------------------------------

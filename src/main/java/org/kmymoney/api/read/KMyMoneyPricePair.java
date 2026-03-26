@@ -5,7 +5,7 @@ import java.util.List;
 import org.kmymoney.api.read.hlp.KMyMoneyPricePairCore;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 
 /**
  * In KMyMoney, a price pair is a data structure which holds all the 
@@ -30,7 +30,7 @@ public interface KMyMoneyPricePair extends Comparable<KMyMoneyPricePair>,
      * @throws InvalidQualifSecCurrIDException
      * @throws InvalidQualifSecCurrTypeException
      */
-    KMMPricePairID getID() throws InvalidQualifSecCurrIDException;
+    KMMPrcPrID getID() throws InvalidQualifSecCurrIDException;
     
     // ---------------------------------------------------------------
     

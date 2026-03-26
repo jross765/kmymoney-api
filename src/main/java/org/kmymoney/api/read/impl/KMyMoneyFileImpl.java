@@ -53,8 +53,8 @@ import org.kmymoney.api.read.impl.hlp.fil.NamespaceRemoverReader;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
-import org.kmymoney.base.basetypes.complex.KMMPriceID;
-import org.kmymoney.base.basetypes.complex.KMMPricePairID;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
@@ -885,7 +885,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     // ---------------------------------------------------------------
     
     @Override
-    public KMyMoneyPricePair getPricePairByID(KMMPricePairID prcPrID) {
+    public KMyMoneyPricePair getPricePairByID(KMMPrcPrID prcPrID) {
     	return prcMgr.getPricePairByID(prcPrID);
     }
 
@@ -897,7 +897,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     // ---------------------------------------------------------------
     
     @Override
-    public KMyMoneyPrice getPriceByID(KMMPriceID prcID) {
+    public KMyMoneyPrice getPriceByID(KMMPrcID prcID) {
     	return prcMgr.getPriceByID(prcID);
     }
 
