@@ -1,6 +1,5 @@
 package org.kmymoney.api.read.impl.hlp.acct;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -34,10 +33,6 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleAccount.class);
-
-	// ---------------------------------------------------------------
-
-	private static NumberFormat currencyFormat = null;
 
 	// ---------------------------------------------------------------
 
@@ -429,23 +424,6 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 		return Currency.getInstance(kmmCurrID);
 	}
 
-	public NumberFormat getCurrencyFormat() {
-		return getCurrencyFormat(Locale.getDefault());
-	}
-	
-	public NumberFormat getCurrencyFormat(Locale lcl) {
-		// The currency may have changed
-		if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			currencyFormat = NumberFormat.getCurrencyInstance(lcl);
-			Currency curr = getCurrency();
-			currencyFormat.setCurrency(curr);
-		} else {
-			currencyFormat = NumberFormat.getNumberInstance(lcl);
-		}
-
-		return currencyFormat;
-	}
-	
 	// ---------------------------------------------------------------
 
 	@Override
