@@ -1,6 +1,5 @@
 package org.kmymoney.api.read.impl;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
@@ -16,14 +15,15 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
 import org.kmymoney.api.read.KMyMoneySecurity;
+import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMPrcID;
 import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,9 +46,6 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
     protected KMyMoneyPricePair parent = null;
 
 	protected LocalDate date;
-
-	// The currency-format to use for formatting.<br/>
-    private NumberFormat currencyFormat = null;
 
     // -----------------------------------------------------------
 
@@ -152,6 +149,11 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
     // ----------------------------
     
     @Override
+    public KMMCurrID getToCurrencyID() {
+    	return parent.getToCurrencyID();
+    }
+
+    @Override
     public KMMQualifCurrID getToCurrencyQualifID() {
     	return parent.getToCurrencyQualifID();
     }
@@ -177,26 +179,6 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
 
     // ---------------------------------------------------------------
     
-    /**
-     * @return The currency-format to use for formatting.
-     * @throws InvalidQualifSecCurrTypeException 
-     * @throws InvalidQualifSecCurrIDException 
-     */
-    private NumberFormat getCurrencyFormat() {
-		if ( currencyFormat == null ) {
-			currencyFormat = NumberFormat.getCurrencyInstance();
-		}
-
-//		The currency may have changed
-//		if ( ! getCurrencyQualifID().getType().equals(SecurityCurrID.Type.CURRENCY) )
-//	    	throw new InvalidSecCurrTypeException();
-
-		Currency currency = Currency.getInstance(getToCurrencyCode());
-		currencyFormat.setCurrency(currency);
-
-		return currencyFormat;
-    }
-
     @Override
     public LocalDate getDate() {
 		if ( jwsdpPeer.getDate() == null )
@@ -261,15 +243,12 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
 
 	@Override
 	public String getValueFormatted() {
-		Locale lcl = Locale.getDefault();
-		return getValueFormatted(lcl);
+		return getValueFormatted(Locale.getDefault());
 	}
 
 	public String getValueFormatted(final Locale lcl) {
-		NumberFormat nf = NumberFormat.getCurrencyInstance(lcl);
-		nf.setCurrency(getToCurrency2());
-		return nf.format(getValue().getBigDecimal());
-	}
+    	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
+    											getValue(), getToCurrencyQualifID(), lcl );	}
 
     // -----------------------------------------------------------------
 
@@ -291,20 +270,6 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
 		}
 		
 		return ("" + hashCode()).compareTo("" + otherPrc.hashCode());
-	}
-	
-    // -----------------------------------------------------------------
-
-	public NumberFormat getToCurrencyFormat() {
-		return getToCurrencyFormat(Locale.getDefault());
-	}
-	
-	public NumberFormat getToCurrencyFormat(Locale lcl) {
-		currencyFormat = NumberFormat.getCurrencyInstance(lcl);
-		Currency curr = getToCurrency2();
-		currencyFormat.setCurrency(curr);
-
-		return currencyFormat;
 	}
 	
     // -----------------------------------------------------------------

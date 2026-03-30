@@ -522,10 +522,30 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     // a non-exported package.
 
 	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+		
+		if ( blnc == null ) {
+			throw new IllegalArgumentException("argument <blnc> is null");
+		}
+		
 		return AccountBalanceHelper_FP.formatBalance( acct, blnc );
 	}
 	
 	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc, Locale lcl) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+		
+		if ( blnc == null ) {
+			throw new IllegalArgumentException("argument <blnc> is null");
+		}
+		
+		if ( lcl == null ) {
+			throw new IllegalArgumentException("argument <lcl> is null");
+		}
+		
 		return AccountBalanceHelper_FP.formatBalance( acct, blnc, lcl );
 	}
 	

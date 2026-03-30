@@ -324,7 +324,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
 	/**
 	 * @param id the new currency
-	 * @see #setCurrencyNameSpace(String)
 	 * @see {@link KMyMoneyTransaction#getCurrencyID()}
 	 */
 	public void setCurrencyID(final String id) {
@@ -381,14 +380,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 				helper.getPropertyChangeSupport().firePropertyChange("description", old, desc);
 			}
 		}
-	}
-
-	// ---------------------------------------------------------------
-	
-	@Override
-	public void setCurrencyNameSpace(String id) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	// ---------------------------------------------------------------

@@ -5,6 +5,7 @@ import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 
 /*
  * Auxiliary interface that defines methods that -- for practical reasons,
@@ -59,6 +60,11 @@ public interface KMyMoneyPricePairCore {
     KMyMoneyCurrency getFromCurrency();
     
     // ----------------------------
+
+    /**
+     * @return
+     */
+    KMMCurrID       getToCurrencyID();
 
     /**
      * @return

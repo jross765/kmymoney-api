@@ -1,9 +1,7 @@
 package org.kmymoney.api.read.impl;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Currency;
 import java.util.Locale;
 
 import org.apache.commons.numbers.fraction.BigFraction;
@@ -13,12 +11,11 @@ import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
-import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
-import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
@@ -325,13 +322,8 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      */
     @Override
     public String getValueFormatted(final Locale lcl) {
-		NumberFormat nf = getValueCurrencyFormat(lcl);
-    	if ( getTransaction().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-    		nf.setCurrency(Currency.getInstance(getTransaction().getQualifSecCurrID().getCode()));
-    		return nf.format(getValue().getBigDecimal());
-    	} else {
-    		return nf.format(getValue().getBigDecimal()) + " " + getTransaction().getQualifSecCurrID().toString();
-    	}
+    	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
+    											getValue(), getTransaction().getQualifSecCurrID(), lcl );
     }
 
     // ---------------------------------------------------------------
@@ -369,13 +361,8 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      */
     @Override
     public String getSharesFormatted(final Locale lcl) {
-		NumberFormat nf = getSharesCurrencyFormat(lcl);
-		if ( getAccount().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			nf.setCurrency(new KMMQualifCurrID(getAccount().getQualifSecCurrID()).getCurrID().get());
-			return nf.format(getShares().getBigDecimal());
-		} else {
-			return nf.format(getShares().getBigDecimal()) + " " + getAccount().getQualifSecCurrID().getCode().toString();
-		}
+    	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
+    											getShares(), getAccount().getQualifSecCurrID(), lcl );
     }
 
     // ---------------------------------------------------------------
@@ -409,13 +396,8 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
     @Override
     public String getPriceFormatted(Locale lcl) {
-		NumberFormat nf = getPriceCurrencyFormat(lcl);
-		if ( getTransaction().getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			nf.setCurrency(new KMMQualifCurrID(getTransaction().getQualifSecCurrID()).getCurrID().get());
-			return nf.format(getPrice().getBigDecimal());
-		} else {
-			return nf.format(getPrice().getBigDecimal()) + " " + getTransaction().getQualifSecCurrID().toString();
-		}
+    	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
+    											getPrice(), getTransaction().getQualifSecCurrID(), lcl );
     }
 
     // ---------------------------------------------------------------
@@ -426,42 +408,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     		return "";
     	}
     	return jwsdpPeer.getMemo();
-    }
-    
-    // ---------------------------------------------------------------
-
-    // ---------------------------------------------------------------
-	
-	/**
-	 * @return the currency-format of the transaction
-	 */
-	public NumberFormat getValueCurrencyFormat() {
-		return getValueCurrencyFormat(Locale.getDefault());
-	}
-
-    public NumberFormat getValueCurrencyFormat(Locale lcl) {
-    	return ((KMyMoneyTransactionImpl) getTransaction()).getCurrencyFormat(lcl);
-    }
-
-    /**
-     * @return The currencyFormat for the quantity to use when no locale is given.
-     * @throws InvalidQualifSecCurrIDException 
-     * @throws InvalidQualifSecCurrTypeException 
-     */
-    protected NumberFormat getSharesCurrencyFormat() {
-    	return getSharesCurrencyFormat(Locale.getDefault());
-    }
-    
-    protected NumberFormat getSharesCurrencyFormat(Locale lcl) {
-    	return ((KMyMoneyAccountImpl) getAccount()).getCurrencyFormat();
-    }
-    
-    protected NumberFormat getPriceCurrencyFormat() {	
-    	return getPriceCurrencyFormat(Locale.getDefault());
-    }
-    
-    protected NumberFormat getPriceCurrencyFormat(Locale lcl) {
-    	return getValueCurrencyFormat(lcl); // ::CHECK ::TODO
     }
     
     // ---------------------------------------------------------------

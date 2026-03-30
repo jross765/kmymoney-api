@@ -16,6 +16,7 @@ import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,14 +137,28 @@ public class KMyMoneyPricePairImpl extends KMyMoneyObjectImpl
     // ----------------------------
     
     @Override
-    public KMMQualifCurrID getToCurrencyQualifID() {
-		String secCurrID = getToCurrStr();
+    public KMMCurrID getToCurrencyID() {
+		String currID = getToCurrStr();
 
-		KMMQualifCurrID result = null;
-		if ( secCurrID.startsWith(KMMQualifSecCurrID.PREFIX_SECURITY) ) {
+		KMMCurrID result = null;
+		if ( currID.startsWith(KMMQualifSecCurrID.PREFIX_SECURITY) ) {
 			throw new InvalidQualifSecCurrTypeException();
 		} else {
-			result = new KMMQualifCurrID(secCurrID);
+			result = new KMMCurrID(currID);
+		}
+
+		return result;
+    }
+
+    @Override
+    public KMMQualifCurrID getToCurrencyQualifID() {
+		String currID = getToCurrStr();
+
+		KMMQualifCurrID result = null;
+		if ( currID.startsWith(KMMQualifSecCurrID.PREFIX_SECURITY) ) {
+			throw new InvalidQualifSecCurrTypeException();
+		} else {
+			result = new KMMQualifCurrID(currID);
 		}
 
 		return result;

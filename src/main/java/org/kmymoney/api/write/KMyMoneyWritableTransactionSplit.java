@@ -83,18 +83,6 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 
 	/**
 	 * If the currencies of transaction and account match, this also does
-	 * ${@link #setShares(FixedPointNumber)}.
-	 * 
-	 * @param n the new quantity (in the currency of the account)
-	 * 
-	 * @see #getShares()
-	 * @see #setShares(BigFraction)
-	 * @see #setShares(FixedPointNumber)
-	 */
-	void setShares(String n);
-
-	/**
-	 * If the currencies of transaction and account match, this also does
 	 * ${@link #setValue(FixedPointNumber)}.
 	 * 
 	 * @param n the new value (in the currency of the transaction)
@@ -105,17 +93,6 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	
 	void setValue(BigFraction n);
 	
-	/**
-	 * If the currencies of transaction and account match, this also does
-	 * ${@link #setValue(FixedPointNumber)}.
-	 * 
-	 * @param n the new value (in the currency of the transaction)
-	 * 
-	 * @see #getValue()
-	 * @see #setValue(FixedPointNumber)
-	 */
-	void setValue(String n);
-
 	/**
 	 * 
 	 * @param prc

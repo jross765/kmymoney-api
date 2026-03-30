@@ -2,7 +2,6 @@ package org.kmymoney.api.write.impl;
 
 import java.beans.PropertyChangeSupport;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.Collection;
 
 import org.apache.commons.numbers.fraction.BigFraction;
@@ -369,33 +368,6 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransactionSplit#setShares(FixedPointNumber)
-	 */
-	@Override
-	public void setShares(final String n) {
-		if ( n == null ) {
-			throw new IllegalArgumentException("argument <n> is null");
-		}
-		
-		if ( n.isEmpty() ) {
-			throw new IllegalArgumentException("argument <n> is empty");
-		}
-	
-		try {
-			this.setShares(new FixedPointNumber(n.toLowerCase().replaceAll("&euro;", "").replaceAll("&pound;", "")));
-		} catch (NumberFormatException e) {
-			try {
-				Number parsed = this.getSharesCurrencyFormat().parse(n);
-				this.setShares(new FixedPointNumber(parsed.toString()));
-			} catch (NumberFormatException e1) {
-				throw e;
-			} catch (ParseException e1) {
-				throw e;
-			}
-		}
-	}
-
-	/**
 	 * @see KMyMoneyWritableTransactionSplit#setValue(FixedPointNumber)
 	 */
 	@Override
@@ -434,33 +406,6 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		FixedPointNumber temp = FixedPointNumber.of(n);
 		setValue(temp);
-	}
-
-	/**
-	 * @see KMyMoneyWritableTransactionSplit#setValue(FixedPointNumber)
-	 */
-	@Override
-	public void setValue(final String valStr) {
-		if ( valStr == null ) {
-			throw new IllegalArgumentException("argument <valStr> is null");
-		}
-		
-		if ( valStr.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <valStr> is empty");
-		}
-
-		try {
-			this.setValue(new FixedPointNumber(valStr.toLowerCase().replaceAll("&euro;", "").replaceAll("&pound;", "")));
-		} catch (NumberFormatException e) {
-			try {
-				Number parsed = this.getValueCurrencyFormat().parse(valStr);
-				this.setValue(new FixedPointNumber(parsed.toString()));
-			} catch (NumberFormatException e1) {
-				throw e;
-			} catch (ParseException e1) {
-				throw e;
-			}
-		}
 	}
 
 	@Override

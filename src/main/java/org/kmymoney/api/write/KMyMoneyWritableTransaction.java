@@ -11,8 +11,6 @@ import org.kmymoney.api.write.hlp.HasWritableUserDefinedAttributes;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 
-import xyz.schnorxoborx.base.beanbase.TransactionSplitNotFoundException;
-
 /**
  * Transaction that can be modified.<br/>
  * For PropertyChange-Listeners we support the properties: "description" and
@@ -27,18 +25,10 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 
 	/**
 	 * @param id the new currency
-	 * @see #setCurrencyNameSpace(String)
 	 * 
 	 * @see #getQualifSecCurrID()
 	 */
 	void setCurrencyID(String id);
-
-	/**
-	 * @param id the new name space
-	 * 
-	 * @see #getQualifSecCurrID()
-	 */
-	void setCurrencyNameSpace(String id);
 
 	/**
 	 * The KMyMoney file is the top-level class to contain everything.

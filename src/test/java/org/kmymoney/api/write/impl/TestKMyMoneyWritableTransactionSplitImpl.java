@@ -157,8 +157,7 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(15.00, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(15,    splt.getSharesRat().getNumerator().longValue());
 		assertEquals(1,     splt.getSharesRat().getDenominator().longValue());
-		// ::TODO: That's not exactly what we want...
-		assertEquals("15 E000001", splt.getSharesFormatted()); // ::TODO: locale-specific!
+		assertEquals("15 SAP", splt.getSharesFormatted()); // ::TODO: locale-specific!
 		
 		assertEquals(120.00, splt.getPrice().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(120,    splt.getPriceRat().getNumerator().longValue());

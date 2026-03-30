@@ -1,6 +1,5 @@
 package org.kmymoney.api.read.impl;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import org.kmymoney.api.generated.TRANSACTION;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
@@ -59,11 +59,6 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * @see KMyMoneyTransaction#getDateEntered()
      */
     protected LocalDate entryDate;
-
-    /**
-     * The Currency-Format to use if no locale is given.
-     */
-    protected NumberFormat currencyFormat;
 
     // ---------------------------------------------------------------
 
@@ -131,29 +126,6 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		return Currency.getInstance(kmmCurrID);
 	}
 
-
-    /**
-	 * The Currency-Format to use if no locale is given.
-	 *
-	 * @return default currency-format with the transaction's currency set
-	 */
-	protected NumberFormat getCurrencyFormat() {
-		return getCurrencyFormat(Locale.getDefault());
-	}
-	
-	protected NumberFormat getCurrencyFormat(Locale lcl) {
-		// The currency may have changed
-		if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) { 
-			currencyFormat = NumberFormat.getCurrencyInstance(lcl);
-			Currency curr = getCurrency();
-			currencyFormat.setCurrency(curr);
-		} else {
-			currencyFormat = NumberFormat.getNumberInstance(lcl);
-		}
-		
-		return currencyFormat;
-	}
-
     /**
      * {@inheritDoc}
      */
@@ -185,23 +157,15 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public String getBalanceFormatted() {
-    	return getCurrencyFormat().format(getBalance());
+    	return getBalanceFormatted(Locale.getDefault());
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getBalanceFormatted(final Locale loc) {
-
-	NumberFormat cf = NumberFormat.getInstance(loc);
-		if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-			cf.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
-		} else {
-			cf.setCurrency(null);
-		}
-
-		return cf.format(getBalance());
-    }
+    public String getBalanceFormatted(final Locale lcl) {
+    	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
+    											getBalance(), getQualifSecCurrID(), lcl );    }
 
     /**
      * {@inheritDoc}
@@ -214,21 +178,15 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public String getNegatedBalanceFormatted() {
-    	return getCurrencyFormat().format(getNegatedBalance());
+    	return getNegatedBalanceFormatted(Locale.getDefault());
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getNegatedBalanceFormatted(final Locale loc) {
-    	NumberFormat nf = NumberFormat.getInstance(loc);
-    	if ( getQualifSecCurrID().getType() == KMMQualifSecCurrID.Type.CURRENCY ) {
-    		nf.setCurrency(Currency.getInstance(getQualifSecCurrID().getCode()));
-    	} else {
-    		nf.setCurrency(null);
-    	}
-
-    	return nf.format(getNegatedBalance());
+    public String getNegatedBalanceFormatted(final Locale lcl) {
+    	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
+    											getBalance(), getQualifSecCurrID(), lcl );
     }
 
     /**
