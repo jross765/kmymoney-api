@@ -26,7 +26,7 @@ There have been some major changes in this release:
   computations, but not for exact ones).
     
   (Based on `SchnorxoLib` V. 0.2 and
-  class `BigFraction` in Apache Commons Numbers. ⇒ new dependency)
+  class `BigFraction` in Apache Commons Numbers. &rarr; new dependency)
 
   That applies to *all* classes returning or receiving values -- they
   now basically are all available in two variants throughout the lib.
