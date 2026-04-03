@@ -205,7 +205,9 @@ It should go without saying, but the following points are of course subject to c
 ## Known Issues
 * Performance: When using the `Writable`-classes (i.e., generating new objects or changing existing ones), the performance is less-than-overwhelming, especially when working with larger files.
 
-* Generating new objects currently only works (reliably) when at least one object of the same type (an institution, say) is already in the file.
+* *Edge case*: The "virgin" test file (the practically empty one) cannot be parsed -- in the current stage of development, the lib still assumes a handful of entities being already there.
+
+* *Edge case*: Generating new objects currently only works (reliably) when at least one object of the same type (an institution, say) is already in the file.
 
 * When you generate a price pair that does not exist yet (or a price for a price pair that does not exist yet), then it will be written into the file but not be visible in KMyMoney. In order to make it visible, you first have to generate the according currency.
 
