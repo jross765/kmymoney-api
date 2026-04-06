@@ -34,7 +34,7 @@ public class FileSecurityManager extends org.kmymoney.api.read.impl.hlp.fil.File
 
 	public void addSecurity(KMyMoneySecurity sec) {
 		if ( sec == null ) {
-			throw new IllegalArgumentException("null security given");
+			throw new IllegalArgumentException("argument <sec> is null");
 		}
 
 		secMap.put(sec.getID(), sec);
@@ -50,7 +50,7 @@ public class FileSecurityManager extends org.kmymoney.api.read.impl.hlp.fil.File
 
 	public void removeSecurity(KMyMoneySecurity sec) {
 		if ( sec == null ) {
-			throw new IllegalArgumentException("null security given");
+			throw new IllegalArgumentException("argument <sec> is null");
 		}
 
 		secMap.remove(sec.getID());

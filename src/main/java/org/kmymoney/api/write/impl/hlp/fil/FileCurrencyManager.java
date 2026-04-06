@@ -34,7 +34,7 @@ public class FileCurrencyManager extends org.kmymoney.api.read.impl.hlp.fil.File
 
 	public void addCurrency(KMyMoneyCurrency curr) {
 		if ( curr == null ) {
-			throw new IllegalArgumentException("null currency given");
+			throw new IllegalArgumentException("argument <curr> is null");
 		}
 
 		currMap.put(curr.getID(), curr);
@@ -43,7 +43,7 @@ public class FileCurrencyManager extends org.kmymoney.api.read.impl.hlp.fil.File
 
 	public void removeCurrency(KMyMoneyCurrency curr) {
 		if ( curr == null ) {
-			throw new IllegalArgumentException("null currency given");
+			throw new IllegalArgumentException("argument <curr> is null");
 		}
 
 		currMap.remove(curr.getID());

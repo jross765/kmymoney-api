@@ -229,7 +229,7 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
      */
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null transaction split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
 		KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
@@ -238,7 +238,7 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 			int dummy = 0; // do nothing!
 						   // sic, the following error shall *not* be thrown
 						   // (as opposed to code in KMyMoneyTransaction)!
-//			if ( !old.equals(splt) ) {
+//			if ( ! old.equals(splt) ) {
 //				System.err.println("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
 //						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
 //						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());

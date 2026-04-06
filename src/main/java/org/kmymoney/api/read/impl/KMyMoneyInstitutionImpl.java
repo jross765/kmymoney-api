@@ -168,13 +168,13 @@ public class KMyMoneyInstitutionImpl extends KMyMoneyObjectImpl
     
     public void addAccount(final KMyMoneyAccount acct) {
 		if ( acct == null ) {
-			throw new IllegalArgumentException("null account given");
+			throw new IllegalArgumentException("argument <acct> is null");
 		}
 
 		KMyMoneyAccount old = getAccountByID(acct.getID());
 		if ( old != null ) {
 			// There already is a split with that ID
-			if ( !old.equals(acct) ) {
+			if ( ! old.equals(acct) ) {
 				System.err.println("addAccount: New Account object with same ID, needs to be replaced: " + acct.getID()
 						+ "[" + acct.getClass().getName() + "] and " + old.getID() + "[" + old.getClass().getName()
 						+ "]\n" + "new=" + acct.toString() + "\n" + "old=" + old.toString());
@@ -215,11 +215,11 @@ public class KMyMoneyInstitutionImpl extends KMyMoneyObjectImpl
 	 */
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {

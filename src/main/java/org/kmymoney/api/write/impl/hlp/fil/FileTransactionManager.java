@@ -69,7 +69,7 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 
 	public void addTransaction(KMyMoneyTransaction trx, boolean withSplt) {
 		if ( trx == null ) {
-			throw new IllegalArgumentException("null transaction given");
+			throw new IllegalArgumentException("argument <trx> is null");
 		}
 
 		trxMap.put(trx.getID(), trx);
@@ -89,7 +89,7 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 
 	public void removeTransaction(KMyMoneyTransaction trx, boolean withSplt) {
 		if ( trx == null ) {
-			throw new IllegalArgumentException("null transaction given");
+			throw new IllegalArgumentException("argument <trx> is null");
 		}
 
 		if ( withSplt ) {
@@ -125,7 +125,7 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 
 	public void addTransactionSplit(KMyMoneyTransactionSplit splt, boolean withTrx) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
 		trxSpltMap.put(splt.getQualifID(), splt);
@@ -141,7 +141,7 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 
 	public void removeTransactionSplit(KMyMoneyTransactionSplit splt, boolean withTrx) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
 		if ( withTrx ) {

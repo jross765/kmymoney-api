@@ -94,11 +94,11 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		final KMyMoneyWritableFileImpl file, 
     		final KMMPyeID newID) {
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null ID given");
+			throw new IllegalArgumentException("argument <newID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
     
         ObjectFactory factory = file.getObjectFactory();
@@ -245,13 +245,9 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 			throw new IllegalArgumentException("argument <notes> is null");
 		}
 		
-		if ( notes.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <notes> is empty");
-		}
-
 		// Caution: empty string allowed here
 //		if ( notes.trim().length() == 0 ) {
-//	   	 throw new IllegalArgumentException("empty notesgiven!");
+//	   	 throw new IllegalArgumentException("argument <notes> is empty");
 //		}
 
 		String oldNotes = getNotes();

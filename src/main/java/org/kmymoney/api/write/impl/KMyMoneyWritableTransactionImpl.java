@@ -121,7 +121,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	 */
 	public KMyMoneyWritableTransactionSplit createWritableSplit(final KMyMoneyAccount acct) {
 		if ( acct == null ) {
-			throw new IllegalArgumentException("null account given");
+			throw new IllegalArgumentException("argument <acct> is null");
 		}
 
 		KMyMoneyWritableTransactionSplitImpl splt = new KMyMoneyWritableTransactionSplitImpl(this, acct);
@@ -140,17 +140,17 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			final KMyMoneyPayee pye,
 			final Collection<KMyMoneyTag> tagList) {
 		if ( acct == null ) {
-			throw new IllegalArgumentException("null account given");
+			throw new IllegalArgumentException("argument <acct> is null");
 		}
 
 		// Sic, null allowed here
 //		if ( pye == null ) {
-//			throw new IllegalArgumentException("null payee given");
+//			throw new IllegalArgumentException("argument <pye> is null");
 //		}
 		
 		// Sic, null allowed here
 //		if ( tagList == null ) {
-//			throw new IllegalArgumentException("null tag-list given");
+//			throw new IllegalArgumentException("argument <tagList> is null");
 //		}
 		
 		KMyMoneyWritableTransactionSplitImpl splt = new KMyMoneyWritableTransactionSplitImpl(this, acct, pye, tagList);
@@ -169,11 +169,11 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			final KMyMoneyWritableFileImpl file, 
 			final KMMTrxID newID) {
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null transaction ID given");
+			throw new IllegalArgumentException("argument <newID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset transaction ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
 
 		// ObjectFactory fact = file.getObjectFactory();
@@ -269,14 +269,14 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		// alt:
 		// return (KMyMoneyWritableTransactionSplit) super.getSplitByID(id);
 		if ( spltID == null ) {
-			throw new IllegalArgumentException("null transaction split ID given");
+			throw new IllegalArgumentException("argument <spltID> is null");
 		}
 
-		if ( !spltID.equals("") ) {
-			throw new IllegalArgumentException("transaction split ID is empty");
+		if ( ! spltID.isSet() ) {
+			throw new IllegalArgumentException("argument <spltID> is not set");
 		}
 		// ::TODO
-//		if ( !spltID.isSet() ) {
+//		if ( ! spltID.isSet() ) {
 //			throw new IllegalArgumentException("transaction split ID is not set");
 //		}
 
@@ -368,14 +368,14 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	public void setMemo(final String desc) {
 		if ( desc == null ) {
 			throw new IllegalArgumentException(
-					"null description given! Please use the empty string instead of null for an empty description");
+					"argument <desc> is null. Please use the empty string instead of null for an empty description");
 		}
 
 		String old = jwsdpPeer.getMemo();
 		jwsdpPeer.setMemo(desc);
 		getWritableFile().setModified(true);
 
-		if ( old == null || !old.equals(desc) ) {
+		if ( old == null || ! old.equals(desc) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("description", old, desc);
 			}
@@ -427,19 +427,19 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	@Override
 	public void addUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is emptys");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -456,11 +456,11 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	@Override
 	public void removeUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -475,19 +475,19 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	@Override
 	public void setUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {

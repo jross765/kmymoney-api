@@ -422,11 +422,11 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void setSecID(final KMMSecID secID) {
 		if ( secID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 		
 		if ( ! secID.isSet() ) {
-			throw new IllegalArgumentException("unset security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
 		setQualifSecCurrID(new KMMQualifSecID(secID));
@@ -438,7 +438,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void setCurrency(final Currency curr) {
 		if ( curr == null ) {
-			throw new IllegalArgumentException("null curreny given");
+			throw new IllegalArgumentException("argument <curr> is null");
 		}
 		
 		setQualifSecCurrID(new KMMQualifCurrID(curr));
@@ -450,11 +450,11 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	@Override
 	public void setCurrency(final String currCode) {
 		if ( currCode == null ) {
-			throw new IllegalArgumentException("null currency code given");
+			throw new IllegalArgumentException("argument <currCode> is null");
 		}
 
 		if ( currCode.isEmpty() ) {
-			throw new IllegalArgumentException("empty currency code given");
+			throw new IllegalArgumentException("argument <currCode> is empty");
 		}
 
 		setCurrency(Currency.getInstance(currCode));
@@ -524,11 +524,11 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 */
 	public void setTypeBigInt(final BigInteger typeInt) {
 		if ( typeInt == null ) {
-			throw new IllegalArgumentException("null type given!");
+			throw new IllegalArgumentException("argument <typeInt> is null");
 		}
 
 		if ( typeInt.intValue() <= 0 ) {
-			throw new IllegalArgumentException("type <= 0 given!");
+			throw new IllegalArgumentException("argument <typeInt> is null <= 0");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {

@@ -64,11 +64,11 @@ public class FileTagManager {
 
 	public KMyMoneyTag getTagByID(final KMMTagID tagID) {
 		if ( tagID == null ) {
-			throw new IllegalArgumentException("null tag ID given");
+			throw new IllegalArgumentException("argument <tagID> is null");
 		}
 
 		if ( ! tagID.isSet() ) {
-			throw new IllegalArgumentException("unset tag ID given");
+			throw new IllegalArgumentException("argument <tagID> is not set");
 		}
 
 		if ( tagMap == null ) {
@@ -85,11 +85,11 @@ public class FileTagManager {
 
 	public List<KMyMoneyTag> getTagsByName(String expr) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		return getTagsByName(expr, true);
@@ -97,11 +97,11 @@ public class FileTagManager {
 
 	public List<KMyMoneyTag> getTagsByName(String expr, boolean relaxed) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		if ( tagMap == null ) {
@@ -129,11 +129,11 @@ public class FileTagManager {
 
 	public KMyMoneyTag getTagsByNameUniq(String expr) throws NoEntryFoundException, TooManyEntriesFoundException {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		List<KMyMoneyTag> cmdtyList = getTagsByName(expr, false);

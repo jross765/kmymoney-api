@@ -68,7 +68,7 @@ public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePri
 
 	public void addPricePair(KMyMoneyPricePair prcPr, boolean withPrc) {
 		if ( prcPr == null ) {
-			throw new IllegalArgumentException("null price pair given");
+			throw new IllegalArgumentException("argument <prcPr> is null");
 		}
 
 		prcPrMap.put(prcPr.getID(), prcPr);
@@ -88,7 +88,7 @@ public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePri
 
 	public void removePricePair(KMyMoneyPricePair prcPr, boolean withPrc) {
 		if ( prcPr == null ) {
-			throw new IllegalArgumentException("null price pair given");
+			throw new IllegalArgumentException("argument <prcPr> is null");
 		}
 
 		if ( withPrc ) {
@@ -110,7 +110,7 @@ public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePri
 
 	public void addPrice(KMyMoneyPrice prc, boolean withPrcPr) {
 		if ( prc == null ) {
-			throw new IllegalArgumentException("null price given");
+			throw new IllegalArgumentException("argument <prc> is null");
 		}
 
 		prcMap.put(prc.getID(), prc);
@@ -127,7 +127,7 @@ public class FilePriceManager extends org.kmymoney.api.read.impl.hlp.fil.FilePri
 
 	public void removePrice(KMyMoneyPrice prc, boolean withPrcPr) {
 		if ( prc == null ) {
-			throw new IllegalArgumentException("null price given");
+			throw new IllegalArgumentException("argument <prc> is null");
 		}
 
 		// remove price pair as well, if the removed price object 

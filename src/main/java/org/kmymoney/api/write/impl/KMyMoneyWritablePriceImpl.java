@@ -147,10 +147,10 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 	@Override
 	public void setFromSecCurrStr(String secCurr) {
 		if ( secCurr == null )
-			throw new IllegalArgumentException("null security/currency given");
+			throw new IllegalArgumentException("argument <secCurr> is null");
 
 		if ( secCurr.trim().length() == 0 )
-			throw new IllegalArgumentException("empty security/currency given");
+			throw new IllegalArgumentException("argument <secCurr> is empty");
 
 		setFromCurrencyQualifID(new KMMQualifCurrID(secCurr));
 	}
@@ -158,10 +158,10 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 	@Override
 	public void setToCurrStr(String curr) {
 		if ( curr == null )
-			throw new IllegalArgumentException("null currency given");
+			throw new IllegalArgumentException("argument <curr> is null");
 
 		if ( curr.trim().length() == 0 )
-			throw new IllegalArgumentException("empty currency given");
+			throw new IllegalArgumentException("argument <curr> is empty");
 
 		setToCurrencyQualifID(new KMMQualifCurrID(curr));
 	}
@@ -171,11 +171,11 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     @Override
     public void setFromSecCurrQualifID(final KMMQualifSecCurrID qualifID) {
 		if ( qualifID == null ) {
-			throw new IllegalArgumentException("null security/currency ID given");
+			throw new IllegalArgumentException("argument <qualifID> is null");
 		}
 
 		if ( ! qualifID.isSet() ) {
-			throw new IllegalArgumentException("unset security/currency ID given");
+			throw new IllegalArgumentException("argument <qualifID> is not set");
 		}
 
     	wrtblParent.setFromSecCurrQualifID(qualifID);
@@ -185,11 +185,11 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     @Override
     public void setFromSecurityQualifID(final KMMQualifSecID qualifID) {
 		if ( qualifID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <qualifID> is null");
 		}
 
 		if ( ! qualifID.isSet() ) {
-			throw new IllegalArgumentException("unset security ID given");
+			throw new IllegalArgumentException("argument <qualifID> is not set");
 		}
 
     	wrtblParent.setFromSecurityQualifID(qualifID);
@@ -199,11 +199,11 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     @Override
     public void setFromCurrencyQualifID(final KMMQualifCurrID qualifID) {
 		if ( qualifID == null ) {
-			throw new IllegalArgumentException("null currency ID given");
+			throw new IllegalArgumentException("argument <qualifID> is null");
 		}
 
 		if ( ! qualifID.isSet() ) {
-			throw new IllegalArgumentException("unset currency ID given");
+			throw new IllegalArgumentException("argument <qualifID> is not set");
 		}
 
     	wrtblParent.setFromCurrencyQualifID(qualifID);
@@ -259,10 +259,10 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 
     public void setParentPricePairID(KMMPrcPrID prcPrID) {
 		if ( prcPrID == null )
-			throw new IllegalArgumentException("null price pair ID given");
+			throw new IllegalArgumentException("argument <prcPrID> is null");
 
 		if ( ! prcPrID.isSet() )
-			throw new IllegalArgumentException("unset price pair ID given");
+			throw new IllegalArgumentException("argument <prcPrID> is not set");
 
 		KMMPrcPrID oldPrcPrID = getParentPricePairID();
 
@@ -277,7 +277,7 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 	
     public void setParentPricePair(KMyMoneyPricePair prcPr) {
 		if ( prcPr == null )
-			throw new IllegalArgumentException("null price pair given");
+			throw new IllegalArgumentException("argument <prcPr> is null");
 
     }
 	
@@ -286,7 +286,7 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     @Override
 	public void setDate(LocalDate date) {
 		if ( date == null )
-			throw new IllegalArgumentException("null date given");
+			throw new IllegalArgumentException("argument <date> is null");
 
 		LocalDate oldDate = getDate();
 		
@@ -324,7 +324,7 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     @Override
     public void setDateTime(LocalDateTime dateTime) {
 		if ( dateTime == null )
-			throw new IllegalArgumentException("null code given");
+			throw new IllegalArgumentException("argument <dateTime> is null");
 
 		setDate(dateTime.toLocalDate());
 	}
@@ -347,10 +347,10 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
      */
     public void setSourceStr(String srcStr) {
 		if ( srcStr == null )
-			throw new IllegalArgumentException("null source given");
+			throw new IllegalArgumentException("argument <srcStr> is null");
 
 		if ( srcStr.trim().length() == 0 )
-			throw new IllegalArgumentException("empty source given");
+			throw new IllegalArgumentException("argument <srcStr> is empty");
 
 		String oldSrc = getSourceStr();
 

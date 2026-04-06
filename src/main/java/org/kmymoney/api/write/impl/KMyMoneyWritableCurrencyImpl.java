@@ -76,7 +76,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
     		final KMyMoneyWritableFileImpl file, 
     		final Currency curr) {
 		if ( curr == null ) {
-			throw new IllegalArgumentException("null currency code given");
+			throw new IllegalArgumentException("argument <curr> is null");
 		}
 
 //        ObjectFactory factory = file.getObjectFactory();

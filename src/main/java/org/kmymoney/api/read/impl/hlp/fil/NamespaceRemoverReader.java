@@ -45,7 +45,7 @@ public class NamespaceRemoverReader extends Reader {
 
 	public void setInput(final Reader newInput) {
 		if ( newInput == null ) {
-			throw new IllegalArgumentException("null not allowed for field this.input");
+			throw new IllegalArgumentException("argument <newInput> is null");
 		}
 
 		input = newInput;

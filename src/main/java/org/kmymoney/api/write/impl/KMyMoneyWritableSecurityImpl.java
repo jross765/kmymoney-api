@@ -95,11 +95,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			final KMyMoneyWritableFileImpl file, 
 			final KMMSecID newID) {
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null ID given");
+			throw new IllegalArgumentException("argument <newID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
 
 		SECURITY jwsdpSec = file.createSecurityType();
@@ -108,6 +108,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		jwsdpSec.setType(Const.SEC_TYPE_DEFAULT.getCode());
 		jwsdpSec.setSymbol(Const.SEC_SYMBOL_DEFAULT);
 		jwsdpSec.setName("no name given");
+		
 		jwsdpSec.setRoundingMethod(Const.SEC_ROUNDMETH_DEFAULT.getCode());
 		jwsdpSec.setPp(BigInteger.valueOf(Const.SEC_PP_DEFAULT));
 		jwsdpSec.setSaf(BigInteger.valueOf(Const.SEC_SAF_DEFAULT));
@@ -143,11 +144,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setSymbol(final String symb) {
 		if ( symb == null ) {
-			throw new IllegalArgumentException("null symbol given!");
+			throw new IllegalArgumentException("argument <symb> is null");
 		}
 
 		if ( symb.trim().length() == 0 ) {
-			throw new IllegalArgumentException("empty symbol given!");
+			throw new IllegalArgumentException("argument <symb> is empty");
 		}
 
 		String oldSymb = getSymbol();
@@ -163,11 +164,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setCode(final String code) {
 		if ( code == null ) {
-			throw new IllegalArgumentException("null code given!");
+			throw new IllegalArgumentException("argument <code> is null");
 		}
 
 		if ( code.trim().length() == 0 ) {
-			throw new IllegalArgumentException("empty code given!");
+			throw new IllegalArgumentException("argument <code> is empty");
 		}
 
 		String oldCode = getCode();
@@ -206,15 +207,15 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
      */
 	public void setTypeBigInt(final BigInteger type) {
 		if ( type == null ) {
-			throw new IllegalArgumentException("null type given!");
+			throw new IllegalArgumentException("argument <type> is null");
 		}
 
 		if ( type.intValue() < 0 ) {
-			throw new IllegalArgumentException("type < 0 given!"); // sic, 0 is allowed!
+			throw new IllegalArgumentException("argument <type> is < 0"); // sic, 0 is allowed!
 		}
 
 		if ( type.intValue() == KMMSecCurr.Type.UNSET ) {
-			throw new IllegalArgumentException("unset type given!");
+			throw new IllegalArgumentException("argument <type> is not set");
 		}
 
 		BigInteger oldType = getTypeBigInt();
@@ -230,11 +231,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setName(String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given!");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 		if ( name.trim().length() == 0 ) {
-			throw new IllegalArgumentException("empty name given!");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		String oldName = getName();
@@ -250,11 +251,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setPP(final BigInteger pp) {
 		if ( pp == null ) {
-			throw new IllegalArgumentException("null PP given!");
+			throw new IllegalArgumentException("argument <pp> is null");
 		}
 
 		if ( pp.intValue() <= 0 ) {
-			throw new IllegalArgumentException("PP is <= 0");
+			throw new IllegalArgumentException("argument <pp> is <= 0");
 		}
 		
 		BigInteger oldPP = getPP();
@@ -274,7 +275,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		}
 
 		if ( meth == KMMSecCurr.RoundingMethod.UNKNOWN ) {
-			throw new IllegalArgumentException("argumen <meth> is set to " + KMMSecCurr.RoundingMethod.UNKNOWN);
+			throw new IllegalArgumentException("argument <meth> is set to " + KMMSecCurr.RoundingMethod.UNKNOWN);
 		}
 		
 		KMMSecCurr.RoundingMethod oldMeth = getRoundingMethod();
@@ -290,11 +291,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setSAF(final BigInteger saf) {
 		if ( saf == null ) {
-			throw new IllegalArgumentException("null SAF given!");
+			throw new IllegalArgumentException("argument <saf> is null");
 		}
 
 		if ( saf.intValue() <= 0 ) {
-			throw new IllegalArgumentException("SAF is <= 0");
+			throw new IllegalArgumentException("argument <saf> is <= 0");
 		}
 		
 		BigInteger oldSAF = getSAF();
@@ -310,11 +311,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setTradingCurrency(final KMMQualifCurrID currID) {
 		if ( currID == null ) {
-			throw new IllegalArgumentException("unset currency given!");
+			throw new IllegalArgumentException("argument <currID> is null");
 		}
 
 		if ( ! currID.isSet() ) {
-			throw new IllegalArgumentException("unset currency given!");
+			throw new IllegalArgumentException("argument <currID> is not set");
 		}
 
 		KMMQualifCurrID oldCurrID = getTradingCurrency();
@@ -330,11 +331,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setTradingMarket(final String mkt) {
 		if ( mkt == null ) {
-			throw new IllegalArgumentException("null trading market given!");
+			throw new IllegalArgumentException("argument <mkt> is null");
 		}
 
 		if ( mkt.trim().length() == 0 ) {
-			throw new IllegalArgumentException("empty trading market given!");
+			throw new IllegalArgumentException("argument <pp> is empty");
 		}
 
 		String oldMkt = getTradingMarket();
@@ -373,19 +374,19 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void addUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -402,11 +403,11 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void removeUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -421,19 +422,19 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	@Override
 	public void setUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {

@@ -77,11 +77,11 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
     		final KMyMoneyWritableFileImpl file, 
     		final KMMInstID newID) {
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null ID given");
+			throw new IllegalArgumentException("argument <newID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
     
         ObjectFactory factory = file.getObjectFactory();
@@ -169,11 +169,11 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
     @Override
     public void setName(final String name) {
     	if ( name == null ) {
-    		throw new IllegalArgumentException("null name given!");
+    		throw new IllegalArgumentException("argument <name> is null");
     	}
 
     	if ( name.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("empty name given!");
+    		throw new IllegalArgumentException("argument <name> is empty");
     	}
 
     	String oldName = getName();
@@ -193,11 +193,11 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	@Override
 	public void setSortCode(final String sortCode) {
 		if ( sortCode == null ) {
-			throw new IllegalArgumentException("null sort code given");
+			throw new IllegalArgumentException("argument <sortCode> is null");
 		}
 		
 		if ( sortCode.isEmpty() ) {
-			throw new IllegalArgumentException("empty sort code given");
+			throw new IllegalArgumentException("argument <sortCode> is empty");
 		}
 	
 		String oldSortCode = getSortCode();
@@ -213,7 +213,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	@Override
     public void setAddress(final KMMAddress adr) {
 		if ( adr == null ) {
-			throw new IllegalArgumentException("null address given!");
+			throw new IllegalArgumentException("argument <adr> is null");
 		}
 
 		/*
@@ -245,12 +245,12 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
     @Override
 	public void setBIC(String bic) {
     	if ( bic == null ) {
-    		throw new IllegalArgumentException("null bic given!");
+    		throw new IllegalArgumentException("argument <bic> is null");
     	}
 
     	// CAUTION: Empty string allowed here
 //    	if ( bic.trim().length() == 0 ) {
-//    		throw new IllegalArgumentException("empty bic given!");
+//    		throw new IllegalArgumentException("argument <bic> is empty");
 //    	}
 
     	String oldBIC = getBIC();
@@ -269,12 +269,12 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	@Override
 	public void setURL(String url) {
     	if ( url == null ) {
-    		throw new IllegalArgumentException("null url given!");
+    		throw new IllegalArgumentException("argument <url> is null");
     	}
 
     	// CAUTION: Empty string allowed here
 //    	if ( url.trim().length() == 0 ) {
-//    		throw new IllegalArgumentException("empty url given!");
+//    		throw new IllegalArgumentException("argument <url> is empty");
 //    	}
 
     	String oldURL = getURL();
@@ -294,19 +294,19 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	@Override
 	public void addUserDefinedAttribute(String name, String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -323,11 +323,11 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	@Override
 	public void removeUserDefinedAttribute(String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -342,19 +342,19 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	@Override
 	public void setUserDefinedAttribute(String name, String value) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
 		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( value == null ) {
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {

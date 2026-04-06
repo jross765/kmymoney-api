@@ -88,11 +88,11 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
     		final KMyMoneyWritableFileImpl file, 
     		final KMMTagID newID) {
 		if ( newID == null ) {
-			throw new IllegalArgumentException("null ID given");
+			throw new IllegalArgumentException("argument <newID> is null");
 		}
 
 		if ( ! newID.isSet() ) {
-			throw new IllegalArgumentException("unset ID given");
+			throw new IllegalArgumentException("argument <newID> is not set");
 		}
     
         ObjectFactory factory = file.getObjectFactory();
@@ -158,11 +158,11 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
     @Override
     public void setName(final String name) {
     	if ( name == null ) {
-    		throw new IllegalArgumentException("null name given!");
+    		throw new IllegalArgumentException("argument <name> is null");
     	}
 
     	if ( name.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("empty name given!");
+    		throw new IllegalArgumentException("argument <name> is empty");
     	}
 
     	String oldName = getName();
@@ -182,16 +182,12 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
     @Override
     public void setNotes(final String notes) {
 		if ( notes == null ) {
-			throw new IllegalArgumentException("null notes given");
+			throw new IllegalArgumentException("argument <notes> is null");
 		}
 		
-		if ( notes.isEmpty() ) {
-			throw new IllegalArgumentException("empty notes given");
-		}
-
 		// Caution: empty string allowed here
 //	if ( notes.trim().length() == 0 ) {
-//	    throw new IllegalArgumentException("empty notesgiven!");
+//	    throw new IllegalArgumentException("argument <notes> is empty");
 //	}
 
 		String oldNotes = getNotes();

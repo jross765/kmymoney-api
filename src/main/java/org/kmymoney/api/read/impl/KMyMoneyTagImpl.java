@@ -106,13 +106,13 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
      */
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
-			throw new IllegalArgumentException("null transaction split given");
+			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
 		KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
 		if ( old != null ) {
 			// There already is a split with that ID
-			if ( !old.equals(splt) ) {
+			if ( ! old.equals(splt) ) {
 				System.err.println("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
 						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
 						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());

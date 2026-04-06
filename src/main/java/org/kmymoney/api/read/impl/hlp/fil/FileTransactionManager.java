@@ -161,11 +161,11 @@ public class FileTransactionManager {
 
 	public KMyMoneyTransaction getTransactionByID(final KMMTrxID trxID) {
 		if ( trxID == null ) {
-			throw new IllegalArgumentException("null transaction ID given");
+			throw new IllegalArgumentException("argument <trxID> is null");
 		}
 
 		if ( ! trxID.isSet() ) {
-			throw new IllegalArgumentException("unset transaction ID given");
+			throw new IllegalArgumentException("argument <trxID> is not set");
 		}
 
 		if ( trxMap == null ) {
@@ -230,7 +230,7 @@ public class FileTransactionManager {
 
 	public List<KMyMoneyTransactionSplit> getTransactionSplitsByCurr(final Currency curr) {
 		if ( curr == null ) {
-			throw new IllegalArgumentException("null currency given");
+			throw new IllegalArgumentException("argument <curr> is null");
 		}
 		
 		KMMQualifCurrID qualifID = new KMMQualifCurrID(curr);
@@ -351,11 +351,11 @@ public class FileTransactionManager {
 
 	public List<KMyMoneyTransactionSplitImpl> getTransactionSplits_readAfresh(final KMMTrxID trxID) {
 		if ( trxID == null ) {
-			throw new IllegalArgumentException("null transaction ID given");
+			throw new IllegalArgumentException("argument <trxID> is null");
 		}
 
 		if ( ! trxID.isSet() ) {
-			throw new IllegalArgumentException("unset transaction ID given");
+			throw new IllegalArgumentException("argument <trxID> is not set");
 		}
 
 		List<KMyMoneyTransactionSplitImpl> result = new ArrayList<KMyMoneyTransactionSplitImpl>();
@@ -394,11 +394,11 @@ public class FileTransactionManager {
 
 	private List<SPLIT> getTransactionSplits_raw(final KMMTrxID trxID) {
 		if ( trxID == null ) {
-			throw new IllegalArgumentException("null transaction ID given");
+			throw new IllegalArgumentException("argument <trxID> is null");
 		}
 
 		if ( ! trxID.isSet() ) {
-			throw new IllegalArgumentException("unset transaction ID given");
+			throw new IllegalArgumentException("argument <trxID> is not set");
 		}
 
 		List<SPLIT> result = new ArrayList<SPLIT>();

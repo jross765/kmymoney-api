@@ -806,7 +806,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			throw new IllegalArgumentException("argument <spltID> is null");
 		}
 
-		if ( !spltID.isSet() ) {
+		if ( ! spltID.isSet() ) {
 			throw new IllegalArgumentException("argument <spltID> is not set");
 		}
 

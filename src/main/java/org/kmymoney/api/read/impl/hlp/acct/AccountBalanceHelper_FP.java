@@ -1,6 +1,5 @@
 package org.kmymoney.api.read.impl.hlp.acct;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Currency;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Locale;
 
 import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMyMoneyAccount;
-import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
@@ -66,11 +64,11 @@ public class AccountBalanceHelper_FP
 	public static FixedPointNumber getBalance(final LocalDate date, final KMMQualifSecCurrID secCurrID,
 											  final SimpleAccount acct) {
 		if ( secCurrID == null ) {
-			throw new IllegalArgumentException("null <secCurrID> given");
+			throw new IllegalArgumentException("argument <secCurrID> is null");
 		}
 
 		if ( ! secCurrID.isSet() ) {
-			throw new IllegalArgumentException("unset <secCurrID> ID given");
+			throw new IllegalArgumentException("argument <secCurrID> ID not set");
 		}
 
 		FixedPointNumber retval = getBalance(date, acct);

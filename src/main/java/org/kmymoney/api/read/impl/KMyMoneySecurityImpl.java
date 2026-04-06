@@ -202,11 +202,11 @@ public class KMyMoneySecurityImpl extends KMyMoneyObjectImpl
 	 */
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {

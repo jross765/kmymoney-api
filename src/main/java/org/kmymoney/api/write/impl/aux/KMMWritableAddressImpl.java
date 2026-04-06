@@ -52,7 +52,7 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
 			final KMyMoneyWritableFileImpl file, 
 			final KMyMoneyWritableInstitutionImpl inst) {
 		if ( inst == null ) {
-			throw new IllegalArgumentException("null institution given");
+			throw new IllegalArgumentException("argument <inst> is null");
 		}
 
 		// This is needed because transaction.addSplit() later
@@ -84,7 +84,7 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
 			final KMyMoneyWritableFileImpl file, 
 			final KMyMoneyWritablePayeeImpl pye) {
 		if ( pye == null ) {
-			throw new IllegalArgumentException("null payee given");
+			throw new IllegalArgumentException("argument <pye> is null");
 		}
 
 		// This is needed because transaction.addSplit() later

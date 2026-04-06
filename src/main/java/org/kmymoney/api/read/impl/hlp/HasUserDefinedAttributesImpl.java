@@ -22,11 +22,11 @@ public class HasUserDefinedAttributesImpl // implements HasUserDefinedAttributes
 			return null;
 		
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		return getUserDefinedAttributeCore(kvps.getPAIR(), name);
@@ -47,11 +47,11 @@ public class HasUserDefinedAttributesImpl // implements HasUserDefinedAttributes
 			return null;
 
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 //		if ( name.trim().equals("") ) {
-//			throw new IllegalArgumentException("empty name given");
+//			throw new IllegalArgumentException("argument <name> is empty");
 //		}
 
 		if ( name.trim().equals("") ) {
@@ -118,11 +118,11 @@ public class HasUserDefinedAttributesImpl // implements HasUserDefinedAttributes
 			KEYVALUEPAIRS currKVPs,
 			final KEYVALUEPAIRS newKVPs) {
 		if ( currKVPs == null ) {
-			throw new IllegalArgumentException("null current 'kvps' given");
+			throw new IllegalArgumentException("argument <currKVPs> is null");
 		}
 
 		if ( newKVPs == null ) {
-			throw new IllegalArgumentException("null new 'kvps' given");
+			throw new IllegalArgumentException("argument <newKVPs> is null");
 		}
 
 		if ( currKVPs == newKVPs ) {

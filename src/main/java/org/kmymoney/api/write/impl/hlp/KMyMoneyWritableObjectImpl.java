@@ -89,10 +89,10 @@ public class KMyMoneyWritableObjectImpl extends KMyMoneyObjectImpl
 	 */
 	public final void addPropertyChangeListener(final String ptyName, final PropertyChangeListener listener) {
 		if ( ptyName == null )
-			throw new IllegalArgumentException("null property name given");
+			throw new IllegalArgumentException("argument <ptyName> is null");
 		
 		if ( ptyName.isEmpty() )
-			throw new IllegalArgumentException("empty property name given");
+			throw new IllegalArgumentException("argument <ptyName> is empty");
 
 		if ( myPtyChg == null ) {
 			myPtyChg = new PropertyChangeSupport(this);
@@ -109,10 +109,10 @@ public class KMyMoneyWritableObjectImpl extends KMyMoneyObjectImpl
 	 */
 	public final void removePropertyChangeListener(final String ptyName, final PropertyChangeListener listener) {
 		if ( ptyName == null )
-			throw new IllegalArgumentException("null property name given");
+			throw new IllegalArgumentException("argument <ptyName> is null");
 		
 		if ( ptyName.isEmpty() )
-			throw new IllegalArgumentException("empty property name given");
+			throw new IllegalArgumentException("argument <ptyName> is empty");
 
 		if ( myPtyChg != null ) {
 			myPtyChg.removePropertyChangeListener(ptyName, listener);

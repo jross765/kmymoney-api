@@ -201,10 +201,10 @@ public class KMyMoneyPricePairImpl extends KMyMoneyObjectImpl
     // -----------------------------------------------------------
     
     public boolean equals(KMyMoneyPricePair other) {
-		if ( !getFromSecCurrQualifID().toString().equals(other.getFromSecCurrQualifID().toString()) )
+		if ( ! getFromSecCurrQualifID().toString().equals(other.getFromSecCurrQualifID().toString()) )
 			return false;
 
-		if ( !getToCurrencyQualifID().toString().equals(other.getToCurrencyQualifID().toString()) )
+		if ( ! getToCurrencyQualifID().toString().equals(other.getToCurrencyQualifID().toString()) )
 			return false;
 
 		return true;

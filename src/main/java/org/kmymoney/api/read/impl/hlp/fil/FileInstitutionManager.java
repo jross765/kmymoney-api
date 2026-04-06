@@ -64,11 +64,11 @@ public class FileInstitutionManager {
 
 	public KMyMoneyInstitution getInstitutionByID(final KMMInstID instID) {
 		if ( instID == null ) {
-			throw new IllegalArgumentException("null institution ID given");
+			throw new IllegalArgumentException("argument <instID> is null");
 		}
 
 		if ( ! instID.isSet() ) {
-			throw new IllegalArgumentException("unset institution ID given");
+			throw new IllegalArgumentException("argument <instID> is not set");
 		}
 
 		if ( instMap == null ) {
@@ -85,11 +85,11 @@ public class FileInstitutionManager {
 
 	public List<KMyMoneyInstitution> getInstitutionsByName(String expr) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		return getInstitutionsByName(expr, true);
@@ -97,11 +97,11 @@ public class FileInstitutionManager {
 
 	public List<KMyMoneyInstitution> getInstitutionsByName(String expr, boolean relaxed) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		if ( instMap == null ) {
@@ -129,11 +129,11 @@ public class FileInstitutionManager {
 
 	public KMyMoneyInstitution getInstitutionsByNameUniq(String expr) throws NoEntryFoundException, TooManyEntriesFoundException {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		List<KMyMoneyInstitution> cmdtyList = getInstitutionsByName(expr, false);

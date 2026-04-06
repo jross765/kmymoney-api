@@ -34,7 +34,7 @@ public class FileInstitutionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 
 	public void addInstitution(KMyMoneyInstitution inst) {
 		if ( inst == null ) {
-			throw new IllegalArgumentException("null institution given");
+			throw new IllegalArgumentException("argument <inst> is null");
 		}
 
 		instMap.put(inst.getID(), inst);
@@ -43,7 +43,7 @@ public class FileInstitutionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 
 	public void removeInstitution(KMyMoneyInstitution inst) {
 		if ( inst == null ) {
-			throw new IllegalArgumentException("null institution given");
+			throw new IllegalArgumentException("argument <inst> is null");
 		}
 
 		instMap.remove(inst.getID());

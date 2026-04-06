@@ -343,14 +343,14 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( isCurrencyMatching() ) {
 			String oldShares = getJwsdpPeer().getShares();
 			getJwsdpPeer().setShares(n.toKMyMoneyString());
-			if ( old == null || !old.equals(n.toKMyMoneyString()) ) {
+			if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
 				if ( helper.getPropertyChangeSupport() != null ) {
 					helper.getPropertyChangeSupport().firePropertyChange("shares", new FixedPointNumber(oldShares), n);
 				}
 			}
 		}
 
-		if ( old == null || !old.equals(n.toKMyMoneyString()) ) {
+		if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("shares", new FixedPointNumber(old), n);
 			}
@@ -383,14 +383,14 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( isCurrencyMatching() ) {
 			String oldValue = getJwsdpPeer().getShares();
 			getJwsdpPeer().setValue(n.toKMyMoneyString());
-			if ( old == null || !old.equals(n.toKMyMoneyString()) ) {
+			if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
 				if ( helper.getPropertyChangeSupport() != null ) {
 					helper.getPropertyChangeSupport().firePropertyChange("value", new FixedPointNumber(oldValue), n);
 				}
 			}
 		}
 	
-		if ( old == null || !old.equals(n.toKMyMoneyString()) ) {
+		if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("value", new FixedPointNumber(old), n);
 			}
@@ -418,7 +418,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		jwsdpPeer.setPrice(prc.toKMyMoneyString());
 		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
 		
-		if ( old == null || !old.equals(prc.toKMyMoneyString()) ) {
+		if ( old == null || ! old.equals(prc.toKMyMoneyString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("price", new FixedPointNumber(old), prc);
 			}
@@ -435,7 +435,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		jwsdpPeer.setPrice(prc.toString());
 		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
 		
-		if ( old == null || !old.equals(prc.toString()) ) {
+		if ( old == null || ! old.equals(prc.toString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("price", new FixedPointNumber(old), prc);
 			}
@@ -500,15 +500,16 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <desc> is null. Please use the empty string instead of null for an empty description");
 		}
 
+		// Yes, empty desc is valid
 //		if ( desc.trim().equals("") ) {
-//			throw new IllegalArgumentException("empty description given");
+//			throw new IllegalArgumentException("argument <desc> is empty");
 //		}
 
 		String old = getJwsdpPeer().getMemo();
 		jwsdpPeer.setMemo(desc);
 		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
 
-		if ( old == null || !old.equals(desc) ) {
+		if ( old == null || ! old.equals(desc) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("description", old, desc);
 			}

@@ -34,7 +34,7 @@ public class FileTagManager extends org.kmymoney.api.read.impl.hlp.fil.FileTagMa
 
 	public void addTag(KMyMoneyTag tag) {
 		if ( tag == null ) {
-			throw new IllegalArgumentException("null tag given");
+			throw new IllegalArgumentException("argument <tag> is null");
 		}
 
 		tagMap.put(tag.getID(), tag);
@@ -43,7 +43,7 @@ public class FileTagManager extends org.kmymoney.api.read.impl.hlp.fil.FileTagMa
 
 	public void removeTag(KMyMoneyTag tag) {
 		if ( tag == null ) {
-			throw new IllegalArgumentException("null tag given");
+			throw new IllegalArgumentException("argument <tag> is null");
 		}
 
 		tagMap.remove(tag.getID());

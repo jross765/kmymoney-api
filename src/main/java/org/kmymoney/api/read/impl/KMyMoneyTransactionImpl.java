@@ -224,12 +224,12 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * @param impl the split to add to mySplits
      */
     protected void addSplit(final KMyMoneyTransactionSplitImpl impl) {
-    	if (!jwsdpPeer.getSPLITS().getSPLIT().contains(impl.getJwsdpPeer())) {
+    	if ( ! jwsdpPeer.getSPLITS().getSPLIT().contains(impl.getJwsdpPeer()) ) {
     		jwsdpPeer.getSPLITS().getSPLIT().add(impl.getJwsdpPeer());
     	}
 
     	Collection<KMyMoneyTransactionSplit> splits = getSplits();
-    	if (!splits.contains(impl)) {
+    	if ( ! splits.contains(impl) ) {
     		splits.add(impl);
     	}
     }
@@ -364,11 +364,11 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      */
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		}
 
 		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {

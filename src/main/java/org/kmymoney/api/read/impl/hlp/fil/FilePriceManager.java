@@ -475,12 +475,12 @@ public class FilePriceManager {
 					continue;
 				}
 
-				if ( !fromSecCurr.getCode().equals(secCurrID.getCode()) ) {
+				if ( ! fromSecCurr.getCode().equals(secCurrID.getCode()) ) {
 					continue;
 				}
 
 				// BEGIN core
-				if ( !toCurr.getCode().equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
+				if ( ! toCurr.getCode().equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
 					if ( depth > maxRecursionDepth ) {
 						LOGGER.warn("getLatestPrice: Ignoring price-quote that is not in "
 								+ kmmFile.getDefaultCurrencyID() + " but in '" + toCurr + "'");
@@ -582,7 +582,7 @@ public class FilePriceManager {
 						continue;
 					}
 
-					if ( !fromSecCurr.equals(secCurrID.getCode()) ) {
+					if ( ! fromSecCurr.equals(secCurrID.getCode()) ) {
 						continue;
 					}
 
@@ -598,7 +598,7 @@ public class FilePriceManager {
 						factor = getLatestPrice(new KMMQualifSecID(toCurr), depth + 1);
 					} else {
 						// is currency
-						if ( !toCurr.equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
+						if ( ! toCurr.equals( kmmFile.getDefaultCurrencyID().get().getCurrencyCode() ) ) {
 							if ( depth > maxRecursionDepth ) {
 								LOGGER.warn("getLatestPrice_readAfresh: Ignoring price-quote that is not in "
 										+ kmmFile.getDefaultCurrencyID() + " but in '" + toCurr + "'");

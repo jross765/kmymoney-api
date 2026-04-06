@@ -488,17 +488,17 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	 * number.
 	 */
 	@SuppressWarnings("unused")
-	private Long startsWithNumber(final String s) {
-		if ( s == null ) {
-			throw new IllegalArgumentException("null string given");
+	private Long startsWithNumber(final String str) {
+		if ( str == null ) {
+			throw new IllegalArgumentException("argument <str> is null");
 		}
 
-//		if ( s.trim().equals("") ) {
-//			throw new IllegalArgumentException("empty string given");
+//		if ( str.trim().equals("") ) {
+//			throw new IllegalArgumentException("argument <str> is empty");
 //		}
 
 		int digitCount = 0;
-		for ( int i = 0; i < s.length() && Character.isDigit(s.charAt(i)); i++ ) {
+		for ( int i = 0; i < str.length() && Character.isDigit(str.charAt(i)); i++ ) {
 			digitCount++;
 		}
 		
@@ -506,7 +506,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 			return null;
 		}
 		
-		return Long.valueOf(s.substring(0, digitCount));
+		return Long.valueOf(str.substring(0, digitCount));
 	}
 
 }

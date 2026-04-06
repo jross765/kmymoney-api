@@ -25,26 +25,23 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 												   final KMyMoneyWritableFile kmmFile,
 												   final String name, final String value) {
 		if ( kvps == null )
-			throw new IllegalArgumentException("null slot list given");
+			throw new IllegalArgumentException("argument <kvps> is null");
 		
 		if ( kmmFile == null )
-			throw new IllegalArgumentException("null KMyMoney file given");
+			throw new IllegalArgumentException("argument <kmmFile> is null");
 		
 		if ( name == null )
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		
 		if ( name.isEmpty() )
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <kvps> is empty");
 
 		if ( value == null )
-			throw new IllegalArgumentException("null value given");
-		
-		if ( value.trim().equals("") )
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		
 		// CAUTION: Yes, that's valid
 //		if ( value.isEmpty() )
-//			throw new IllegalArgumentException("empty value given");
+//			throw new IllegalArgumentException("argument <value> is empty");
 		
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
@@ -58,16 +55,16 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 													  final KMyMoneyWritableFile kmmFile,
 													  final String name) {
 		if ( kvps == null )
-			throw new IllegalArgumentException("null slot list given");
+			throw new IllegalArgumentException("argument <kvps> is null");
 
 		if ( kmmFile == null )
-			throw new IllegalArgumentException("null KMyMoney file given");
+			throw new IllegalArgumentException("argument <kmmFile> is null");
 
 		if ( name == null )
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 
 		if ( name.isEmpty() )
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
@@ -80,22 +77,22 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
             									   final KMyMoneyWritableFile kmmFile,
             									   final String name, final String value) {
 		if ( kvps == null )
-			throw new IllegalArgumentException("null slot list given");
+			throw new IllegalArgumentException("argument <kvps> is null");
 		
 		if ( kmmFile == null )
-			throw new IllegalArgumentException("null KMyMoney file given");
+			throw new IllegalArgumentException("argument <kmmFile> is null");
 		
 		if ( name == null )
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		
 		if ( name.isEmpty() )
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 
 		if ( value == null )
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 
 		if ( value.trim().equals("") )
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is empty");
 		
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
@@ -110,26 +107,23 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 													final KMyMoneyWritableFile kmmFile,
 													final String name, final String value) {
 		if ( kvpList == null )
-			throw new IllegalArgumentException("null slot list given");
+			throw new IllegalArgumentException("argument <kvpList> is null");
 
 		if ( kmmFile == null )
-			throw new IllegalArgumentException("null KMyMoney file given");
+			throw new IllegalArgumentException("argument <kmmFile> is null");
 
 		if ( name == null )
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 
 		if ( name.isEmpty() )
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 
 		if ( value == null )
-			throw new IllegalArgumentException("null value given");
+			throw new IllegalArgumentException("argument <value> is null");
 
-		if ( value.trim().equals("") )
-			throw new IllegalArgumentException("empty value given");
-		
 // 		CAUTION: Yes, that's valid
 //		if ( value.isEmpty() )
-//			throw new IllegalArgumentException("empty value given");
+//			throw new IllegalArgumentException("argument <value> is empty");
 
 		if ( getUserDefinedAttributeKeysCore(kvpList).contains(name) )
 			throw new KVPListAlreadyContainsKeyException();
@@ -149,16 +143,16 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 													   final KMyMoneyWritableFile kmmFile,
 													   final String name) {
 		if ( kvpList == null )
-			throw new IllegalArgumentException("null slot list given");
+			throw new IllegalArgumentException("argument <kvpList> is null");
 
 		if ( kmmFile == null )
-			throw new IllegalArgumentException("null KMyMoney file given");
+			throw new IllegalArgumentException("argument <kmmFile> is null");
 
 		if ( name == null )
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 
 		if ( name.isEmpty() )
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 
 		if ( ! getUserDefinedAttributeKeysCore(kvpList).contains(name) )
 			throw new KVPListDoesNotContainKeyException();
@@ -180,26 +174,24 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 			                                       final KMyMoneyWritableFile kmmFile,
 			                                       final String name, final String value) {
 		if ( kvpList == null )
-			throw new IllegalArgumentException("null slot list given");
+			throw new IllegalArgumentException("argument <kvpList> is null");
 
 		if ( kmmFile == null )
-			throw new IllegalArgumentException("null KMyMoney file given");
+			throw new IllegalArgumentException("argument <kmmFile> is null");
 
 		if ( name == null )
-			throw new IllegalArgumentException("null name given");
+			throw new IllegalArgumentException("argument <name> is null");
 		
 		if ( name.isEmpty() )
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <name> is empty");
 
 		if ( value == null )
-			throw new IllegalArgumentException("null value given");
-		
-		if ( value.trim().equals("") )
-			throw new IllegalArgumentException("empty value given");
+			throw new IllegalArgumentException("argument <value> is null");
 		
 		// CAUTION: Yes, that's valid
 //		if ( value.isEmpty() )
-//			throw new IllegalArgumentException("empty value given");
+//			throw new IllegalArgumentException("argument <value> is empty");
+
 		if ( ! getUserDefinedAttributeKeysCore(kvpList).contains(name) ) {
 			throw new KVPListDoesNotContainKeyException();
 		}

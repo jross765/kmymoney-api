@@ -64,11 +64,11 @@ public class FilePayeeManager {
 
 	public KMyMoneyPayee getPayeeByID(final KMMPyeID pyeID) {
 		if ( pyeID == null ) {
-			throw new IllegalArgumentException("null payee ID given");
+			throw new IllegalArgumentException("argument <pyeID> is null");
 		}
 
 		if ( ! pyeID.isSet() ) {
-			throw new IllegalArgumentException("unset payee ID given");
+			throw new IllegalArgumentException("argument <pyeID> is not set");
 		}
 
 		if ( pyeMap == null ) {
@@ -85,11 +85,11 @@ public class FilePayeeManager {
 
 	public List<KMyMoneyPayee> getPayeesByName(String expr) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		return getPayeesByName(expr, true);
@@ -97,11 +97,11 @@ public class FilePayeeManager {
 
 	public List<KMyMoneyPayee> getPayeesByName(String expr, boolean relaxed) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		if ( pyeMap == null ) {
@@ -129,11 +129,11 @@ public class FilePayeeManager {
 
 	public KMyMoneyPayee getPayeesByNameUniq(String expr) throws NoEntryFoundException, TooManyEntriesFoundException {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		List<KMyMoneyPayee> cmdtyList = getPayeesByName(expr, false);

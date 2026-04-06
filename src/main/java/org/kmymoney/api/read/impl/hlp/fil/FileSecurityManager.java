@@ -72,11 +72,11 @@ public class FileSecurityManager {
 
 	public KMyMoneySecurity getSecurityByID(final KMMSecID secID) {
 		if ( secID == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <secID> is null");
 		}
 
 		if ( ! secID.isSet() ) {
-			throw new IllegalArgumentException("unset security ID given");
+			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
 		if ( secMap == null ) {
@@ -93,11 +93,11 @@ public class FileSecurityManager {
 
 	public KMyMoneySecurity getSecurityByID(final String idStr) {
 		if ( idStr == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <idStr> is null");
 		}
 
 		if ( idStr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty security ID given");
+			throw new IllegalArgumentException("argument <idStr> is empty");
 		}
 
 		KMMSecID secID = new KMMSecID(idStr);
@@ -110,11 +110,11 @@ public class FileSecurityManager {
 
 	public KMyMoneySecurity getSecurityByQualifID(final String qualifIDStr) {
 		if ( qualifIDStr == null ) {
-			throw new IllegalArgumentException("null security ID given");
+			throw new IllegalArgumentException("argument <qualifIDStr> is null");
 		}
 
 		if ( qualifIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty security ID given");
+			throw new IllegalArgumentException("argument <qualifIDStr> is empty");
 		}
 
 		KMMQualifSecID secID = KMMQualifSecID.parse(qualifIDStr);
@@ -123,11 +123,11 @@ public class FileSecurityManager {
 
 	public KMyMoneySecurity getSecurityBySymbol(final String symb) {
 		if ( symb == null ) {
-			throw new IllegalArgumentException("null symbol given");
+			throw new IllegalArgumentException("argument <symb> is null");
 		}
 
 		if ( symb.trim().equals("") ) {
-			throw new IllegalArgumentException("empty symbol given");
+			throw new IllegalArgumentException("argument <symb> is empty");
 		}
 
 		if ( secMap == null ) {
@@ -161,11 +161,11 @@ public class FileSecurityManager {
 
 	public KMyMoneySecurity getSecurityByCode(final String code) {
 		if ( code == null ) {
-			throw new IllegalArgumentException("null code given");
+			throw new IllegalArgumentException("argument <code> is null");
 		}
 
 		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("empty code given");
+			throw new IllegalArgumentException("argument <code> is empty");
 		}
 
 		if ( secMap == null ) {
@@ -199,11 +199,11 @@ public class FileSecurityManager {
 
 	public List<KMyMoneySecurity> getSecuritiesByName(final String expr) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		return getSecuritiesByName(expr, true);
@@ -211,11 +211,11 @@ public class FileSecurityManager {
 
 	public List<KMyMoneySecurity> getSecuritiesByName(final String expr, final boolean relaxed) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		if ( secMap == null ) {
@@ -247,11 +247,11 @@ public class FileSecurityManager {
 	public KMyMoneySecurity getSecurityByNameUniq(final String expr)
 			throws NoEntryFoundException, TooManyEntriesFoundException {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty expression given");
+			throw new IllegalArgumentException("emargument <expr> is empty");
 		}
 
 		List<KMyMoneySecurity> cmdtyList = getSecuritiesByName(expr, false);
@@ -277,11 +277,11 @@ public class FileSecurityManager {
 
 	public List<KMyMoneySecurity> getSecuritiesByTypeAndName(KMMSecCurr.Type type, String expr, boolean relaxed) {
 		if ( expr == null ) {
-			throw new IllegalArgumentException("null expression given");
+			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
 		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("empty name given");
+			throw new IllegalArgumentException("argument <expr> is empty");
 		}
 
 		List<KMyMoneySecurity> result = new ArrayList<KMyMoneySecurity>();
