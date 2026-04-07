@@ -20,6 +20,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
@@ -203,6 +204,8 @@ public class FileTransactionManager {
 		return retval;
 	}
 
+	// ---------------------------------------------------------------
+
 	public List<KMyMoneyTransactionSplit> getTransactionSplitsBySecID(final KMMSecID secID) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
@@ -234,6 +237,19 @@ public class FileTransactionManager {
 		}
 		
 		KMMQualifCurrID qualifID = new KMMQualifCurrID(curr);
+		return getTransactionSplitsByQualifCurrID(qualifID);
+	}
+
+	public List<KMyMoneyTransactionSplit> getTransactionSplitsByCurrID(final KMMCurrID currID) {
+		if ( currID == null ) {
+			throw new IllegalArgumentException("argument <currID> is null");
+		}
+		
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
+		}
+		
+		KMMQualifCurrID qualifID = new KMMQualifCurrID(currID);
 		return getTransactionSplitsByQualifCurrID(qualifID);
 	}
 

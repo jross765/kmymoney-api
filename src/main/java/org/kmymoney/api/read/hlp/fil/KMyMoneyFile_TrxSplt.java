@@ -9,11 +9,46 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 public interface KMyMoneyFile_TrxSplt {
+
+    /**
+     * @param spltID the unique ID of the transaction split to look for
+     * @return the transaction split or null if it's not found
+     * 
+     * @see #getTransactionSplits()
+     */
+	KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID);
+
+	KMyMoneyTransactionSplit getTransactionSplitByID(KMMTrxID trxID, KMMSpltID spltID);
+
+	KMyMoneyTransactionSplit getTransactionSplitByAcctIDAndTrxID(KMMAcctID acctID, KMMTrxID trxID);
+
+	// ---------------------------------------------------------------
+	
+	// ::EMPTY
+
+	// ---------------------------------------------------------------
+
+    /**
+     * 
+     * @param qualifID
+     * @return list of all transaction splits (ro-objects)
+     *   denominated in the given security/currency. 
+     */
+    List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecCurrID(KMMQualifSecCurrID qualifID);
+    
+    /**
+     * 
+     * @param qualifID
+     * @return list of all transaction splits (ro-objects)
+     *   denominated in the given security. 
+     */
+    List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecID(KMMQualifSecID qualifID);
 
 	/**
 	 * 
@@ -27,9 +62,17 @@ public interface KMyMoneyFile_TrxSplt {
      * 
      * @param qualifID
      * @return list of all transaction splits (ro-objects)
-     *   denominated in the given security. 
+     *   denominated in the given currency. 
      */
-    List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecID(KMMQualifSecID qualifID);
+    List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifCurrID(KMMQualifCurrID qualifID);
+    
+    /**
+     * 
+     * @param currID
+     * @return list of all transaction splits (ro-objects)
+     *   denominated in the given currency. 
+     */
+    List<KMyMoneyTransactionSplit> getTransactionSplitsByCurrID(KMMCurrID currID);
 
     /**
      * 
@@ -39,35 +82,7 @@ public interface KMyMoneyFile_TrxSplt {
      */
     List<KMyMoneyTransactionSplit> getTransactionSplitsByCurr(Currency curr);
 
-    /**
-     * 
-     * @param qualifID
-     * @return list of all transaction splits (ro-objects)
-     *   denominated in the given currency. 
-     */
-    List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifCurrID(KMMQualifCurrID qualifID);
-    
-    /**
-     * 
-     * @param qualifID
-     * @return list of all transaction splits (ro-objects)
-     *   denominated in the given security/currency. 
-     */
-    List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecCurrID(KMMQualifSecCurrID qualifID);
-    
 	// ---------------------------------------------------------------
-
-    /**
-     * @param spltID the unique ID of the transaction split to look for
-     * @return the transaction split or null if it's not found
-     * 
-     * @see #getTransactionSplits()
-     */
-	KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID);
-
-	KMyMoneyTransactionSplit getTransactionSplitByID(KMMTrxID trxID, KMMSpltID spltID);
-
-	KMyMoneyTransactionSplit getTransactionSplitByAcctIDAndTrxID(KMMAcctID acctID, KMMTrxID trxID);
 
     /**
      * @return list of all transaction splits (ro-objects)

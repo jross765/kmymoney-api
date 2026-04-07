@@ -585,15 +585,15 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     // ----------------------------
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     @Override
-    public List<KMyMoneyTransactionSplit> getTransactionSplitsBySecID(final KMMSecID secID) {
-		return trxMgr.getTransactionSplitsBySecID(secID);
+    public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecCurrID(final KMMQualifSecCurrID secID) {
+		return trxMgr.getTransactionSplitsByQualifSecCurrID(secID);
     }
 
     /**
-     * @return
+     * {@inheritDoc}
      */
     @Override
     public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecID(final KMMQualifSecID qualifID) {
@@ -601,15 +601,15 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     /**
-     * @return
+     * {@inheritDoc}
      */
     @Override
-    public List<KMyMoneyTransactionSplit> getTransactionSplitsByCurr(final Currency curr) {
-		return trxMgr.getTransactionSplitsByCurr(curr);
+    public List<KMyMoneyTransactionSplit> getTransactionSplitsBySecID(final KMMSecID secID) {
+		return trxMgr.getTransactionSplitsBySecID(secID);
     }
 
     /**
-     * @return
+     * {@inheritDoc}
      */
     @Override
     public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifCurrID(final KMMQualifCurrID qualifID) {
@@ -617,11 +617,19 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     }
 
     /**
-     * @return
+     * {@inheritDoc}
      */
     @Override
-    public List<KMyMoneyTransactionSplit> getTransactionSplitsByQualifSecCurrID(final KMMQualifSecCurrID secID) {
-		return trxMgr.getTransactionSplitsByQualifSecCurrID(secID);
+    public List<KMyMoneyTransactionSplit> getTransactionSplitsByCurrID(final KMMCurrID currID) {
+		return trxMgr.getTransactionSplitsByCurrID(currID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<KMyMoneyTransactionSplit> getTransactionSplitsByCurr(final Currency curr) {
+		return trxMgr.getTransactionSplitsByCurr(curr);
     }
 
     // ---------------------------------------------------------------
