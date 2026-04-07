@@ -56,7 +56,7 @@
   
   <xs:element name="LAST_MODIFIED_DATE">
     <xs:complexType>
-      <xs:attribute name="date" use="required" type="xs:date"/>
+      <xs:attribute name="date" use="required" type="xs:dateTime"/>
     </xs:complexType>
   </xs:element>
   

@@ -1286,7 +1286,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     		metaInfo = new KMMFileMetaInfo(this);
 
     		strm.println("  Creation date:      " + metaInfo.getCreationDate()); 
-    		strm.println("  Last-modified date: " + metaInfo.getLastModifiedDate()); 
+    		strm.println("  Last-modified date: " + metaInfo.getLastModifiedDateTime()); 
     		strm.println("  Version:            " + metaInfo.getVersion()); 
     		strm.println("  Fix version:        " + metaInfo.getFixVersion()); 
     		strm.println("  App version:        " + metaInfo.getAppVersion()); 
@@ -1385,7 +1385,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     		metaInfo = new KMMFileMetaInfo(this);
 
     		result += "    Creation date:      " + metaInfo.getCreationDate() + "\n"; 
-    		result += "    Last-modified date: " + metaInfo.getLastModifiedDate() + "\n"; 
+    		result += "    Last-modified date: " + metaInfo.getLastModifiedDateTime() + "\n"; 
     		result += "    Version:            " + metaInfo.getVersion() + "\n"; 
     		result += "    Fix version:        " + metaInfo.getFixVersion() + "\n"; 
     		result += "    App version:        " + metaInfo.getAppVersion() + "\n"; 

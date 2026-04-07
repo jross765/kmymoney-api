@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.read.KMyMoneyFile;
+import org.kmymoney.api.write.hlp.HasWritableUserDefinedAttributes;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Acct;
 import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Curr;
@@ -29,8 +30,8 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
                                               KMyMoneyWritableFile_Tag,
                                               KMyMoneyWritableFile_Curr,
                                               KMyMoneyWritableFile_Sec,
-                                              KMyMoneyWritableFile_Prc
-                                              // HasWritableUserDefinedAttributes
+                                              KMyMoneyWritableFile_Prc,
+                                              HasWritableUserDefinedAttributes
 {
 	public enum CompressMode {
 		COMPRESS,

@@ -9,7 +9,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -21,13 +22,13 @@ import java.util.TreeSet;
 import java.util.zip.GZIPOutputStream;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.CURRENCY;
 import org.kmymoney.api.generated.INSTITUTION;
+import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.KMYMONEYFILE;
 import org.kmymoney.api.generated.PAYEE;
 import org.kmymoney.api.generated.PRICE;
@@ -60,6 +61,7 @@ import org.kmymoney.api.read.impl.KMyMoneySecurityImpl;
 import org.kmymoney.api.read.impl.KMyMoneyTagImpl;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionImpl;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
+import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
 import org.kmymoney.api.write.KMyMoneyWritableAccount;
 import org.kmymoney.api.write.KMyMoneyWritableCurrency;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
@@ -73,6 +75,7 @@ import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.ObjectCascadeException;
 import org.kmymoney.api.write.hlp.IDManager;
+import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
 import org.kmymoney.api.write.impl.hlp.fil.WritingContentHandler;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMPrcID;
@@ -110,6 +113,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 	// ::MAGIC
 	private static final String CODEPAGE = "UTF-8";
+	private static final int MILLISECS_PER_HOUR = 3600000;
 
 	// ---------------------------------------------------------------
 
@@ -268,24 +272,42 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
             // https://stackoverflow.com/questions/835889/java-util-date-to-xmlgregoriancalendar
 			// https://stackoverflow.com/questions/49667772/localdate-to-gregoriancalendar-conversion
 			// https://stackoverflow.com/questions/14060161/specify-the-date-format-in-xmlgregoriancalendar
-			LocalDate today = LocalDate.now();
-			// CAUTION: The following two lines with new Date(...) do not work (reliably)
-//	        GregorianCalendar cal = new GregorianCalendar();
-//	        cal.setTime(new Date(this.date.getYear(),
-//	        		             this.date.getMonthValue(),
-//	        		             this.date.getDayOfMonth()));
-			GregorianCalendar cal = GregorianCalendar 
-					.from( today.atStartOfDay(ZoneId.systemDefault()) );
+			// https://stackoverflow.com/questions/23238631/how-to-convert-java-time-zoneddatetime-to-xmlgregoriancalendar
+			ZonedDateTime nowZoned = ZonedDateTime.now();
+			GregorianCalendar cal = GregorianCalendar.from(nowZoned);
+			
 	        XMLGregorianCalendar xmlCal = 
-	        		DatatypeFactory.newInstance().newXMLGregorianCalendarDate(
+	        		DatatypeFactory.newInstance().newXMLGregorianCalendar(
 	        				cal.get(Calendar.YEAR), 
 	        				cal.get(Calendar.MONTH) + 1, 
 	        				cal.get(Calendar.DAY_OF_MONTH), 
-	        				DatatypeConstants.FIELD_UNDEFINED);
-	        getRootElement().getFILEINFO().getLASTMODIFIEDDATE().setDate(xmlCal);
+	        				cal.get(Calendar.HOUR_OF_DAY),
+	        				cal.get(Calendar.MINUTE),
+	        				cal.get(Calendar.SECOND),
+	        				// cal.get(Calendar.MILLISECOND),
+	        				0,
+	        				cal.get(Calendar.ZONE_OFFSET) / MILLISECS_PER_HOUR);
+	        
+	        // Set the two (!) fields.
+	        // (Sic, there are two of them)
+	        updateLastModified_fld1(xmlCal);
+	        updateLastModified_fld2(nowZoned);
 		} catch ( DatatypeConfigurationException exc ) {
 			throw new DateMappingException();
 		}
+	}
+
+	// Field 1 (redundant to field 2)
+	private void updateLastModified_fld1(XMLGregorianCalendar xmlCal) {
+        getRootElement().getFILEINFO().getLASTMODIFIEDDATE().setDate(xmlCal);
+	}
+	
+	// Field 2 (redundant to field 1)
+	private void updateLastModified_fld2(ZonedDateTime datTim) {
+		String datTimFmt = datTim.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")); // ::MAGIC
+		// Sic, not *add*UserDefinedAttribute, as the attribute should 
+		// *always* be from the start.
+		setUserDefinedAttribute("LastModificationDate", datTimFmt); // ::MAGIC
 	}
 
 	// ---------------------------------------------------------------
@@ -1559,6 +1581,71 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		counter++;
 		
 		return new KMMSecID(counter);
+	}
+	
+	// ---------------------------------------------------------------
+
+	@Override
+	public void addUserDefinedAttribute(final String name, final String value) {
+		KMYMONEYFILE root = getRootElement();
+		if ( root == null ) {
+			throw new KVPListDoesNotContainKeyException();
+		}
+
+		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
+		if ( kvpList == null ) {
+			// Not necessary to generate a list, as there
+			// *always* should be one with *at least* three
+			// entries.
+			throw new KVPListDoesNotContainKeyException();
+		}
+
+		HasWritableUserDefinedAttributesImpl
+			.addUserDefinedAttributeCore(kvpList, 
+										 getWritableKMyMoneyFile(), 
+										 name, value);
+	}
+
+	@Override
+	public void removeUserDefinedAttribute(final String name) {
+		KMYMONEYFILE root = getRootElement();
+		if ( root == null ) {
+			throw new KVPListDoesNotContainKeyException();
+		}
+
+		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
+		if ( kvpList == null ) {
+			// Not necessary to generate a list, as there
+			// *always* should be one with *at least* three
+			// entries.
+			throw new KVPListDoesNotContainKeyException();
+		}
+
+		HasWritableUserDefinedAttributesImpl
+			.removeUserDefinedAttributeCore(kvpList, 
+											getWritableKMyMoneyFile(), 
+										 	name);
+	}
+
+	@Override
+	public void setUserDefinedAttribute(final String name, final String value) {
+		KMYMONEYFILE root = getRootElement();
+		if ( root == null ) {
+			throw new KVPListDoesNotContainKeyException();
+		}
+
+		KEYVALUEPAIRS kvpList = root.getKEYVALUEPAIRS();
+		if ( kvpList == null ) {
+			// Not necessary to generate a list, as there
+			// *always* should be one with *at least* three
+			// entries.
+			throw new KVPListDoesNotContainKeyException();
+		}
+
+		HasWritableUserDefinedAttributesImpl
+			.setUserDefinedAttributeCore(kvpList, 
+										 getWritableKMyMoneyFile(), 
+										 name, value);
 	}
 
 }
