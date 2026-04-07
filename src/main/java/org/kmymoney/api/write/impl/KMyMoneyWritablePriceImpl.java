@@ -149,8 +149,8 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 		if ( secCurr == null )
 			throw new IllegalArgumentException("argument <secCurr> is null");
 
-		if ( secCurr.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <secCurr> is empty");
+		if ( secCurr.isBlank() )
+			throw new IllegalArgumentException("argument <secCurr> is blank");
 
 		setFromCurrencyQualifID(new KMMQualifCurrID(secCurr));
 	}
@@ -160,8 +160,8 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 		if ( curr == null )
 			throw new IllegalArgumentException("argument <curr> is null");
 
-		if ( curr.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <curr> is empty");
+		if ( curr.isBlank() )
+			throw new IllegalArgumentException("argument <curr> is blank");
 
 		setToCurrencyQualifID(new KMMQualifCurrID(curr));
 	}
@@ -349,8 +349,8 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 		if ( srcStr == null )
 			throw new IllegalArgumentException("argument <srcStr> is null");
 
-		if ( srcStr.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <srcStr> is empty");
+		if ( srcStr.isBlank() )
+			throw new IllegalArgumentException("argument <srcStr> is blank");
 
 		String oldSrc = getSourceStr();
 

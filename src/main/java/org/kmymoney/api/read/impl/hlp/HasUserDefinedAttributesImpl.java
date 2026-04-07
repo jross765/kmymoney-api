@@ -25,8 +25,8 @@ public class HasUserDefinedAttributesImpl // implements HasUserDefinedAttributes
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		return getUserDefinedAttributeCore(kvps.getPAIR(), name);
@@ -50,11 +50,11 @@ public class HasUserDefinedAttributesImpl // implements HasUserDefinedAttributes
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-//		if ( name.trim().equals("") ) {
-//			throw new IllegalArgumentException("argument <name> is empty");
+//		if ( name.isBlank() ) {
+//			throw new IllegalArgumentException("argument <name> is blank");
 //		}
 
-		if ( name.trim().equals("") ) {
+		if ( name.isBlank() ) {
 			return null;
 		}
 

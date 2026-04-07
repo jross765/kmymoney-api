@@ -374,8 +374,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		return acctMgr.getAccountsByName(name);
@@ -390,8 +390,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
     	return acctMgr.getAccountsByName(expr, qualif, relaxed);
@@ -403,8 +403,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
     	return acctMgr.getAccountByNameUniq(name, qualif);
@@ -426,8 +426,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			throw new IllegalArgumentException("argument <nameRegEx> is null");
 		}
 
-		if ( nameRegEx.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <nameRegEx> is empty");
+		if ( nameRegEx.isBlank() ) {
+			throw new IllegalArgumentException("argument <nameRegEx> is blank");
 		}
 
 		return acctMgr.getAccountByNameEx(nameRegEx);
@@ -457,8 +457,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		return acctMgr.getAccountByIDorName(acctID, name);
@@ -489,8 +489,8 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		return acctMgr.getAccountByIDorNameEx(acctID, name);

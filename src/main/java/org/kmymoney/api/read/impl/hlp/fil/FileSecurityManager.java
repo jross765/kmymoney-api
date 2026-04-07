@@ -96,8 +96,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <idStr> is null");
 		}
 
-		if ( idStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <idStr> is empty");
+		if ( idStr.isBlank() ) {
+			throw new IllegalArgumentException("argument <idStr> is blank");
 		}
 
 		KMMSecID secID = new KMMSecID(idStr);
@@ -113,8 +113,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <qualifIDStr> is null");
 		}
 
-		if ( qualifIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <qualifIDStr> is empty");
+		if ( qualifIDStr.isBlank() ) {
+			throw new IllegalArgumentException("argument <qualifIDStr> is blank");
 		}
 
 		KMMQualifSecID secID = KMMQualifSecID.parse(qualifIDStr);
@@ -126,8 +126,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <symb> is null");
 		}
 
-		if ( symb.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <symb> is empty");
+		if ( symb.isBlank() ) {
+			throw new IllegalArgumentException("argument <symb> is blank");
 		}
 
 		if ( secMap == null ) {
@@ -164,8 +164,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() ) {
+			throw new IllegalArgumentException("argument <code> is blank");
 		}
 
 		if ( secMap == null ) {
@@ -202,8 +202,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		return getSecuritiesByName(expr, true);
@@ -214,8 +214,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		if ( secMap == null ) {
@@ -250,8 +250,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("emargument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("emargument <expr> is blank");
 		}
 
 		List<KMyMoneySecurity> cmdtyList = getSecuritiesByName(expr, false);
@@ -280,8 +280,8 @@ public class FileSecurityManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		List<KMyMoneySecurity> result = new ArrayList<KMyMoneySecurity>();

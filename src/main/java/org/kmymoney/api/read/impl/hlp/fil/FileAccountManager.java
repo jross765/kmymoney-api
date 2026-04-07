@@ -173,8 +173,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		return getAccountsByName(name, true, true);
@@ -185,8 +185,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		if ( acctMap == null ) {
@@ -230,8 +230,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		List<KMyMoneyAccount> acctList = getAccountsByName(name, qualif, false);
@@ -254,8 +254,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <nameRegEx> is null");
 		}
 		
-		if ( nameRegEx.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <nameRegEx> is empty");
+		if ( nameRegEx.isBlank() ) {
+			throw new IllegalArgumentException("argument <nameRegEx> is blank");
 		}
 
 		if ( acctMap == null ) {
@@ -296,8 +296,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		KMyMoneyAccount retval = getAccountByID(acctID);
@@ -326,8 +326,8 @@ public class FileAccountManager {
 			throw new IllegalStateException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalStateException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalStateException("argument <name> is blank");
 		}
 
 		return getAccountByIDorName(new KMMComplAcctID(acctID), name);
@@ -351,8 +351,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		KMyMoneyAccount retval = getAccountByID(acctID);
@@ -377,8 +377,8 @@ public class FileAccountManager {
 			throw new IllegalStateException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalStateException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalStateException("argument <name> is blank");
 		}
 
 		return getAccountByIDorNameEx(new KMMComplAcctID(acctID), name);
@@ -403,8 +403,8 @@ public class FileAccountManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		List<KMyMoneyAccount> result = new ArrayList<KMyMoneyAccount>();

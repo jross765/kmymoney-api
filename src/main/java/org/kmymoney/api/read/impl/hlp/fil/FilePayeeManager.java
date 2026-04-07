@@ -88,8 +88,8 @@ public class FilePayeeManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		return getPayeesByName(expr, true);
@@ -100,8 +100,8 @@ public class FilePayeeManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		if ( pyeMap == null ) {
@@ -132,8 +132,8 @@ public class FilePayeeManager {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
 
-		if ( expr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <expr> is empty");
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
 		List<KMyMoneyPayee> cmdtyList = getPayeesByName(expr, false);

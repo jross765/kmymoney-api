@@ -448,8 +448,8 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <num> is null");
 		}
 		
-		if ( num.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <num> is empty");
+		if ( num.isBlank() ) {
+			throw new IllegalArgumentException("argument <num> is blank");
 		}
 	
     	String oldNumber = getNumber();
@@ -501,8 +501,8 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 
 		// Yes, empty desc is valid
-//		if ( desc.trim().equals("") ) {
-//			throw new IllegalArgumentException("argument <desc> is empty");
+//		if ( desc.isBlank() ) {
+//			throw new IllegalArgumentException("argument <desc> is blank");
 //		}
 
 		String old = getJwsdpPeer().getMemo();
@@ -537,7 +537,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <actStr> is null");
 		}
 
-		if ( actStr.trim().length() == 0 ) {
+		if ( actStr.isBlank() ) {
 			throw new IllegalArgumentException("argument <actStr> is null");
 		}
 
@@ -577,7 +577,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 */
 	public void setReconStateInt(final int statInt) {
 		if ( statInt < 0 ) { // sic, 0 is allowed
-			throw new IllegalArgumentException("argument <statInt> is empty");
+			throw new IllegalArgumentException("argument <statInt> is blank");
 		}
 
 		BigInteger old = getJwsdpPeer().getReconcileflag();

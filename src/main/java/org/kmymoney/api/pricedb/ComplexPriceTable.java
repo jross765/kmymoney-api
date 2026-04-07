@@ -71,8 +71,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		if ( secCurrIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
+		if ( secCurrIDStr.isBlank() ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is blank");
 		}
 		
 		if ( factor == null ) {
@@ -102,8 +102,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		if ( secCurrIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
+		if ( secCurrIDStr.isBlank() ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is blank");
 		}
 		
 		if ( factor == null ) {
@@ -259,8 +259,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() ) {
+			throw new IllegalArgumentException("argument <code> is blank");
 		}
 
 		if ( type == KMMQualifSecCurrID.Type.CURRENCY ) {
@@ -316,8 +316,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() ) {
+			throw new IllegalArgumentException("argument <code> is blank");
 		}
 		
 		if ( type == KMMQualifSecCurrID.Type.CURRENCY ) {
@@ -380,8 +380,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() ) {
+			throw new IllegalArgumentException("argument <code> is blank");
 		}
 		
 		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(type, code);
@@ -394,8 +394,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		if ( secCurrIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
+		if ( secCurrIDStr.isBlank() ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is blank");
 		}
 
 		KMMQualifSecCurrID secCurrID = KMMQualifSecCurrID.parse(secCurrIDStr);
@@ -515,8 +515,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
 
-		if ( code.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() ) {
+			throw new IllegalArgumentException("argument <code> is blank");
 		}
 		
 		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(type, code);
@@ -529,8 +529,8 @@ public class ComplexPriceTable implements Serializable {
 			throw new IllegalArgumentException("argument <secCurrIDStr> is null");
 		}
 
-		if ( secCurrIDStr.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <secCurrIDStr> is empty");
+		if ( secCurrIDStr.isBlank() ) {
+			throw new IllegalArgumentException("argument <secCurrIDStr> is blank");
 		}
 		
 		KMMQualifSecCurrID secCurrID = KMMQualifSecCurrID.parse(secCurrIDStr);

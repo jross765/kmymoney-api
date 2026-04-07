@@ -33,15 +33,15 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( name == null )
 			throw new IllegalArgumentException("argument <name> is null");
 		
-		if ( name.isEmpty() )
-			throw new IllegalArgumentException("argument <kvps> is empty");
+		if ( name.isBlank() )
+			throw new IllegalArgumentException("argument <kvps> is blank");
 
 		if ( value == null )
 			throw new IllegalArgumentException("argument <value> is null");
 		
 		// CAUTION: Yes, that's valid
-//		if ( value.isEmpty() )
-//			throw new IllegalArgumentException("argument <value> is empty");
+//		if ( value.isBlank() )
+//			throw new IllegalArgumentException("argument <value> is blank");
 		
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
@@ -63,8 +63,8 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( name == null )
 			throw new IllegalArgumentException("argument <name> is null");
 
-		if ( name.isEmpty() )
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() )
+			throw new IllegalArgumentException("argument <name> is blank");
 
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
@@ -85,14 +85,14 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( name == null )
 			throw new IllegalArgumentException("argument <name> is null");
 		
-		if ( name.isEmpty() )
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() )
+			throw new IllegalArgumentException("argument <name> is blank");
 
 		if ( value == null )
 			throw new IllegalArgumentException("argument <value> is null");
 
-		if ( value.trim().equals("") )
-			throw new IllegalArgumentException("argument <value> is empty");
+		if ( value.isBlank() )
+			throw new IllegalArgumentException("argument <value> is blank");
 		
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
@@ -115,15 +115,15 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( name == null )
 			throw new IllegalArgumentException("argument <name> is null");
 
-		if ( name.isEmpty() )
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() )
+			throw new IllegalArgumentException("argument <name> is blank");
 
 		if ( value == null )
 			throw new IllegalArgumentException("argument <value> is null");
 
 // 		CAUTION: Yes, that's valid
-//		if ( value.isEmpty() )
-//			throw new IllegalArgumentException("argument <value> is empty");
+//		if ( value.isBlank() )
+//			throw new IllegalArgumentException("argument <value> is blank");
 
 		if ( getUserDefinedAttributeKeysCore(kvpList).contains(name) )
 			throw new KVPListAlreadyContainsKeyException();
@@ -151,8 +151,8 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( name == null )
 			throw new IllegalArgumentException("argument <name> is null");
 
-		if ( name.isEmpty() )
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() )
+			throw new IllegalArgumentException("argument <name> is blank");
 
 		if ( ! getUserDefinedAttributeKeysCore(kvpList).contains(name) )
 			throw new KVPListDoesNotContainKeyException();
@@ -182,15 +182,15 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( name == null )
 			throw new IllegalArgumentException("argument <name> is null");
 		
-		if ( name.isEmpty() )
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() )
+			throw new IllegalArgumentException("argument <name> is blank");
 
 		if ( value == null )
 			throw new IllegalArgumentException("argument <value> is null");
 		
 		// CAUTION: Yes, that's valid
-//		if ( value.isEmpty() )
-//			throw new IllegalArgumentException("argument <value> is empty");
+//		if ( value.isBlank() )
+//			throw new IllegalArgumentException("argument <value> is blank");
 
 		if ( ! getUserDefinedAttributeKeysCore(kvpList).contains(name) ) {
 			throw new KVPListDoesNotContainKeyException();

@@ -111,7 +111,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 			KMMComplAcctID parentID = getParentAccountID();
 			if ( parentID == null ) {
 				return getName();
-			} else if ( parentID.toString().equals("") ||
+			} else if ( parentID.toString().isEmpty() ||
 						parentID.toString().equals("(unset)") ||
 						parentID.toString().equals("(unknown)") ) {
 				return "UNKNOWN" + SEPARATOR + getName();
@@ -131,7 +131,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 		KMMComplAcctID parentID = getParentAccountID();
 		if ( parentID == null ) {
 			return null;
-		} else if ( parentID.toString().equals("") || 
+		} else if ( parentID.toString().isEmpty() || 
 				    parentID.toString().equals("(unset)") || 
 				    parentID.toString().equals("(unknown)") ) {
 			return null;
@@ -493,8 +493,8 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 			throw new IllegalArgumentException("argument <str> is null");
 		}
 
-//		if ( str.trim().equals("") ) {
-//			throw new IllegalArgumentException("argument <str> is empty");
+//		if ( str.isBlank() ) {
+//			throw new IllegalArgumentException("argument <str> is blank");
 //		}
 
 		int digitCount = 0;

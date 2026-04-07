@@ -138,7 +138,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	if ( jwsdpPeer.getAccount() == null )
     		return null;
     	
-    	if ( jwsdpPeer.getAccount().trim().length() == 0 )
+    	if ( jwsdpPeer.getAccount().isBlank() )
     		return null;
     	
     	return new KMMComplAcctID( jwsdpPeer.getAccount() );
@@ -159,7 +159,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	if ( jwsdpPeer.getNumber() == null )
     		return null;
     	
-//    	if ( jwsdpPeer.getNumber().trim().length() == 0 )
+//    	if ( jwsdpPeer.getNumber().isBlank() )
 //    		return null;
     	
     	return jwsdpPeer.getNumber();
@@ -172,7 +172,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	if ( jwsdpPeer.getPayee() == null )
     		return null;
     	
-    	if ( jwsdpPeer.getPayee().trim().length() == 0 )
+    	if ( jwsdpPeer.getPayee().isBlank() )
     		return null;
     	
     	return new KMMPyeID( jwsdpPeer.getPayee() );
@@ -372,7 +372,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	if ( jwsdpPeer.getPrice() == null )
     		return null;
     	
-    	if ( jwsdpPeer.getPrice().trim().length() == 0 )
+    	if ( jwsdpPeer.getPrice().isBlank() )
     		return null;
     	
     	return new FixedPointNumber( jwsdpPeer.getPrice() );
@@ -383,7 +383,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	if ( jwsdpPeer.getPrice() == null )
     		return null;
     	
-    	if ( jwsdpPeer.getPrice().trim().length() == 0 )
+    	if ( jwsdpPeer.getPrice().isBlank() )
     		return null;
     	
     	return BigFraction.parse(jwsdpPeer.getPrice());

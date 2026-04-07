@@ -91,8 +91,8 @@ public class KMyMoneyWritableObjectImpl extends KMyMoneyObjectImpl
 		if ( ptyName == null )
 			throw new IllegalArgumentException("argument <ptyName> is null");
 		
-		if ( ptyName.isEmpty() )
-			throw new IllegalArgumentException("argument <ptyName> is empty");
+		if ( ptyName.isBlank() )
+			throw new IllegalArgumentException("argument <ptyName> is blank");
 
 		if ( myPtyChg == null ) {
 			myPtyChg = new PropertyChangeSupport(this);
@@ -111,8 +111,8 @@ public class KMyMoneyWritableObjectImpl extends KMyMoneyObjectImpl
 		if ( ptyName == null )
 			throw new IllegalArgumentException("argument <ptyName> is null");
 		
-		if ( ptyName.isEmpty() )
-			throw new IllegalArgumentException("argument <ptyName> is empty");
+		if ( ptyName.isBlank() )
+			throw new IllegalArgumentException("argument <ptyName> is blank");
 
 		if ( myPtyChg != null ) {
 			myPtyChg.removePropertyChangeListener(ptyName, listener);

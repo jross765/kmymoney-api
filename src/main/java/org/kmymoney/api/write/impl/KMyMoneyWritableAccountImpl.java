@@ -320,8 +320,8 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
@@ -453,8 +453,8 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalArgumentException("argument <currCode> is null");
 		}
 
-		if ( currCode.isEmpty() ) {
-			throw new IllegalArgumentException("argument <currCode> is empty");
+		if ( currCode.isBlank() ) {
+			throw new IllegalArgumentException("argument <currCode> is blank");
 		}
 
 		setCurrency(Currency.getInstance(currCode));
@@ -478,7 +478,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		// Caution: empty string allowed here
-		// if ( descr.trim().length() == 0 ) {
+		// if ( descr.isBlank() ) {
 		//   throw new IllegalArgumentException("argument <descr> is null");
 		// }
 
@@ -836,16 +836,16 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
 
-		if ( value.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <value> is empty");
+		if ( value.isBlank() ) {
+			throw new IllegalArgumentException("argument <value> is blank");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
@@ -873,8 +873,8 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
@@ -900,8 +900,8 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {

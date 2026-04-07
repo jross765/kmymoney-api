@@ -128,7 +128,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
     		throw new IllegalArgumentException("argument <name> is null");
     	}
 
-    	if ( name.trim().length() == 0 ) {
+    	if ( name.isBlank() ) {
     		throw new IllegalArgumentException("argument <name> is emptys");
     	}
 
@@ -148,8 +148,8 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
     		throw new IllegalArgumentException("argument <symb> is null");
     	}
 
-    	if ( symb.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <symb> is empty");
+    	if ( symb.isBlank() ) {
+    		throw new IllegalArgumentException("argument <symb> is blank");
     	}
 
     	String oldSymb = getSymbol();

@@ -139,8 +139,8 @@ public class KMyMoneyWritablePricePairImpl extends KMyMoneyPricePairImpl
 		if ( secCurr == null )
 			throw new IllegalArgumentException("argument <secCurr> is null");
 
-		if ( secCurr.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <secCurr> is empty");
+		if ( secCurr.isBlank() )
+			throw new IllegalArgumentException("argument <secCurr> is blank");
 
 		setFromCurrencyQualifID(new KMMQualifCurrID(secCurr));
 	}
@@ -150,8 +150,8 @@ public class KMyMoneyWritablePricePairImpl extends KMyMoneyPricePairImpl
 		if ( curr == null )
 			throw new IllegalArgumentException("argument <curr> is null");
 
-		if ( curr.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <curr> is empty");
+		if ( curr.isBlank() )
+			throw new IllegalArgumentException("argument <curr> is blank");
 
 		setToCurrencyQualifID(new KMMQualifCurrID(curr));
 	}
@@ -208,8 +208,8 @@ public class KMyMoneyWritablePricePairImpl extends KMyMoneyPricePairImpl
 		if ( code == null )
 			throw new IllegalArgumentException("argument <code> is null");
 
-		if ( code.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() )
+			throw new IllegalArgumentException("argument <code> is blank");
 
 		setFromCurrencyQualifID(new KMMQualifCurrID(code));
 	}
@@ -245,8 +245,8 @@ public class KMyMoneyWritablePricePairImpl extends KMyMoneyPricePairImpl
 		if ( code == null )
 			throw new IllegalArgumentException("argument <code> is null");
 
-		if ( code.trim().length() == 0 )
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() )
+			throw new IllegalArgumentException("argument <code> is blank");
 
 		setToCurrencyQualifID(new KMMQualifCurrID(code));
 	}

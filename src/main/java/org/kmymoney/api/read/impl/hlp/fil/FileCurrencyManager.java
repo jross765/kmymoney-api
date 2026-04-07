@@ -62,8 +62,8 @@ public class FileCurrencyManager {
 			throw new IllegalArgumentException("argument <currID> is null");
 		}
 
-		if ( currID.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <currID> is empty");
+		if ( currID.isBlank() ) {
+			throw new IllegalArgumentException("argument <currID> is blank");
 		}
 
 		if ( currMap == null ) {

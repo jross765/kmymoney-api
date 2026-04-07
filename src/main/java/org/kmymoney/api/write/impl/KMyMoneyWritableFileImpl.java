@@ -951,7 +951,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			throw new IllegalArgumentException("argument <currCode> is null");
 		}
 
-		if ( currCode.trim().equals("") ) {
+		if ( currCode.isBlank() ) {
 			throw new IllegalArgumentException("argument <currCode> is not set");
 		}
 
@@ -1021,16 +1021,16 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			throw new IllegalArgumentException("argument <pCmdtySpace> is null");
 		}
 
-		if ( pCmdtySpace.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <pCmdtySpace> is empty");
+		if ( pCmdtySpace.isBlank() ) {
+			throw new IllegalArgumentException("argument <pCmdtySpace> is blank");
 		}
 
 		if ( pCmdtyID == null ) {
 			throw new IllegalArgumentException("argument <pCmdtyID> is null");
 		}
 		
-		if ( pCmdtyID.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <pCmdtyID> is empty");
+		if ( pCmdtyID.isBlank() ) {
+			throw new IllegalArgumentException("argument <pCmdtyID> is blank");
 		}
 
 		if ( conversionFactor == null ) {
@@ -1045,8 +1045,8 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			throw new IllegalArgumentException("argument <pCmdtyName> is null");
 		}
 		
-		if ( pCmdtyName.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <pCmdtyName> is empty");
+		if ( pCmdtyName.isBlank() ) {
+			throw new IllegalArgumentException("argument <pCmdtyName> is blank");
 		}
 		
 		/*

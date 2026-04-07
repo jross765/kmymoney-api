@@ -367,8 +367,8 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().equals("") ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {

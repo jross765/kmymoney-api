@@ -147,8 +147,8 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <symb> is null");
 		}
 
-		if ( symb.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <symb> is empty");
+		if ( symb.isBlank() ) {
+			throw new IllegalArgumentException("argument <symb> is blank");
 		}
 
 		String oldSymb = getSymbol();
@@ -167,8 +167,8 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <code> is null");
 		}
 
-		if ( code.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <code> is empty");
+		if ( code.isBlank() ) {
+			throw new IllegalArgumentException("argument <code> is blank");
 		}
 
 		String oldCode = getCode();
@@ -234,8 +234,8 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 
-		if ( name.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		String oldName = getName();
@@ -334,8 +334,8 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <mkt> is null");
 		}
 
-		if ( mkt.trim().length() == 0 ) {
-			throw new IllegalArgumentException("argument <pp> is empty");
+		if ( mkt.isBlank() ) {
+			throw new IllegalArgumentException("argument <pp> is blank");
 		}
 
 		String oldMkt = getTradingMarket();
@@ -377,16 +377,16 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
-		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("argument <value> is empty");
+		if ( value.isBlank() ) {
+			throw new IllegalArgumentException("argument <value> is blank");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -406,8 +406,8 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
@@ -425,16 +425,16 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 			throw new IllegalArgumentException("argument <name> is null");
 		}
 		
-		if ( name.isEmpty() ) {
-			throw new IllegalArgumentException("argument <name> is empty");
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
 		}
 
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
-		if ( value.isEmpty() ) {
-			throw new IllegalArgumentException("argument <value> is empty");
+		if ( value.isBlank() ) {
+			throw new IllegalArgumentException("argument <value> is blank");
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {

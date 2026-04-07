@@ -189,8 +189,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <name> is null");
     	}
 
-    	if ( name.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <name> is empty");
+    	if ( name.isBlank() ) {
+    		throw new IllegalArgumentException("argument <name> is blank");
     	}
 
     	String oldName = getName();
@@ -246,8 +246,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 		}
 		
 		// Caution: empty string allowed here
-//		if ( notes.trim().length() == 0 ) {
-//	   	 throw new IllegalArgumentException("argument <notes> is empty");
+//		if ( notes.isBlank() ) {
+//	   	 throw new IllegalArgumentException("argument <notes> is blank");
 //		}
 
 		String oldNotes = getNotes();
@@ -299,8 +299,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <eml> is null");
     	}
 
-    	if ( eml.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <eml> is empty");
+    	if ( eml.isBlank() ) {
+    		throw new IllegalArgumentException("argument <eml> is blank");
     	}
 
     	String oldEml = getEmail();
@@ -322,8 +322,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <ref> is null");
     	}
 
-    	if ( ref.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <ref> is empty");
+    	if ( ref.isBlank() ) {
+    		throw new IllegalArgumentException("argument <ref> is blank");
     	}
 
     	String oldRef = getReference();
@@ -347,8 +347,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <patt> is null");
     	}
 
-    	if ( patt.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <patt> is empty");
+    	if ( patt.isBlank() ) {
+    		throw new IllegalArgumentException("argument <patt> is blank");
     	}
 
     	String oldPatt = getIDPattern();
@@ -370,8 +370,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <tpl> is null");
     	}
 
-    	if ( tpl.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <tpl> is empty");
+    	if ( tpl.isBlank() ) {
+    		throw new IllegalArgumentException("argument <tpl> is blank");
     	}
 
     	String oldTpl = getURLTemplate();
@@ -425,8 +425,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <key> is null");
     	}
 
-    	if ( key.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <key> is empty");
+    	if ( key.isBlank() ) {
+    		throw new IllegalArgumentException("argument <key> is blank");
     	}
     	
     	String secureKey = key;
@@ -452,8 +452,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	}
 
     	// sic, empty is allowed
-//    	if ( keysRaw.trim().length() == 0 ) {
-//    		throw new IllegalArgumentException("argument <keysRaw> is empty");
+//    	if ( keysRaw.isBlank() ) {
+//    		throw new IllegalArgumentException("argument <keysRaw> is blank");
 //    	}
 
     	String oldKeysRaw = getMatchKeysRaw();

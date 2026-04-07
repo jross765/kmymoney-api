@@ -161,8 +161,8 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
     		throw new IllegalArgumentException("argument <name> is null");
     	}
 
-    	if ( name.trim().length() == 0 ) {
-    		throw new IllegalArgumentException("argument <name> is empty");
+    	if ( name.isBlank() ) {
+    		throw new IllegalArgumentException("argument <name> is blank");
     	}
 
     	String oldName = getName();
@@ -186,8 +186,8 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
 		}
 		
 		// Caution: empty string allowed here
-//	if ( notes.trim().length() == 0 ) {
-//	    throw new IllegalArgumentException("argument <notes> is empty");
+//	if ( notes.isBlank() ) {
+//	    throw new IllegalArgumentException("argument <notes> is blank");
 //	}
 
 		String oldNotes = getNotes();
