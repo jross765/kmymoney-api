@@ -11,6 +11,7 @@ import org.kmymoney.api.read.KMyMoneyCurrency;
 import org.kmymoney.api.read.impl.KMyMoneyCurrencyImpl;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,20 +58,20 @@ public class FileCurrencyManager {
 
 	// ---------------------------------------------------------------
 
-	public KMyMoneyCurrency getCurrencyByID(String currID) {
+	public KMyMoneyCurrency getCurrencyByID(KMMCurrID currID) {
 		if ( currID == null ) {
 			throw new IllegalArgumentException("argument <currID> is null");
 		}
 
-		if ( currID.isBlank() ) {
-			throw new IllegalArgumentException("argument <currID> is blank");
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
 		}
 
 		if ( currMap == null ) {
 			throw new IllegalStateException("no root-element loaded");
 		}
 
-		KMyMoneyCurrency retval = currMap.get(currID);
+		KMyMoneyCurrency retval = currMap.get(currID.get().getCurrencyCode());
 		if ( retval == null ) {
 			LOGGER.warn("getCurrencyByID: No Currency with ID '" + currID + "'. We know " + currMap.size()
 					+ " currencies.");
@@ -88,7 +89,7 @@ public class FileCurrencyManager {
 			throw new IllegalArgumentException("argument <currID> is not set");
 		}
 
-		return getCurrencyByID(currID.getCode());
+		return getCurrencyByID(currID.getCurrID());
 	}
 
 	public Collection<KMyMoneyCurrency> getCurrencies() {

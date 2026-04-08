@@ -85,6 +85,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
@@ -968,16 +969,16 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// ---------------------------------------------------------------
 	
 	@Override
-	public KMyMoneyWritableCurrency getWritableCurrencyByID(String currCode) {
-		if ( currCode == null ) {
-			throw new IllegalArgumentException("argument <currCode> is null");
+	public KMyMoneyWritableCurrency getWritableCurrencyByID(KMMCurrID currID) {
+		if ( currID == null ) {
+			throw new IllegalArgumentException("argument <currID> is null");
 		}
 
-		if ( currCode.isBlank() ) {
-			throw new IllegalArgumentException("argument <currCode> is not set");
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
 		}
 
-		KMyMoneyCurrency curr = super.getCurrencyByID(currCode);
+		KMyMoneyCurrency curr = super.getCurrencyByID(currID);
 		return new KMyMoneyWritableCurrencyImpl((KMyMoneyCurrencyImpl) curr);
 	}
 

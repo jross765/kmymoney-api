@@ -876,7 +876,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     // ---------------------------------------------------------------
 
     @Override
-    public KMyMoneyCurrency getCurrencyByID(String currID) {
+    public KMyMoneyCurrency getCurrencyByID(KMMCurrID currID) {
     	return currMgr.getCurrencyByID(currID);
     }
 

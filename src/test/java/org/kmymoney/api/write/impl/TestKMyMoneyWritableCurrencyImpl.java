@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,6 +22,7 @@ import org.kmymoney.api.read.impl.TestKMyMoneyCurrencyImpl;
 import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.write.KMyMoneyWritableCurrency;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,11 +31,13 @@ import org.w3c.dom.NodeList;
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyWritableCurrencyImpl {
-	private static final String CURR_1_ID     = TestKMyMoneyCurrencyImpl.CURR_1_ID;
-	private static final String CURR_1_SYMB   = TestKMyMoneyCurrencyImpl.CURR_1_SYMB;
+	private static final String    CURR_1_ISOSTR = TestKMyMoneyCurrencyImpl.CURR_1_ISOSTR;
+	private static final String    CURR_1_SYMB   = TestKMyMoneyCurrencyImpl.CURR_1_SYMB;
+	private static final KMMCurrID CURR_1_ID     = TestKMyMoneyCurrencyImpl.CURR_1_ID;
 	
-	private static final String CURR_2_ID     = TestKMyMoneyCurrencyImpl.CURR_2_ID;
-	private static final String CURR_2_SYMB   = TestKMyMoneyCurrencyImpl.CURR_2_SYMB;
+	private static final String    CURR_2_ISOSTR = TestKMyMoneyCurrencyImpl.CURR_2_ISOSTR;
+	private static final String    CURR_2_SYMB   = TestKMyMoneyCurrencyImpl.CURR_2_SYMB;
+	private static final KMMCurrID CURR_2_ID     = TestKMyMoneyCurrencyImpl.CURR_2_ID;
 
 	// ---------------------------------------------------------------
 
@@ -90,8 +92,8 @@ public class TestKMyMoneyWritableCurrencyImpl {
 
 		// ---
 
-		currID1 = new KMMQualifCurrID(CURR_1_ID);
-		currID2 = new KMMQualifCurrID(CURR_2_ID);
+		currID1 = new KMMQualifCurrID(CURR_1_ISOSTR);
+		currID2 = new KMMQualifCurrID(CURR_2_ISOSTR);
 	}
 
 	// -----------------------------------------------------------------
@@ -149,7 +151,7 @@ public class TestKMyMoneyWritableCurrencyImpl {
 		assertNotEquals(null, curr);
 
 		assertEquals(currID1, curr.getQualifID());
-		assertEquals(CURR_1_ID, curr.getQualifID().getCode());
+		assertEquals(CURR_1_ISOSTR, curr.getQualifID().getCode());
 
 		// ----------------------------
 		// Modify the object
@@ -192,7 +194,7 @@ public class TestKMyMoneyWritableCurrencyImpl {
 		assertEquals(ConstTest.Stats.NOF_CURR, kmmInFileStats.getNofEntriesCurrencies(KMMFileStats.Type.CACHE));
 
 		assertEquals(currID1, curr.getQualifID()); // unchanged
-		assertEquals(CURR_1_ID, curr.getQualifID().getCode()); // unchanged
+		assertEquals(CURR_1_ISOSTR, curr.getQualifID().getCode()); // unchanged
 		assertEquals("British Pound", curr.getName()); // changed
 		assertEquals("£", curr.getSymbol()); // changed
 		assertEquals(3, curr.getPP().intValue()); // changed
@@ -212,7 +214,7 @@ public class TestKMyMoneyWritableCurrencyImpl {
 		assertNotEquals(null, curr);
 
 		assertEquals(currID1, curr.getQualifID()); // unchanged
-		assertEquals(CURR_1_ID, curr.getQualifID().getCode()); // unchanged
+		assertEquals(CURR_1_ISOSTR, curr.getQualifID().getCode()); // unchanged
 		assertEquals("British Pound", curr.getName()); // changed
 		assertEquals("£", curr.getSymbol()); // changed
 		assertEquals(3, curr.getPP().intValue()); // changed

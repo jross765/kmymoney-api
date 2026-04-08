@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.kmymoney.api.write.KMyMoneyWritableCurrency;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
@@ -14,9 +15,9 @@ public interface KMyMoneyWritableFile_Curr {
 	 * @param currCode
 	 * @return
 	 * 
-	 * @see #getCurrencyByID(String)
+	 * @see #getCurrencyByID(KMMCurrID)
 	 */
-	KMyMoneyWritableCurrency getWritableCurrencyByID(String currCode);
+	KMyMoneyWritableCurrency getWritableCurrencyByID(KMMCurrID currID);
 	
 	/**
 	 * 

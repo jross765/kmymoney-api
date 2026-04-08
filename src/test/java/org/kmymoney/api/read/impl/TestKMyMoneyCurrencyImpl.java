@@ -13,15 +13,18 @@ import org.kmymoney.api.read.KMyMoneyCurrency;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyCurrencyImpl {
-	public static final String CURR_1_ID     = "EUR";
-	public static final String CURR_1_SYMB   = "€";
+	public static final String    CURR_1_ISOSTR = "EUR";
+	public static final String    CURR_1_SYMB   = "€";
+	public static final KMMCurrID CURR_1_ID     = new KMMCurrID(CURR_1_ISOSTR);
 
-	public static final String CURR_2_ID     = "USD";
-	public static final String CURR_2_SYMB   = "$";
+	public static final String    CURR_2_ISOSTR = "USD";
+	public static final String    CURR_2_SYMB   = "$";
+	public static final KMMCurrID CURR_2_ID     = new KMMCurrID(CURR_2_ISOSTR);
 
 	// -----------------------------------------------------------------
 
@@ -64,8 +67,8 @@ public class TestKMyMoneyCurrencyImpl {
 
 		// ---
 
-		currID1 = new KMMQualifCurrID(CURR_1_ID);
-		currID2 = new KMMQualifCurrID(CURR_2_ID);
+		currID1 = new KMMQualifCurrID(CURR_1_ISOSTR);
+		currID2 = new KMMQualifCurrID(CURR_2_ISOSTR);
 	}
 
 	// -----------------------------------------------------------------
@@ -73,9 +76,9 @@ public class TestKMyMoneyCurrencyImpl {
 	@Test
 	public void test00() throws Exception {
 		// Cf. TestCmdtyCurrID -- let's just double-check
-		assertEquals(KMMQualifSecCurrID.Type.CURRENCY.toString() + KMMQualifSecCurrID.SEPARATOR + CURR_1_ID,
+		assertEquals(KMMQualifSecCurrID.Type.CURRENCY.toString() + KMMQualifSecCurrID.SEPARATOR + CURR_1_ISOSTR,
 				currID1.toString());
-		assertEquals(KMMQualifSecCurrID.Type.CURRENCY.toString() + KMMQualifSecCurrID.SEPARATOR + CURR_2_ID,
+		assertEquals(KMMQualifSecCurrID.Type.CURRENCY.toString() + KMMQualifSecCurrID.SEPARATOR + CURR_2_ISOSTR,
 				currID2.toString());
 	}
 
@@ -83,7 +86,7 @@ public class TestKMyMoneyCurrencyImpl {
 
 	@Test
 	public void test01_1() throws Exception {
-		curr = kmmFile.getCurrencyByQualifID(new KMMQualifCurrID(CURR_1_ID));
+		curr = kmmFile.getCurrencyByQualifID(new KMMQualifCurrID(CURR_1_ISOSTR));
 		assertNotEquals(null, curr);
 
 		assertEquals(currID1.toString(), curr.getQualifID().toString());

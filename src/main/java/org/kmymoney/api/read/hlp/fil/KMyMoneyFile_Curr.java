@@ -4,14 +4,15 @@ import java.util.Collection;
 
 import org.kmymoney.api.read.KMyMoneyCurrency;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 
 public interface KMyMoneyFile_Curr {
 
 	/**
-	 * @param id the unique ID of the currency to look for
+	 * @param currID the unique ID of the currency to look for
 	 * @return the currency or null if it's not found
 	 */
-	KMyMoneyCurrency getCurrencyByID(String id);
+	KMyMoneyCurrency getCurrencyByID(KMMCurrID currID);
 
 	/**
 	 * @param currID
