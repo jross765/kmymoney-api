@@ -927,9 +927,9 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			return;
 		
 		if ( getUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED) == null ) {
-			addUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED, "yes"); // ::MAGIC
+			addUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED, Const.KVP_VAL_ACCT_CLOSED);
 		} else {
-			setUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED, "yes"); // ::MAGIC
+			setUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED, Const.KVP_VAL_ACCT_CLOSED);
 		}
 	}
 

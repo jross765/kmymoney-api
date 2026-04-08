@@ -4,14 +4,22 @@ import org.kmymoney.api.read.KMMSecCurr;
 
 public class Const {
   
-  public static final String KVP_KEY_ACCT_IBAN         = "iban";
-  public static final String KVP_KEY_ACCT_CLOSED       = "mm-closed";
+  public static final String KVP_KEY_FILE_BASE_CURRENCY = "kmm-baseCurrency";
+  public static final String KVP_KEY_FILE_ID            = "kmm-id";
+  public static final String KVP_KEY_FILE_LAST_MOD_DATE = "LastModificationDate";
+
+  public static final String KVP_KEY_INST_BIC           = "bic";
+  public static final String KVP_KEY_INST_URL           = "url";
   
-  public static final String KVP_KEY_SEC_SECURITY_ID   = "kmm-security-id";  
-  public static final String KVP_KEY_SEC_ONLINE_SOURCE = "kmm-online-source";
+  public static final String KVP_KEY_ACCT_IBAN          = "iban";
+  public static final String KVP_KEY_ACCT_CLOSED        = "mm-closed";
+  public static final String KVP_VAL_ACCT_CLOSED        = "yes";
   
-  public static final String KVP_KEY_ASSOC_URI         = "assoc_uri";
-  public static final String KVP_KEY_DUMMY             = "dummy";
+  public static final String KVP_KEY_SEC_SECURITY_ID    = "kmm-security-id";  
+  public static final String KVP_KEY_SEC_ONLINE_SOURCE  = "kmm-online-source";
+  
+  public static final String KVP_KEY_ASSOC_URI          = "assoc_uri";
+  public static final String KVP_KEY_DUMMY              = "dummy";
 
   // -----------------------------------------------------------------
 

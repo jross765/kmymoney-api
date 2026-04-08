@@ -25,6 +25,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.CURRENCY;
 import org.kmymoney.api.generated.INSTITUTION;
@@ -308,7 +309,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		String datTimFmt = datTim.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")); // ::MAGIC
 		// Sic, not *add*UserDefinedAttribute, as the attribute should 
 		// *always* be from the start.
-		setUserDefinedAttribute("LastModificationDate", datTimFmt); // ::MAGIC
+		setUserDefinedAttribute(Const.KVP_KEY_FILE_LAST_MOD_DATE, datTimFmt);
 	}
 
 	// ---------------------------------------------------------------

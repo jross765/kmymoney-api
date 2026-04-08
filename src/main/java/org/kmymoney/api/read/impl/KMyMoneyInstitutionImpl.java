@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.ACCOUNTID;
 import org.kmymoney.api.generated.INSTITUTION;
@@ -100,7 +101,7 @@ public class KMyMoneyInstitutionImpl extends KMyMoneyObjectImpl
 	@Override
 	public String getBIC() {
     	try {
-    		return getUserDefinedAttribute("bic"); // ::MAGIC
+    		return getUserDefinedAttribute(Const.KVP_KEY_INST_BIC);
     	} catch (KVPListDoesNotContainKeyException exc) {
     		return null;
     	}
@@ -109,7 +110,7 @@ public class KMyMoneyInstitutionImpl extends KMyMoneyObjectImpl
 	@Override
 	public String getURL() {
     	try {
-    		return getUserDefinedAttribute("url"); // ::MAGIC
+    		return getUserDefinedAttribute(Const.KVP_KEY_INST_URL);
     	} catch (KVPListDoesNotContainKeyException exc) {
     		return null;
     	}

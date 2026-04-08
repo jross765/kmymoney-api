@@ -369,7 +369,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     	if ( val == null )
     		return false;
     	
-    	if ( val.equals("yes") ) // ::MAGIC
+    	if ( val.equals(Const.KVP_VAL_ACCT_CLOSED) )
     		return true;
     	else
     		return false;

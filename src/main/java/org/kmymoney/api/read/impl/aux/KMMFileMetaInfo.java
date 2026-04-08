@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.FILEINFO;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.KMYMONEYFILE;
@@ -84,11 +85,11 @@ public class KMMFileMetaInfo {
 	// ----------------------------
 
 	public String getBaseCurrency() {
-		return kmmFile.getUserDefinedAttribute("kmm-baseCurrency"); // ::MAGIC
+		return kmmFile.getUserDefinedAttribute(Const.KVP_KEY_FILE_BASE_CURRENCY);
 	}
 
 	public String getFileID() {
-		return kmmFile.getUserDefinedAttribute("kmm-id"); // ::MAGIC
+		return kmmFile.getUserDefinedAttribute(Const.KVP_KEY_FILE_ID);
 	}
 
 }
