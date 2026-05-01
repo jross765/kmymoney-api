@@ -220,6 +220,8 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      */
     Collection<KMyMoneyTag> getTags();
     
+    boolean hasTag(KMMTagID tagID);
+    
     // ----------------------------
 
     /**

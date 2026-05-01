@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
@@ -20,6 +21,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
+import org.kmymoney.base.basetypes.simple.KMMTagID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -461,6 +463,8 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
     		propertyChangeSupport.firePropertyChange("number", oldNumber, num);
     	}
 	}
+	
+	// ---------------------------------------------------------------
 
 	@Override
 	public void setPayeeID(KMMPyeID pyeID) {
@@ -488,6 +492,49 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		
 		setPayeeID(pye.getID());
 	}
+
+	// ---------------------------------------------------------------
+
+	@Override
+	public void clearTags() {
+		if ( getTagIDs() == null )
+			return;
+		
+		if ( getTagIDs().size() == 0 )
+			return;
+		
+		for ( int i = jwsdpPeer.getTAG().size(); i >= 0; i-- ) {
+			jwsdpPeer.getTAG().remove(i);
+		}
+	}
+
+	@Override
+	public void addTagID(KMMTagID tagID) {
+		if ( tagID == null ) {
+			throw new IllegalArgumentException("argument <tagID> is null");
+		}
+		
+		if ( ! tagID.isSet() ) {
+			throw new IllegalArgumentException("argument <tagID> is not set");
+		}
+		
+		ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
+		SPLIT.TAG jwsdpSpltTag = fact.createSPLITTAG();
+		jwsdpSpltTag.setId(tagID.toString());
+		
+		jwsdpPeer.getTAG().add(jwsdpSpltTag);
+	}
+
+	@Override
+	public void addTag(KMyMoneyTag tag) {
+		if ( tag == null ) {
+			throw new IllegalArgumentException("argument <tag> is null");
+		}
+		
+		addTagID(tag.getID());
+	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * Set the description-text.

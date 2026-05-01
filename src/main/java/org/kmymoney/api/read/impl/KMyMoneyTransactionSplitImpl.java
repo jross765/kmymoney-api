@@ -218,6 +218,19 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     	
     	return result;
     }
+    
+    @Override
+    public boolean hasTag(KMMTagID tagID) {
+    	if ( tagID == null ) {
+    		throw new IllegalArgumentException("argument <tagID> is null");
+    	}
+    	
+    	if ( ! tagID.isSet() ) {
+    		throw new IllegalArgumentException("argument <tagID> is not set");
+    	}
+
+    	return getTagIDs().contains(tagID);
+    }
 
     // ----------------------------
 
