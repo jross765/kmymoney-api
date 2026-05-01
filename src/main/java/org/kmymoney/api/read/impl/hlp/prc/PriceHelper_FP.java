@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
+@Deprecated
 public class PriceHelper_FP {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(PriceHelper_FP.class);

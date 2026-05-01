@@ -31,6 +31,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * In order to get the value in the base-currency, the factor is to be multiplied with 
      * an amount of that currency.
      */
+    @Deprecated
     private Map<String, FixedPointNumber> mIso4217CurrCode2Factor    = null; // String, because unqualified
     private Map<String, BigFraction>      mIso4217CurrCode2FactorRat = null; // dto.
 
@@ -51,6 +52,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * @return a factor {@link FixedPointNumber} that is to be multiplied with an
      *         amount of that currency to get the value in the base-currency.
      */
+    @Deprecated
     public FixedPointNumber getConversionFactor(final KMMQualifCurrID currID) {
 		if ( currID == null ) {
 			throw new IllegalArgumentException("argument <currID> is null");
@@ -63,6 +65,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
     	return mIso4217CurrCode2Factor.get(currID.getCode());
     }
 
+    @Deprecated
     public FixedPointNumber getConversionFactor(final KMMCurrID currID) {
 		if ( currID == null ) {
 			throw new IllegalArgumentException("argument <currID> is null");
@@ -76,6 +79,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
     	return getConversionFactor(qualifID);
     }
 
+    @Deprecated
     public FixedPointNumber getConversionFactor(final Currency curr) {
 		if ( curr == null ) {
 			throw new IllegalArgumentException("argument <curr> is null");
@@ -127,6 +131,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      *                        multiplied with an amount of that currency to get the
      *                        value in the base-currency.
      */
+    @Deprecated
     public void setConversionFactor(final KMMQualifCurrID currID, final FixedPointNumber factor) {
 		if ( currID == null ) {
 			throw new IllegalArgumentException("argument <currID> is null");
@@ -143,6 +148,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
     	mIso4217CurrCode2Factor.put(currID.getCode(), factor);
     }
 
+    @Deprecated
     public void setConversionFactor(final KMMCurrID currID, final FixedPointNumber factor) {
 		if ( currID == null ) {
 			throw new IllegalArgumentException("argument <currID> is null");
@@ -156,6 +162,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
 		setConversionFactor(qualifID, factor);
     }
 
+    @Deprecated
     public void setConversionFactor(final Currency curr, final FixedPointNumber factor) {
 		if ( curr == null ) {
 			throw new IllegalArgumentException("argument <curr> is null");
@@ -212,6 +219,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * @param currID the currency to convert to
      * @return false if the conversion is not possible
      */
+    @Deprecated
     public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMQualifCurrID currID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -237,6 +245,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
         return result;
     }
 
+    @Deprecated
     public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMCurrID currID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -254,6 +263,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
 		return convertFromBaseCurrency(value, qualifID);
     }
 
+    @Deprecated
     public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final Currency curr) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -329,6 +339,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * @param currID it's currency
      * @return false if the conversion is not possible
      */
+    @Deprecated
     public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final KMMQualifCurrID currID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -354,6 +365,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
 		return result;
     }
 
+    @Deprecated
     public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final KMMCurrID currID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -376,6 +388,7 @@ public class SimpleCurrencyExchRateTable implements SimplePriceTable,
      * @param curr the currency to convert to
      * @return false if the conversion is not possible
      */
+    @Deprecated
     public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final Currency curr) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");

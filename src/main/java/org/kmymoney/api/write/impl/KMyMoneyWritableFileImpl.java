@@ -25,6 +25,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.CURRENCY;
@@ -1034,10 +1035,98 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// ::TODO: Improve interface / provide variants
 	// ::TODO: Change impl -- it cannot work like this, is too much "gnugash-y".
 	@Override
+	@Deprecated
 	public void addCurrency(
 			final String pCmdtySpace,
 			final String pCmdtyID,
 			final FixedPointNumber conversionFactor,
+			final int pCmdtyNameFraction,
+			final String pCmdtyName) {
+
+		if ( pCmdtySpace == null ) {
+			throw new IllegalArgumentException("argument <pCmdtySpace> is null");
+		}
+
+		if ( pCmdtySpace.isBlank() ) {
+			throw new IllegalArgumentException("argument <pCmdtySpace> is blank");
+		}
+
+		if ( pCmdtyID == null ) {
+			throw new IllegalArgumentException("argument <pCmdtyID> is null");
+		}
+		
+		if ( pCmdtyID.isBlank() ) {
+			throw new IllegalArgumentException("argument <pCmdtyID> is blank");
+		}
+
+		if ( conversionFactor == null ) {
+			throw new IllegalArgumentException("argument <conversionFactor> is null");
+		}
+		
+		if ( pCmdtyNameFraction <= 0 ) {
+			throw new IllegalArgumentException("argument <pCmdtyNameFraction> is <= 0");
+		}
+		
+		if ( pCmdtyName == null ) {
+			throw new IllegalArgumentException("argument <pCmdtyName> is null");
+		}
+		
+		if ( pCmdtyName.isBlank() ) {
+			throw new IllegalArgumentException("argument <pCmdtyName> is blank");
+		}
+		
+		/*
+		 * ::TODO
+		if ( getCurrencyTable().getConversionFactor(pCmdtySpace, pCmdtyId) == null ) {
+
+			CURRENCY newCurrency = getObjectFactory().createGncV2GncBookGncCommodity();
+			newCurrency.setCmdtyFraction(pCmdtyNameFraction);
+			newCurrency.setCmdtySpace(pCmdtySpace);
+			newCurrency.setCmdtyId(pCmdtyId);
+			newCurrency.setCmdtyName(pCmdtyName);
+			newCurrency.setVersion(Const.XML_FORMAT_VERSION);
+			getRootElement().getGncBook().getBookElements().add(newCurrency);
+			incrementCountDataFor("security");
+		}
+		
+		// add price-quote
+		CURRENCY currency = new GncV2.GncBook.GncPricedb.Price.PriceCommodity();
+		currency.setCmdtySpace(pCmdtySpace);
+		currency.setCmdtyId(pCmdtyID);
+
+		CURRENCY baseCurrency = getObjectFactory().createGncV2GncBookGncPricedbPricePriceCurrency();
+		baseCurrency.setCmdtySpace(CurrencyNameSpace.NAMESPACE_CURRENCY);
+		baseCurrency.setCmdtyId(getDefaultCurrencyID());
+
+		PRICE newQuote = getObjectFactory().createGncV2GncBookGncPricedbPrice();
+		newQuote.setPriceSource("JKMyMoneyLib");
+		newQuote.setPriceId(getObjectFactory().createGncV2GncBookGncPricedbPricePriceId());
+		newQuote.getPriceId().setType(Const.XML_DATA_TYPE_GUID);
+		newQuote.getPriceId().setValue(createGUID());
+		newQuote.setPriceCommodity(currency);
+		newQuote.setPriceCurrency(baseCurrency);
+		newQuote.setPriceTime(getObjectFactory().createGncV2GncBookGncPricedbPricePriceTime());
+		newQuote.getPriceTime().setTsDate(PRICE_QUOTE_DATE_FORMAT.format(new Date()));
+		newQuote.setPriceType("last");
+		newQuote.setPriceValue(conversionFactor.toKMyMoneyString());
+
+		List<Object> bookElements = getRootElement().getBookElements();
+		for ( Object element : bookElements ) {
+			if ( element instanceof GncV2.GncBook.GncPricedb ) {
+				GncV2.GncBook.GncPricedb prices = (GncV2.GncBook.GncPricedb) element;
+				prices.getPrice().add(newQuote);
+				getCurrencyTable().setConversionFactor(pCmdtySpace, pCmdtyId, conversionFactor);
+				return;
+			}
+		}
+		throw new IllegalStateException("No priceDB in Book in KMyMoney file");
+		*/
+	}
+
+	public void addCurrencyRat(
+			final String pCmdtySpace,
+			final String pCmdtyID,
+			final BigFraction conversionFactor,
 			final int pCmdtyNameFraction,
 			final String pCmdtyName) {
 

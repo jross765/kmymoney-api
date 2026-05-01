@@ -62,6 +62,7 @@ public interface KMyMoneyWritableAccount extends KMyMoneyAccount,
 	 * 
 	 * @see #getBalanceChange(LocalDate, LocalDate)
 	 */
+	@Deprecated
 	FixedPointNumber getBalanceChange(LocalDate from, LocalDate to);
 
 	BigFraction      getBalanceChangeRat(LocalDate from, LocalDate to);

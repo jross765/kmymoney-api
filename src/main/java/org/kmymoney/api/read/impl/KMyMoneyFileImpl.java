@@ -971,6 +971,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 	}
 
     @Override
+	@Deprecated
     public FixedPointNumber getLatestPrice(KMMQualifSecCurrID secCurrID) {
     	return prcMgr.getLatestPrice(secCurrID);
     }

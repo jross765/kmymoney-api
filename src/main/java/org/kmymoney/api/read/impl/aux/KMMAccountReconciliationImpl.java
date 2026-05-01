@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.RECONCILIATION;
 import org.kmymoney.api.read.aux.KMMAccountReconciliation;
 import org.slf4j.Logger;
@@ -45,8 +46,13 @@ public class KMMAccountReconciliationImpl implements KMMAccountReconciliation {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Deprecated
 	public FixedPointNumber getValue() {
 		return new FixedPointNumber ( jwsdpPeer.getValue() );
+	}
+
+	public BigFraction getValueRat() {
+		return BigFraction.parse( jwsdpPeer.getValue() );
 	}
 
 	// ---------------------------------------------------------------

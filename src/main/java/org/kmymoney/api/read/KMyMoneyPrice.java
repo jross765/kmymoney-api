@@ -122,6 +122,7 @@ public interface KMyMoneyPrice extends Comparable<KMyMoneyPrice>,
      * 
      * @see #getValueFormatted()
      */
+	@Deprecated
     FixedPointNumber getValue();
     
     BigFraction      getValueRat();

@@ -2,6 +2,7 @@ package org.kmymoney.api.write.hlp.fil;
 
 import java.util.Collection;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.write.KMyMoneyWritableCurrency;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.simple.KMMCurrID;
@@ -61,10 +62,18 @@ public interface KMyMoneyWritableFile_Curr {
 	 * @param pCmdtyNameFraction number of decimal-places after the comma
 	 * @param pCmdtyName         common name of the new currency
 	 */
+	@Deprecated
 	public void addCurrency(
 			String pCmdtySpace,
 			String pCmdtyId,
 			FixedPointNumber conversionFactor,
+			int pCmdtyNameFraction,
+			String pCmdtyName);
+
+	public void addCurrencyRat(
+			String pCmdtySpace,
+			String pCmdtyId,
+			BigFraction conversionFactor,
 			int pCmdtyNameFraction,
 			String pCmdtyName);
 

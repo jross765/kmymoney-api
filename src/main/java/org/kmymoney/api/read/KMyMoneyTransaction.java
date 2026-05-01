@@ -167,6 +167,7 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @see #getBalanceFormatted(Locale)
      * @see #isBalanced()
      */
+    @Deprecated
     FixedPointNumber getBalance();
 
     BigFraction      getBalanceRat();
@@ -200,6 +201,7 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @see #getNegatedBalanceFormatted(Locale)
      * @see #isBalanced()
      */
+	@Deprecated
     FixedPointNumber getNegatedBalance();
 
     /**

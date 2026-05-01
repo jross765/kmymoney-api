@@ -341,6 +341,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      *
      * @return the balance
      */
+	@Deprecated
     FixedPointNumber getBalance();
 
     BigFraction      getBalanceRat();
@@ -352,6 +353,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      *             calculation
      * @return the balance formatted using the current locale
      */
+	@Deprecated
     FixedPointNumber getBalance(LocalDate date);
 
     BigFraction      getBalanceRat(LocalDate date);
@@ -364,22 +366,27 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @param after splits that are after date are added here.
      * @return the balance formatted using the current locale
      */
+	@Deprecated
     FixedPointNumber getBalance(LocalDate date, List<KMyMoneyTransactionSplit> after);
 
     BigFraction      getBalanceRat(LocalDate date, List<KMyMoneyTransactionSplit> after);
 
+	@Deprecated
     FixedPointNumber getBalance(LocalDate date, KMMQualifSecCurrID secCurrID);
 
     BigFraction      getBalanceRat(LocalDate date, KMMQualifSecCurrID secCurrID);
 
+	@Deprecated
     FixedPointNumber getBalance(LocalDate date, KMMSecID secID);
 
     BigFraction      getBalanceRat(LocalDate date, KMMSecID secID);
 
+	@Deprecated
     FixedPointNumber getBalance(LocalDate date, KMMCurrID currID);
 
     BigFraction      getBalanceRat(LocalDate date, KMMCurrID currID);
 
+	@Deprecated
     FixedPointNumber getBalance(LocalDate date, Currency curr);
 
     BigFraction      getBalanceRat(LocalDate date, Currency curr);
@@ -388,6 +395,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @param lastSpltIncl last split to be included
      * @return the balance up to and including the given split
      */
+	@Deprecated
     FixedPointNumber getBalance(KMyMoneyTransactionSplit lastSpltIncl);
 
     BigFraction      getBalanceRat(KMyMoneyTransactionSplit lastSpltIncl);
@@ -426,6 +434,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @throws InvalidQualifSecCurrIDException 
      * @throws InvalidQualifSecCurrTypeException 
      */
+	@Deprecated
     FixedPointNumber getBalanceRecursive() throws InvalidQualifSecCurrIDException;
 
     BigFraction      getBalanceRecursiveRat();
@@ -439,6 +448,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @throws InvalidQualifSecCurrIDException 
      * @throws InvalidQualifSecCurrTypeException 
      */
+	@Deprecated
     FixedPointNumber getBalanceRecursive(LocalDate date) throws InvalidQualifSecCurrIDException;
 
     BigFraction      getBalanceRecursiveRat(LocalDate date);
@@ -453,6 +463,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @throws InvalidQualifSecCurrIDException 
      * @see {@link KMyMoneyAccount#getBalanceRecursive(LocalDate, Currency)}
      */
+	@Deprecated
     FixedPointNumber getBalanceRecursive(LocalDate date, KMMQualifSecCurrID secCurrID) throws InvalidQualifSecCurrIDException;
 
     BigFraction      getBalanceRecursiveRat(LocalDate date, KMMQualifSecCurrID secCurrID) throws InvalidQualifSecCurrIDException;
@@ -466,6 +477,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @throws InvalidQualifSecCurrIDException
      * @throws KMMIDNotSetException 
      */
+	@Deprecated
     FixedPointNumber getBalanceRecursive(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
 
     BigFraction      getBalanceRecursiveRat(LocalDate date, KMMSecID secID) throws KMMIDNotSetException;
@@ -480,6 +492,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @throws InvalidQualifSecCurrTypeException 
      * @see KMyMoneyAccount#getBalanceRecursive(LocalDate, KMMQualifSecCurrID)
      */
+	@Deprecated
     FixedPointNumber getBalanceRecursive(LocalDate date, Currency curr) throws InvalidQualifSecCurrIDException;
 
     BigFraction      getBalanceRecursiveRat(LocalDate date, Currency curr);
@@ -488,6 +501,7 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      * @param lastSpltIncl last split to be included
      * @return the recursive balance up to and including the given split
      */
+	@Deprecated
     FixedPointNumber getBalanceRecursive(KMyMoneyTransactionSplit lastSpltIncl);
 
     BigFraction      getBalanceRecursiveRat(KMyMoneyTransactionSplit lastSpltIncl);

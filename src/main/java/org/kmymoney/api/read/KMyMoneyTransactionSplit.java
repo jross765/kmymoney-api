@@ -6,7 +6,6 @@ import java.util.Locale;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
@@ -246,6 +245,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * @see #getValueFormatted()
      * @see #getValueFormatted(Locale)
      */
+	@Deprecated
     FixedPointNumber getValue();
 
     BigFraction getValueRat();
@@ -281,6 +281,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * @see #getSharesFormatted()
      * @see #getSharesFormatted(Locale)
      */
+	@Deprecated
     FixedPointNumber getShares();
 
     /**
@@ -323,6 +324,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * @see #getPriceFormatted()
      * @see #getPriceFormatted(Locale)
      */
+	@Deprecated
     FixedPointNumber getPrice();
 
     BigFraction      getPriceRat();

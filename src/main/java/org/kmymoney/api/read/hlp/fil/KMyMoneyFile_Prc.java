@@ -92,6 +92,7 @@ public interface KMyMoneyFile_Prc {
 	 * @throws InvalidQualifSecCurrIDException 
 	 * @throws InvalidQualifSecCurrTypeException 
 	 */
+	@Deprecated
 	FixedPointNumber getLatestPrice(KMMQualifSecCurrID secCurrID);
 
 	BigFraction      getLatestPriceRat(KMMQualifSecCurrID secCurrID);

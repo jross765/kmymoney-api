@@ -521,6 +521,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
     // outside of this module, because the actual implementation is in
     // a non-exported package.
 
+	@Deprecated
 	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc) {
 		if ( acct == null ) {
 			throw new IllegalArgumentException("argument <acct> is null");
@@ -533,6 +534,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		return AccountBalanceHelper_FP.formatBalance( acct, blnc );
 	}
 	
+	@Deprecated
 	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc, Locale lcl) {
 		if ( acct == null ) {
 			throw new IllegalArgumentException("argument <acct> is null");

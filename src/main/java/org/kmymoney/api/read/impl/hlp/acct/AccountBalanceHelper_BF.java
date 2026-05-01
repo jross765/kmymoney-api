@@ -39,10 +39,11 @@ public class AccountBalanceHelper_BF
 		BigFraction balance = BigFraction.ZERO;
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
-			if ( date != null && 
-				 after != null ) {
+			if ( date != null ) {
 				if ( splt.getTransaction().getDatePosted().isAfter(date) ) {
-					after.add(splt);
+					if ( after != null ) {
+						after.add(splt);
+					}
 					continue;
 				}
 			}

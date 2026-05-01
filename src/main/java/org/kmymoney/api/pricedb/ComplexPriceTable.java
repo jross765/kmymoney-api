@@ -27,6 +27,7 @@ public class ComplexPriceTable implements Serializable {
 	// ---------------------------------------------------------------
 
 	public interface ComplexPriceTableChangeListener {
+	    @Deprecated
 		void conversionFactorChanged(final String secCurrIDStr, final FixedPointNumber factor);
 		void conversionFactorChanged(final String secCurrIDStr, final BigFraction factor);
 	}
@@ -254,6 +255,7 @@ public class ComplexPriceTable implements Serializable {
 	 * @return the factor to convert the price specified by the name-space-code-pair
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
+    @Deprecated
 	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID.Type type, final String code) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
@@ -274,6 +276,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
+    @Deprecated
 	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID secCurrID) {
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null");
@@ -300,6 +303,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
+    @Deprecated
 	public FixedPointNumber getConversionFactor(final Currency curr) {
 		if ( curr == null ) {
 			throw new IllegalArgumentException("argument <curr> is null");
@@ -375,6 +379,7 @@ public class ComplexPriceTable implements Serializable {
 	 *
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
+    @Deprecated
 	public void setConversionFactor(final KMMQualifSecCurrID.Type type, final String code, final FixedPointNumber factor) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
@@ -402,6 +407,7 @@ public class ComplexPriceTable implements Serializable {
 		setConversionFactor(secCurrID, factor);
 	}
 
+    @Deprecated
 	public void setConversionFactor(final KMMQualifSecCurrID secCurrID, final FixedPointNumber factor) {
 		if ( secCurrID == null ) {
 		    throw new IllegalArgumentException("argument <secCurrID> is null");
@@ -422,6 +428,7 @@ public class ComplexPriceTable implements Serializable {
 		firePriceTableChanged(secCurrID.toString(), factor);
 	}
 	
+    @Deprecated
 	public void setConversionFactor(final KMMSecID secID, final FixedPointNumber factor) {
 		if ( secID == null ) {
 		    throw new IllegalArgumentException("argument <secID> is null");
@@ -494,6 +501,7 @@ public class ComplexPriceTable implements Serializable {
 		firePriceTableChanged(currID.toString(), factor);
 	}
 	
+    @Deprecated
 	public void setConversionFactor(final Currency curr, final FixedPointNumber factor) {
 		if ( curr == null ) {
 		    throw new IllegalArgumentException("argument <curr> is null");
@@ -643,6 +651,7 @@ public class ComplexPriceTable implements Serializable {
 	 * @see SimplePriceTable#convertFromBaseCurrency(FixedPointNumber,
 	 *      java.lang.String)
 	 */
+    @Deprecated
 	public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber pValue, final KMMQualifSecCurrID secCurrID) {
 		if ( pValue == null )
 			throw new IllegalArgumentException("argument <pValue> is null");
@@ -672,6 +681,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
+    @Deprecated
 	public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber pValue, final Currency curr) {
 		if ( pValue == null )
 			throw new IllegalArgumentException("argument <pValue> is null");
@@ -729,6 +739,7 @@ public class ComplexPriceTable implements Serializable {
 
 	// ----------------------------
 
+    @Deprecated
 	public FixedPointNumber convertToBaseCurrency(final FixedPointNumber pValue, final KMMQualifSecCurrID secCurrID) {
 		if ( pValue == null ) {
 			throw new IllegalArgumentException("argument <pValue> is null"); 
@@ -759,6 +770,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
+    @Deprecated
 	public FixedPointNumber convertToBaseCurrency(final FixedPointNumber pValue, final Currency curr) {
 		if ( pValue == null )
 			throw new IllegalArgumentException("argument <pValue> is null");

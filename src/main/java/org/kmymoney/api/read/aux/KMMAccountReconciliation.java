@@ -2,6 +2,8 @@ package org.kmymoney.api.read.aux;
 
 import java.time.LocalDate;
 
+import org.apache.commons.numbers.fraction.BigFraction;
+
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 public interface KMMAccountReconciliation {
@@ -16,6 +18,9 @@ public interface KMMAccountReconciliation {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public FixedPointNumber getValue();
+
+	public BigFraction      getValueRat();
 
 }

@@ -3,11 +3,13 @@ package org.kmymoney.api.write;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
+import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
+import org.kmymoney.base.basetypes.simple.KMMTagID;
 
 import xyz.schnorxoborx.base.beanbase.IllegalTransactionSplitActionException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
@@ -67,6 +69,7 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @see #setShares(BigFraction)
 	 * @see #setShares(String)
 	 */
+	@Deprecated
 	void setShares(FixedPointNumber n);
 
 	/**
@@ -89,6 +92,7 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * 
 	 * @see #getValue()
 	 */
+	@Deprecated
 	void setValue(FixedPointNumber n);
 	
 	void setValue(BigFraction n);
@@ -99,6 +103,7 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * 
 	 * @see #getPrice()
 	 */
+	@Deprecated
 	void setPrice(FixedPointNumber prc);
 	
 	void setPrice(BigFraction prc);
@@ -110,6 +115,8 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @see #getNumber()
 	 */
 	void setNumber(String num);
+	
+	// ----------------------------
 
 	/**
 	 * 
@@ -128,6 +135,30 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 * @see #getPayeeID()
 	 */
 	void setPayee(KMyMoneyPayee pye);
+
+	// ----------------------------
+	
+	void clearTags();
+
+	/**
+	 * 
+	 * @param pyeID
+	 * 
+	 * @see #getPayee()
+	 * @see #getPayeeID()
+	 */
+	void addTagID(KMMTagID tagID);
+
+	/**
+	 * 
+	 * @param pye
+	 * 
+	 * @see #getPayee()
+	 * @see #getPayeeID()
+	 */
+	void addTag(KMyMoneyTag tag);
+
+	// ----------------------------
 
 	/**
 	 * Set the description-text.

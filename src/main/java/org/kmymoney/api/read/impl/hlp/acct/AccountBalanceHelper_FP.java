@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
+@Deprecated
 public class AccountBalanceHelper_FP
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountBalanceHelper_FP.class);
@@ -41,10 +42,11 @@ public class AccountBalanceHelper_FP
 		FixedPointNumber balance = FixedPointNumber.ZERO.copy();
 		
 		for ( KMyMoneyTransactionSplit splt : acct.getTransactionSplits() ) {
-			if ( date != null && 
-				 after != null ) {
+			if ( date != null ) {
 				if ( splt.getTransaction().getDatePosted().isAfter(date) ) {
-					after.add(splt);
+					if ( after != null ) {
+						after.add(splt);
+					}
 					continue;
 				}
 			}

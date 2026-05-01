@@ -31,6 +31,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * In order to get the value in the base-currency, the factor is to be multiplied with 
      * an amount of that security.
      */
+    @Deprecated
     private Map<KMMSecID, FixedPointNumber> secID2Factor    = null; // String, because unqualified
     private Map<KMMSecID, BigFraction>      secID2FactorRat = null; // dto.
 
@@ -48,6 +49,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * @return a factor {@link FixedPointNumber} that is to be multiplied with an
      *         amount of that currency to get the value in the base-currency.
      */
+    @Deprecated
     public FixedPointNumber getConversionFactor(final KMMQualifSecID secID) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
@@ -60,6 +62,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
     	return secID2Factor.get(secID.getSecID());
     }
 
+    @Deprecated
     public FixedPointNumber getConversionFactor(final KMMSecID secID) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
@@ -104,6 +107,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      *                            multiplied with an amount of that currency to get
      *                            the value in the base-currency.
      */
+    @Deprecated
     public void setConversionFactor(final KMMQualifSecID secID, final FixedPointNumber factor) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
@@ -120,6 +124,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 		setConversionFactor(secID.getSecID(), factor);
     }
 
+    @Deprecated
     public void setConversionFactor(final KMMSecID secID, final FixedPointNumber factor) {
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
@@ -177,6 +182,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * @param secID the currency to convert to
      * @return false if the conversion is not possible
      */
+    @Deprecated
     public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMQualifSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -189,6 +195,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 		return convertFromBaseCurrency(value, secID.getSecID());
     }
 
+    @Deprecated
     public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber value, final KMMSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -264,6 +271,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
      * @param secID the security's ID
      * @return false if the conversion is not possible
      */
+    @Deprecated
     public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final KMMQualifSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
@@ -286,6 +294,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
         return convertToBaseCurrency(value, secID.getSecID());
     }
 
+    @Deprecated
     public FixedPointNumber convertToBaseCurrency(final FixedPointNumber value, final KMMSecID secID) {
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");

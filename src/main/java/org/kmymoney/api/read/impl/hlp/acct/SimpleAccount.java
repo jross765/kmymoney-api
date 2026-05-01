@@ -159,6 +159,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---------------------------------------------------------------
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance() {
 		return AccountBalanceHelper_FP.getBalance(this);
 	}
@@ -171,6 +172,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final LocalDate date) {
 		return AccountBalanceHelper_FP.getBalance(date, this);
 	}
@@ -183,6 +185,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final LocalDate date, List<KMyMoneyTransactionSplit> after) {
 		return AccountBalanceHelper_FP.getBalance(date, after, this);
 	}
@@ -194,6 +197,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final LocalDate date, final KMMQualifSecCurrID secCurrID) {
 		return AccountBalanceHelper_FP.getBalance(date, secCurrID, this);
 	}
@@ -206,6 +210,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final LocalDate date, final KMMSecID secID) {
 		return AccountBalanceHelper_FP.getBalance(date, secID, this);
 	}
@@ -218,11 +223,13 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final LocalDate date, final KMMCurrID currID) {
 		return AccountBalanceHelper_FP.getBalance(date, currID, this);
 	}
 
 	@Override
+	@Deprecated
 	public BigFraction getBalanceRat(final LocalDate date, final KMMCurrID currID) {
 		return AccountBalanceHelper_BF.getBalance(date, currID, this);
 	}
@@ -230,6 +237,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final LocalDate date, final Currency curr) {
 		return AccountBalanceHelper_FP.getBalance(date, curr, this);
 	}
@@ -242,6 +250,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance(final KMyMoneyTransactionSplit lastSpltIncl) {
 		return AccountBalanceHelper_FP.getBalance(lastSpltIncl, this);
 	}
@@ -266,6 +275,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---------------------------------------------------------------
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceRecursive() {
 		return AccountBalanceHelper_FP.getBalanceRecursive(this);
 	}
@@ -278,6 +288,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceRecursive(final LocalDate date) {
 		return AccountBalanceHelper_FP.getBalanceRecursive(date, this);
 	}
@@ -290,6 +301,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceRecursive(final LocalDate date, final KMMQualifSecCurrID secCurrID) throws InvalidQualifSecCurrIDException {
 		return AccountBalanceHelper_FP.getBalanceRecursive(date, secCurrID, this);
 	}
@@ -302,6 +314,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceRecursive(final LocalDate date, final KMMSecID secID) throws KMMIDNotSetException {
 		return AccountBalanceHelper_FP.getBalanceRecursive(date, secID, this);
 	}
@@ -314,6 +327,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceRecursive(final LocalDate date, final Currency curr) {
 		return AccountBalanceHelper_FP.getBalanceRecursive(date, curr, this);
 	}
@@ -326,6 +340,7 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	// ---
 
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceRecursive(final KMyMoneyTransactionSplit lastSpltIncl) {
 		return AccountBalanceHelper_FP.getBalanceRecursive(lastSpltIncl, this);
 	}

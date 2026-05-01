@@ -74,6 +74,7 @@ public interface KMyMoneyWritablePrice extends KMyMoneyPrice,
      * 
      * @see #getValue()
      */
+	@Deprecated
     void setValue(FixedPointNumber val);
 
     void setValue(BigFraction val);
