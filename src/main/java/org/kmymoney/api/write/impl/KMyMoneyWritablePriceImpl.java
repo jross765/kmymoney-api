@@ -364,6 +364,7 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     }
 
     @Override
+    @Deprecated
     public void setValue(FixedPointNumber val) {
 		if ( val == null ) {
 			throw new IllegalArgumentException("argument <val> is null");
@@ -381,14 +382,20 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     }
 
 	@Override
-	// ::TODO
 	public void setValue(final BigFraction val) {
 		if ( val == null ) {
 			throw new IllegalArgumentException("argument <val> is null");
 		}
 
-		FixedPointNumber temp = FixedPointNumber.of(val);
-		setValue(temp);
+		BigFraction oldVal = getValueRat();
+
+		jwsdpPeer.setPrice(val.toString());
+		getWritableKMyMoneyFile().setModified(true);
+
+		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+		if ( propertyChangeSupport != null ) {
+			propertyChangeSupport.firePropertyChange("price", oldVal, val);
+		}
 	}
 
     // ---------------------------------------------------------------

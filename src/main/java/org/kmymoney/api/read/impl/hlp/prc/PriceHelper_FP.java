@@ -30,7 +30,8 @@ public class PriceHelper_FP {
     
 	// ---------------------------------------------------------------
 
-    public static FixedPointNumber getLatestPrice(
+    @Deprecated
+	public static FixedPointNumber getLatestPrice(
 			final KMMQualifSecCurrID secCurrID,
 			final KMyMoneyFile kmmFile,
 			final Map<KMMPrcID, KMyMoneyPrice> prcMap) {
@@ -54,7 +55,8 @@ public class PriceHelper_FP {
 							  kmmFile, prcMap, 0);
 	}
 
-    public static FixedPointNumber getLatestPrice(
+    @Deprecated
+	public static FixedPointNumber getLatestPrice(
 			final Currency curr,
 			final KMyMoneyFile kmmFile,
 			final Map<KMMPrcID, KMyMoneyPrice> prcMap) {
@@ -76,6 +78,7 @@ public class PriceHelper_FP {
 
 	// ----------------------------
 
+    @Deprecated
 	private static FixedPointNumber getLatestPrice(
 			final KMMQualifSecCurrID secCurrID, 
 			final KMyMoneyFile kmmFile,
@@ -189,10 +192,12 @@ public class PriceHelper_FP {
 	// ---------------------------------------------------------------
 	// Helpers -- balance pre-computed
 	
+    @Deprecated
 	public static String formatValue(KMyMoneyPriceImpl prc, FixedPointNumber val) {
 		return formatValue(prc, val, Locale.getDefault());
 	}
 	
+    @Deprecated
 	public static String formatValue(KMyMoneyPriceImpl prc, FixedPointNumber val, Locale lcl) {
     	return AmountFormatter_FP.formatAmount( prc.getKMyMoneyFile(),
     											val, prc.getToCurrencyQualifID(), lcl );
