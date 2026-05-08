@@ -38,7 +38,6 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 
 import junit.framework.JUnit4TestAdapter;
-import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 public class TestKMyMoneyWritablePriceImpl {
 	private static final KMMPrcID PRC_1_ID = TestKMyMoneyPriceImpl.PRC_1_ID;
@@ -372,7 +371,7 @@ public class TestKMyMoneyWritablePriceImpl {
 		// CAUTION: No, not date, because that would change the "ID".
 		// Cf. TestKMyMoneyWritablePricePair.
 		// prc.setDate(LocalDate.of(1977, 7, 12));
-		prc.setValue(new FixedPointNumber("123.71"));
+		prc.setValue(BigFraction.of(12371, 100));
 		prc.setSource(Source.USER);
 
 		// ----------------------------
@@ -423,7 +422,7 @@ public class TestKMyMoneyWritablePriceImpl {
 		// CAUTION: No, not date, because that would change the "ID".
 		// Cf. TestKMyMoneyWritablePricePair.
 		// prc.setDate(LocalDate.of(1977, 7, 12));
-		prc.setValue(new FixedPointNumber("123.71"));
+		prc.setValue(BigFraction.of(12371, 100));
 		prc.setSource(Source.USER);
 
 		// ----------------------------
@@ -579,7 +578,7 @@ public class TestKMyMoneyWritablePriceImpl {
 
 		KMyMoneyPricePair prcPr = kmmInFile.getPricePairByID(PRCPR_1_ID);
 		KMyMoneyWritablePrice prc = kmmInFile.createWritablePrice((KMyMoneyPricePairImpl) prcPr, LocalDate.of(1910, 5, 1));
-		prc.setValue(new FixedPointNumber(345.21));
+		prc.setValue(BigFraction.of(34521, 100));
 		prc.setSource(Source.USER);
 
 		// ----------------------------

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import java.io.File;
 import java.io.InputStream;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,7 +26,6 @@ import org.kmymoney.base.basetypes.simple.KMMID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 import junit.framework.JUnit4TestAdapter;
-import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 public class TestKMyMoneyWritableTransactionSplitImpl {
 	public static final KMMComplAcctID ACCT_1_ID = TestKMyMoneyAccountImpl.ACCT_1_ID;
@@ -245,8 +245,8 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		// Modify the object
 
 		splt.setAccountID(ACCT_2_ID);
-		splt.setValue(new FixedPointNumber("-123.45"));
-		splt.setShares(new FixedPointNumber("-67.8901"));
+		splt.setValue(BigFraction.of(-12345, 100));
+		splt.setShares(BigFraction.of(-678901, 10000));
 		splt.setMemo("Alle meine Entchen");
 		splt.setNumber("<%$@üb234/xy&>"); // very dirty stuff...
 
@@ -266,8 +266,8 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		// we expect it is.
 
 		// Change value; other variant, diff. value
-		splt.setValue(new FixedPointNumber("-123.55"));
-		splt.setShares(new FixedPointNumber("-67.9001"));
+		splt.setValue(BigFraction.of(-12355, 100));
+		splt.setShares(BigFraction.of(-679001, 10000));
 		
 		File outFile = folder.newFile(ConstTest.KMM_FILENAME_OUT);
 		// System.err.println("Outfile for TestKMyMoneyWritableCustomerImpl.test01_1: '"
