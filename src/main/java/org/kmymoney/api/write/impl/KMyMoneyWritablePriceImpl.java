@@ -370,6 +370,10 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 			throw new IllegalArgumentException("argument <val> is null");
 		}
 
+		if ( val.compareTo(FixedPointNumber.ZERO) <= 0 ) {
+			throw new IllegalArgumentException("argument <val> is <= 0");
+		}
+		
 		FixedPointNumber oldVal = getValue();
 
 		jwsdpPeer.setPrice(val.toKMyMoneyString());
@@ -387,9 +391,13 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
 			throw new IllegalArgumentException("argument <val> is null");
 		}
 
+		if ( val.compareTo(BigFraction.ZERO) <= 0 ) {
+			throw new IllegalArgumentException("argument <val> is <= 0");
+		}
+		
 		BigFraction oldVal = getValueRat();
 
-		jwsdpPeer.setPrice(val.toString());
+		jwsdpPeer.setPrice(val.toString().replaceAll("\\s", ""));
 		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();

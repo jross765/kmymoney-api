@@ -226,6 +226,7 @@ public class KMyMoneyPriceImpl extends KMyMoneyObjectImpl
     }
 
     @Override
+    @Deprecated
     public FixedPointNumber getValue() {
 		if ( jwsdpPeer.getPrice() == null )
 			return null;

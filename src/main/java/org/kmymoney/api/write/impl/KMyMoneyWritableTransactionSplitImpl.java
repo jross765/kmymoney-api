@@ -261,17 +261,13 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( ! acctID.isSet() ) {
 			throw new IllegalArgumentException("argument <acctID> is not set");
 		}
-		
-		String old = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
-		jwsdpPeer.setAccount(acctID.toString());
-		((KMyMoneyWritableFile) getWritableKMyMoneyFile()).setModified(true);
 
-		if ( old == null || 
-			 ! old.equals(acctID.toString()) ) {
-			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("accountID", old, acctID.toString());
-			}
+		if ( acctID.getType() == KMMComplAcctID.Type.SPECIAL ) {
+			LOGGER.error("setAccountID: A transaction split's account may not be set to a special (top-level) account");
+			throw new IllegalArgumentException("argument <acctID> is of type " + KMMComplAcctID.Type.SPECIAL);
 		}
+		
+		setAccountID(acctID.getStdID());
 	}
 
 	@Override
@@ -284,14 +280,23 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <acctID> is not set");
 		}
 		
-		String old = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
+		String oldAcctID = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
 		jwsdpPeer.setAccount(acctID.toString());
-		((KMyMoneyWritableFile) getWritableKMyMoneyFile()).setModified(true);
 
-		if ( old == null || 
-			 ! old.equals(acctID.toString()) ) {
+		// No, the following is nonsense:
+//		if ( ! isCurrencyMatching() ) {
+//			LOGGER.error("setAccountID: Transaction Split: " + getQualifID() + ": New account's security/currency is not the same as transaction's security/currency");
+//			LOGGER.error("Reverting change");
+//			jwsdpPeer.setAccount(oldAcctID);
+//			throw new IllegalStateException("Transaction Split: " + getQualifID() + ": New account's security/currency is not the same as transaction's security/currency");
+//		}
+		
+		getWritableKMyMoneyFile().setModified(true);
+
+		if ( oldAcctID == null || 
+			 ! oldAcctID.equals(acctID.toString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("accountID", old, acctID.toString());
+				helper.getPropertyChangeSupport().firePropertyChange("accountID", oldAcctID, acctID.toString());
 			}
 		}
 	}
@@ -310,24 +315,54 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	/**
 	 * @return true if the currency of transaction and account match
+     * 
+     * ::CHECK: What could we possibly need that for?
+     * 
+     * It is definitely *not* the case that a transaction's split's
+     * account's security/currency has to be the same as its resp.
+     * transaction's security/currency -- there are many real-world 
+     * instances where that is not / must not be the case (a dividend 
+     * transaction, for example).
+     * 
+     * This (or a similar) wrong assumption obviously was in one of
+     * the previous maintainers' mind, because such a check was
+     * coded into this lib before the current maintainer took over
+     * (and it took him a while to see the error).
+     * 
+     * It is, however, true that this condition must hold for at
+     * least *one* of a transaction's splits. But this is, by definition,
+     * a check to be performed on a transaction object, not a 
+     * single split object. For such a check, this could be a helper
+     * function.
 	 */
-	private boolean isCurrencyMatching() {
+	private boolean isSecCurrMatching() {
 		KMyMoneyAccount acct = getAccount();
 		if ( acct == null ) {
-			return false;
+			throw new IllegalStateException("account is null");
 		}
 		
 		KMyMoneyWritableTransaction trx = getTransaction();
 		if ( trx == null ) {
-			return false;
+			throw new IllegalStateException("transaction is null");
 		}
 		
-		KMMQualifSecCurrID secCurrID = acct.getQualifSecCurrID();
-		if ( secCurrID == null ) {
-			return false;
+		KMMQualifSecCurrID acctSecCurrID = acct.getQualifSecCurrID();
+		if ( acctSecCurrID == null ) {
+			throw new IllegalStateException("account's security/currency is null");
+		}		
+		if ( ! acctSecCurrID.isSet() ) {
+			throw new IllegalStateException("account's security/currency is not set");
 		}
 		
-		return secCurrID.toString().equals(trx.getQualifSecCurrID().toString());
+		KMMQualifSecCurrID trxSecCurrID = trx.getQualifSecCurrID();
+		if ( trxSecCurrID == null ) {
+			throw new IllegalStateException("transaction's security/currency is null");
+		}
+		if ( ! trxSecCurrID.isSet() ) {
+			throw new IllegalStateException("transaction's security/currency is not set");
+		}
+		
+		return acctSecCurrID.toString().equals( trxSecCurrID.toString() );
 	}
 
 	/**
@@ -335,53 +370,35 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 */
 	@Override
 	@Deprecated
-	public void setShares(final FixedPointNumber n) {
-		if ( n == null ) {
-			throw new IllegalArgumentException("argument <n> is null");
+	public void setShares(final FixedPointNumber shr) {
+		if ( shr == null ) {
+			throw new IllegalArgumentException("argument <shr> is null");
 		}
 
-		String old = getJwsdpPeer().getShares();
-		jwsdpPeer.setShares(n.toKMyMoneyString());
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
-		if ( isCurrencyMatching() ) {
-			String oldShares = getJwsdpPeer().getShares();
-			getJwsdpPeer().setShares(n.toKMyMoneyString());
-			if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
-				if ( helper.getPropertyChangeSupport() != null ) {
-					helper.getPropertyChangeSupport().firePropertyChange("shares", new FixedPointNumber(oldShares), n);
-				}
-			}
-		}
-
-		if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
+		FixedPointNumber oldShr = getShares();
+		jwsdpPeer.setShares(shr.toKMyMoneyString());
+		getWritableKMyMoneyFile().setModified(true);
+		
+		if ( oldShr == null || ! oldShr.equals(shr) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("shares", new FixedPointNumber(old), n);
+				helper.getPropertyChangeSupport().firePropertyChange("shares", oldShr, shr);
 			}
 		}
 	}
 
 	@Override
-	public void setShares(final BigFraction n) {
-		if ( n == null ) {
-			throw new IllegalArgumentException("argument <n> is null");
+	public void setShares(final BigFraction shr) {
+		if ( shr == null ) {
+			throw new IllegalArgumentException("argument <shr> is null");
 		}
 
-		String old = getJwsdpPeer().getShares();
-		jwsdpPeer.setShares(n.toString());
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
-		if ( isCurrencyMatching() ) {
-			String oldShares = getJwsdpPeer().getShares();
-			getJwsdpPeer().setShares(n.toString());
-			if ( old == null || ! old.equals(n.toString()) ) {
-				if ( helper.getPropertyChangeSupport() != null ) {
-					helper.getPropertyChangeSupport().firePropertyChange("shares", BigFraction.parse(oldShares), n);
-				}
-			}
-		}
-
-		if ( old == null || ! old.equals(n.toString()) ) {
+		BigFraction oldShr = getSharesRat();
+		jwsdpPeer.setShares(shr.toString().replaceAll("\\s", ""));
+		getWritableKMyMoneyFile().setModified(true);
+		
+		if ( oldShr == null || ! oldShr.equals(shr) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("shares", old, n);
+				helper.getPropertyChangeSupport().firePropertyChange("shares", oldShr, shr);
 			}
 		}
 	}
@@ -391,55 +408,35 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 */
 	@Override
 	@Deprecated
-	public void setValue(final FixedPointNumber n) {
-		if ( n == null ) {
-			throw new IllegalArgumentException("argument <n> is null");
+	public void setValue(final FixedPointNumber val) {
+		if ( val == null ) {
+			throw new IllegalArgumentException("argument <val> is null");
 		}
 		
-		String old = getJwsdpPeer().getValue();
-		jwsdpPeer.setValue(n.toKMyMoneyString());
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		FixedPointNumber oldVal = getValue();
+		jwsdpPeer.setValue(val.toKMyMoneyString());
+		getWritableKMyMoneyFile().setModified(true);
 		
-		if ( isCurrencyMatching() ) {
-			String oldValue = getJwsdpPeer().getShares();
-			getJwsdpPeer().setValue(n.toKMyMoneyString());
-			if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
-				if ( helper.getPropertyChangeSupport() != null ) {
-					helper.getPropertyChangeSupport().firePropertyChange("value", new FixedPointNumber(oldValue), n);
-				}
-			}
-		}
-	
-		if ( old == null || ! old.equals(n.toKMyMoneyString()) ) {
+		if ( oldVal == null || ! oldVal.equals(val) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("value", new FixedPointNumber(old), n);
+				helper.getPropertyChangeSupport().firePropertyChange("value", oldVal, val);
 			}
 		}
 	}
 
 	@Override
-	public void setValue(final BigFraction n) {
-		if ( n == null ) {
-			throw new IllegalArgumentException("argument <n> is null");
+	public void setValue(final BigFraction val) {
+		if ( val == null ) {
+			throw new IllegalArgumentException("argument <val> is null");
 		}
 
-		String old = getJwsdpPeer().getValue();
-		jwsdpPeer.setValue(n.toString());
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		BigFraction oldVal = getValueRat();
+		jwsdpPeer.setValue(val.toString().replaceAll("\\s", ""));
+		getWritableKMyMoneyFile().setModified(true);
 		
-		if ( isCurrencyMatching() ) {
-			String oldValue = getJwsdpPeer().getShares();
-			getJwsdpPeer().setValue(n.toString());
-			if ( old == null || ! old.equals(n.toString()) ) {
-				if ( helper.getPropertyChangeSupport() != null ) {
-					helper.getPropertyChangeSupport().firePropertyChange("value", BigFraction.parse(oldValue), n);
-				}
-			}
-		}
-	
-		if ( old == null || ! old.equals(n.toString()) ) {
+		if ( oldVal == null || ! oldVal.equals(val) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("value", old, n);
+				helper.getPropertyChangeSupport().firePropertyChange("value", oldVal, val);
 			}
 		}
 	}
@@ -451,13 +448,17 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <prc> is null");
 		}
 		
-		String old = getJwsdpPeer().getPrice();
-		jwsdpPeer.setPrice(prc.toKMyMoneyString());
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		if ( prc.compareTo(FixedPointNumber.ZERO) <= 0 ) {
+			throw new IllegalArgumentException("argument <prc> is <= 0");
+		}
 		
-		if ( old == null || ! old.equals(prc.toKMyMoneyString()) ) {
+		FixedPointNumber oldPrc = getPrice();
+		jwsdpPeer.setPrice(prc.toKMyMoneyString());
+		getWritableKMyMoneyFile().setModified(true);
+		
+		if ( oldPrc == null || ! oldPrc.equals(prc) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("price", new FixedPointNumber(old), prc);
+				helper.getPropertyChangeSupport().firePropertyChange("price", oldPrc, prc);
 			}
 		}
 	}
@@ -468,13 +469,17 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <prc> is null");
 		}
 		
-		String old = getJwsdpPeer().getPrice();
-		jwsdpPeer.setPrice(prc.toString());
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		if ( prc.compareTo(BigFraction.ZERO) <= 0 ) {
+			throw new IllegalArgumentException("argument <prc> is <= 0");
+		}
 		
-		if ( old == null || ! old.equals(prc.toString()) ) {
+		BigFraction oldPrc = getPriceRat();
+		jwsdpPeer.setPrice(prc.toString().replaceAll("\\s", ""));
+		getWritableKMyMoneyFile().setModified(true);
+		
+		if ( oldPrc == null || ! oldPrc.equals(prc) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("price", BigFraction.parse(old), prc);
+				helper.getPropertyChangeSupport().firePropertyChange("price", oldPrc, prc);
 			}
 		}
 	}
@@ -509,10 +514,10 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		
 		String old = (getJwsdpPeer().getPayee() == null ? null : getJwsdpPeer().getPayee());
 		jwsdpPeer.setPayee(pyeID.toString());
-		((KMyMoneyWritableFile) getWritableKMyMoneyFile()).setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		if ( old == null || 
-			 ! old.equals(pyeID) ) {
+			 ! old.equals(pyeID.toString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("payeeID", old, pyeID.toString());
 			}
@@ -589,7 +594,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		String old = getJwsdpPeer().getMemo();
 		jwsdpPeer.setMemo(desc);
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		if ( old == null || ! old.equals(desc) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
@@ -625,7 +630,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		String old = getJwsdpPeer().getAction();
 		jwsdpPeer.setAction(actStr);
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		if ( old == null || 
 			 ! old.equals(actStr) ) {
@@ -664,7 +669,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		BigInteger old = getJwsdpPeer().getReconcileflag();
 		jwsdpPeer.setReconcileflag(BigInteger.valueOf(statInt));
-		((KMyMoneyWritableFile) getKMyMoneyFile()).setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		if ( old == null || 
 			 old.intValue() != statInt ) {

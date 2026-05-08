@@ -239,6 +239,10 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		}
 
 		String oldName = getName();
+		if ( oldName.equals(name) ) {
+			return; // nothing has changed
+		}
+		
 		jwsdpPeer.setName(name);
 		getKMyMoneyFile().setModified(true);
 

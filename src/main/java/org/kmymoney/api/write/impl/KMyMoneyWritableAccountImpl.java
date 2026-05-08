@@ -330,7 +330,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 		
 		String oldName = getName();
-		if ( oldName == name ) {
+		if ( oldName.equals(name) ) {
 			return; // nothing has changed
 		}
 

@@ -314,6 +314,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
      * @see KMyMoneyTransactionSplit#getValue()
      */
     @Override
+    @Deprecated
     public FixedPointNumber getValue() {
     	return new FixedPointNumber(jwsdpPeer.getValue());
     }

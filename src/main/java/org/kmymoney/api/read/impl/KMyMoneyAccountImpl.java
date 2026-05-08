@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
 import org.kmymoney.api.generated.PAIR;
@@ -19,6 +20,7 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.aux.KMMAccountReconciliation;
 import org.kmymoney.api.read.impl.aux.KMMAccountReconciliationImpl;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
+import org.kmymoney.api.read.impl.hlp.acct.AccountBalanceHelper_BF;
 import org.kmymoney.api.read.impl.hlp.acct.AccountBalanceHelper_FP;
 import org.kmymoney.api.read.impl.hlp.acct.SimpleAccount;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
@@ -549,6 +551,36 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		}
 		
 		return AccountBalanceHelper_FP.formatBalance( acct, blnc, lcl );
+	}
+	
+	// ----------------------------
+	
+	public static String formatBalanceRat(KMyMoneyAccountImpl acct, BigFraction blnc) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+		
+		if ( blnc == null ) {
+			throw new IllegalArgumentException("argument <blnc> is null");
+		}
+		
+		return AccountBalanceHelper_BF.formatBalance( acct, blnc );
+	}
+	
+	public static String formatBalanceRat(KMyMoneyAccountImpl acct, BigFraction blnc, Locale lcl) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+		
+		if ( blnc == null ) {
+			throw new IllegalArgumentException("argument <blnc> is null");
+		}
+		
+		if ( lcl == null ) {
+			throw new IllegalArgumentException("argument <lcl> is null");
+		}
+		
+		return AccountBalanceHelper_BF.formatBalance( acct, blnc, lcl );
 	}
 	
     // ---------------------------------------------------------------
