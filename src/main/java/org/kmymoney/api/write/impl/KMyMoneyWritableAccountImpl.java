@@ -35,6 +35,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 				for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) acct.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
 					if ( splt.getAccountID().equals(acct.getID()) ) {
 						super.addTransactionSplit(splt);
-			    // NO:
+					// NO:
 //				    addTransactionSplit(new KMyMoneyTransactionSplitImpl(splt.getJwsdpPeer(), splt.getTransaction(), 
 //		                                false, false));
 					}
@@ -187,11 +188,12 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 * Remove this account from the system.<br/>
 	 * Throws IllegalStateException if this account has splits or children.
 	 */
+	@Override
 	public void remove() {
 		if ( hasTransactions() ) {
 			throw new IllegalStateException("Cannot remove account while it contains transaction-splits!");
 		}
-		
+
 		if ( this.getChildren().size() > 0 ) {
 			throw new IllegalStateException("Cannot remove account while it contains child-accounts!");
 		}
@@ -204,6 +206,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public KMyMoneyWritableFileImpl getWritableKMyMoneyFile() {
 		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 	}
@@ -263,7 +266,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Adding transaction split is forbidden for top-level accounts");
+			LOGGER.error("addTransactionSplit: Adding transaction split is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Adding transaction split is forbidden for top-level accounts");
 		}
 
@@ -286,7 +289,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Removing transaction split is forbidden for top-level accounts");
+			LOGGER.error("removeTransactionSplit: Removing transaction split is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Removing transaction split is forbidden for top-level accounts");
 		}
 
@@ -325,10 +328,10 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting name is forbidden for top-level accounts");
+			LOGGER.error("setName: Setting name is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting name is forbidden for top-level accounts");
 		}
-		
+
 		String oldName = getName();
 		if ( oldName.equals(name) ) {
 			return; // nothing has changed
@@ -358,7 +361,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting institution ID for is forbidden for top-level accounts");
+			LOGGER.error("setInstitutionID: Setting institution ID for is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting institution ID is forbidden for top-level accounts");
 		}
 
@@ -374,6 +377,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 		this.getJwsdpPeer().setInstitution(instID.toString());
 		setIsModified();
+
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
@@ -400,7 +404,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			LOGGER.error("Setting security/currency ID is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting security/currency ID is forbidden for top-level accounts");
 		}
-		
+
 		KMMQualifSecCurrID oldCurrId = getQualifSecCurrID();
 		if ( oldCurrId == secCurrID ) {
 			return; // nothing has changed
@@ -424,14 +428,30 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( secID == null ) {
 			throw new IllegalArgumentException("argument <secID> is null");
 		}
-		
+
 		if ( ! secID.isSet() ) {
-			throw new IllegalArgumentException("argument <secID> is null");
+			throw new IllegalArgumentException("argument <secID> is not set");
 		}
 
 		setQualifSecCurrID(new KMMQualifSecID(secID));
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setCurrID(final KMMCurrID currID) {
+		if ( currID == null ) {
+			throw new IllegalArgumentException("argument <currID> is null");
+		}
+
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
+		}
+
+		setQualifSecCurrID(new KMMQualifCurrID(currID));
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -472,6 +492,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setMemo(final String descr) {
 		if ( descr == null ) {
 			throw new IllegalArgumentException("argument <descr> is null");
@@ -483,18 +504,18 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		// }
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting memo for top-level account is forbidden for top-level accounts");
+			LOGGER.error("setMemo: Setting memo for top-level account is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting memo is forbidden for top-level accounts");
 		}
-		
+
 		String oldDescr = getMemo();
-		if ( oldDescr == descr ) {
+		if ( oldDescr.equals(descr) ) {
 			return; // nothing has changed
 		}
-		
+
 		getJwsdpPeer().setDescription(descr);
 		setIsModified();
-		
+
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
@@ -532,12 +553,12 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting type is forbidden for top-level accounts");
+			LOGGER.error("setType: Setting type is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting type is forbidden for top-level accounts");
 		}
 		
 		BigInteger oldType = getTypeBigInt();
-		if ( oldType == typeInt ) {
+		if ( oldType.equals(typeInt) ) {
 			return; // nothing has changed
 		}
 
@@ -548,10 +569,10 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		// It does not seem prudent to change an account's type when
 		// there are already transactions pointing to/from it.
 		if ( hasTransactions() ) {
-	    	LOGGER.error("Changing account type is forbidden for accounts that already contain transactions: " + getID());
+			LOGGER.error("Changing account type is forbidden for accounts that already contain transactions: " + getID());
 			throw new UnsupportedOperationException("Changing account type is forbidden for accounts that already contain transactions: " + getID());
 		}
-    	
+
 		getJwsdpPeer().setType(typeInt);
 		setIsModified();
 
@@ -583,10 +604,10 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting parent-account ID is forbidden for top-level accounts");
+			LOGGER.error("setParentAccountID: Setting parent-account ID is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting parent account ID is forbidden for top-level accounts");
 		}
-		
+
 		// 1) In child account, set reference to parent account
 		KMMComplAcctID oldPrntAcctID = getParentAccountID();
 		jwsdpPeer.setParentaccount(prntAcctID.toString());
@@ -651,6 +672,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalance() {
 		if ( myBalanceCached != null ) {
 			return myBalanceCached;
@@ -781,23 +803,24 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public FixedPointNumber getBalanceChange(final LocalDate from, final LocalDate to) {
 		FixedPointNumber retval = new FixedPointNumber();
 
 		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
 			LocalDate whenHappened = splt.getTransaction().getDatePosted();
-			
+
 			if ( ! whenHappened.isBefore(to) ) {
 				continue;
 			}
-			
+
 			if ( whenHappened.isBefore(from) ) {
 				continue;
 			}
-			
+
 			retval.add(splt.getShares()); // mutable
 		}
-		
+
 		return retval;
 	}
 	
@@ -849,7 +872,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Adding user-defined attribute is forbidden for top-level accounts");
+			LOGGER.error("addUserDefinedAttribute: Adding user-defined attribute is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Adding user-defined attribute is forbidden for top-level accounts");
 		}
 
@@ -858,10 +881,10 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
 			jwsdpPeer.setKEYVALUEPAIRS(newKVPs);
 		}
-		
+
 		HasWritableUserDefinedAttributesImpl
 			.addUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
-			                             name, value);
+										 name, value);
 	}
 
 	/**
@@ -878,7 +901,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Removing user-defined attribute is forbidden for top-level accounts");
+			LOGGER.error("removeUserDefinedAttribute: Removing user-defined attribute is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Removing user-defined attribute is forbidden for top-level accounts");
 		}
 
@@ -888,7 +911,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 		HasWritableUserDefinedAttributesImpl
 			.removeUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
-			                             	name);
+											name);
 	}
 
 	/**
@@ -905,7 +928,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("Setting user-defined attribute is forbidden for top-level accounts");
+			LOGGER.error("setUserDefinedAttribute: Setting user-defined attribute is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Setting user-defined attribute is forbidden for top-level accounts");
 		}
 
@@ -915,7 +938,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 		HasWritableUserDefinedAttributesImpl
 			.setUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
-			                             name, value);
+										 name, value);
 	}
 
 	// ---------------------------------------------------------------
@@ -944,6 +967,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 	// ---------------------------------------------------------------
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("KMyMoneyWritableAccountImpl [");

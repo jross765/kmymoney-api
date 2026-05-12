@@ -42,135 +42,136 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyAccountImpl.class);
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    // the JWSDP-object we are facading.
-    protected final ACCOUNT jwsdpPeer;
+	// the JWSDP-object we are facading.
+	protected final ACCOUNT jwsdpPeer;
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    // protected KMyMoneyObjectImpl helper;
+	// protected KMyMoneyObjectImpl helper;
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /*
-     * The splits of this transaction. May not be fully initialized during loading
-     * of the KMyMoney file.
-     */
-    private final List<KMyMoneyTransactionSplit> mySplits = new ArrayList<KMyMoneyTransactionSplit>();
+	/*
+	 * The splits of this transaction. May not be fully initialized during loading
+	 * of the KMyMoney file.
+	 */
+	private final List<KMyMoneyTransactionSplit> mySplits = new ArrayList<KMyMoneyTransactionSplit>();
 
-    /*
-     * If {@link #mySplits} needs to be sorted because it was modified. Sorting is
-     * done in a lazy way.
-     */
-    private boolean mySplitsNeedSorting = false;
-    
-    // ----------------------------
-    
-    protected List<RECONCILIATION> jwsdpRecons = null;
+	/*
+	 * If {@link #mySplits} needs to be sorted because it was modified. Sorting is
+	 * done in a lazy way.
+	 */
+	private boolean mySplitsNeedSorting = false;
+	
+	// ----------------------------
+	
+	protected List<RECONCILIATION> jwsdpRecons = null;
 
-    private final List<KMMAccountReconciliation> myRecons = new ArrayList<KMMAccountReconciliation>();
+	private final List<KMMAccountReconciliation> myRecons = new ArrayList<KMMAccountReconciliation>();
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * @param peer    the JWSDP-object we are facading.
-     * @param kmmFile the file to register under
-     */
-    @SuppressWarnings("exports")
-    public KMyMoneyAccountImpl(
-    		final ACCOUNT peer,
-    		final KMyMoneyFile kmmFile) {
-    	super(kmmFile);
+	/**
+	 * @param peer    the JWSDP-object we are facading.
+	 * @param kmmFile the file to register under
+	 */
+	@SuppressWarnings("exports")
+	public KMyMoneyAccountImpl(
+			final ACCOUNT peer,
+			final KMyMoneyFile kmmFile) {
+		super(kmmFile);
 
-    	jwsdpPeer = peer;
-    	initRecons();
+		jwsdpPeer = peer;
+		initRecons();
 	}
 	
-    @SuppressWarnings("exports")
-    public KMyMoneyAccountImpl(
+	@SuppressWarnings("exports")
+	public KMyMoneyAccountImpl(
 	    final ACCOUNT peer,
 	    final KMyMoneyFile kmmFile,
 	    final boolean addToInst) {
-    	super(kmmFile);
-    	
-    	if ( peer == null ) {
-    		throw new IllegalArgumentException("argument <peer> is null");
-    	}
-
-    	if ( kmmFile == null ) {
-    		throw new IllegalArgumentException("argument <kmmFile> is null");
-    	}
-
-    	this.jwsdpPeer = peer;
-
-    	if ( addToInst ) {
-    		KMyMoneyInstitution inst = getInstitution();
-    		if (inst == null) {
-    			LOGGER.error("No such Account id='" + getInstitutionID() + "' for Transactions-Split with id '" + getID()
-			    	+ "' description '" + getMemo() + "' in institution with id '" + getInstitution().getID() + "'");
-    		} else {
-    			((KMyMoneyInstitutionImpl) inst).addAccount(this);
-    		}
-    	}
-    }
-
-    // ---------------------------------------------------------------
-
-    private void initRecons() {
-    	if ( jwsdpPeer.getRECONCILIATIONS() != null ) {
-    		jwsdpRecons = jwsdpPeer.getRECONCILIATIONS().getRECONCILIATION();
+		super(kmmFile);
 		
-    		if ( jwsdpRecons != null ) {
-    			for ( RECONCILIATION elt : jwsdpRecons ) {
-    				KMMAccountReconciliationImpl newElt = new KMMAccountReconciliationImpl(elt);
-    				myRecons.add(newElt);
-    			}
-    		}
+		if ( peer == null ) {
+			throw new IllegalArgumentException("argument <peer> is null");
+		}
+
+		if ( kmmFile == null ) {
+			throw new IllegalArgumentException("argument <kmmFile> is null");
+		}
+
+		this.jwsdpPeer = peer;
+
+		if ( addToInst ) {
+			KMyMoneyInstitution inst = getInstitution();
+			if (inst == null) {
+				LOGGER.error("No such Account id='" + getInstitutionID() + "' for Transactions-Split with id '" + getID()
+			    	+ "' description '" + getMemo() + "' in institution with id '" + getInstitution().getID() + "'");
+			} else {
+				((KMyMoneyInstitutionImpl) inst).addAccount(this);
+			}
+		}
+	}
+
+	// ---------------------------------------------------------------
+
+	private void initRecons() {
+		if ( jwsdpPeer.getRECONCILIATIONS() != null ) {
+			jwsdpRecons = jwsdpPeer.getRECONCILIATIONS().getRECONCILIATION();
+		
+			if ( jwsdpRecons != null ) {
+				for ( RECONCILIATION elt : jwsdpRecons ) {
+					KMMAccountReconciliationImpl newElt = new KMMAccountReconciliationImpl(elt);
+					myRecons.add(newElt);
+				}
+			}
 			LOGGER.debug("init: Added " + myRecons.size() + " elements to list of reconciliations");
-    	} else {
+		} else {
 			LOGGER.debug("init: No elements to add to list of reconciliations");
-    	}
-    }
+		}
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * @return the JWSDP-object we are wrapping.
-     */
-    @SuppressWarnings("exports")
-    public ACCOUNT getJwsdpPeer() {
-    	return jwsdpPeer;
-    }
+	/**
+	 * @return the JWSDP-object we are wrapping.
+	 */
+	@Override
+	@SuppressWarnings("exports")
+	public ACCOUNT getJwsdpPeer() {
+		return jwsdpPeer;
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public KMMComplAcctID getID() {
-    	// CAUTION: In the KMyMoney file, the prefix for the special top-level accounts
-    	// is always "AStd::" (two colons).
-    	// However, the method jwsdpPeer.getId() under certain circumstances returns this 
-    	// special ID with "__" (two underscores). (I cannot explain why at the moment; 
-    	// it actually should not happen.) In these cases, we have to replace the 
-    	// double-underscore by double-colon
-    	if ( jwsdpPeer.getId().startsWith(KMMComplAcctID.SPEC_PREFIX.replace("::", "__")))
-    		return new KMMComplAcctID(jwsdpPeer.getId().replace("__", "::"));
-    	else
-    		return new KMMComplAcctID(jwsdpPeer.getId());
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public KMMComplAcctID getID() {
+		// CAUTION: In the KMyMoney file, the prefix for the special top-level accounts
+		// is always "AStd::" (two colons).
+		// However, the method jwsdpPeer.getId() under certain circumstances returns this 
+		// special ID with "__" (two underscores). (I cannot explain why at the moment; 
+		// it actually should not happen.) In these cases, we have to replace the 
+		// double-underscore by double-colon
+		if ( jwsdpPeer.getId().startsWith(KMMComplAcctID.SPEC_PREFIX.replace("::", "__")))
+			return new KMMComplAcctID(jwsdpPeer.getId().replace("__", "::"));
+		else
+			return new KMMComplAcctID(jwsdpPeer.getId());
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
 	@Override
 	public KMMInstID getInstitutionID() {
-    	try {
-    		return new KMMInstID(jwsdpPeer.getInstitution());
-    	} catch ( Exception exc ) {
-    		return null;
-    	}
+		try {
+			return new KMMInstID(jwsdpPeer.getInstitution());
+		} catch ( Exception exc ) {
+			return null;
+		}
 	}
 
 	@Override
@@ -180,107 +181,106 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			return null;
 		}
 		
-    	return getKMyMoneyFile().getInstitutionByID(instID);
+		return getKMyMoneyFile().getInstitutionByID(instID);
 	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * @see KMyMoneyAccount#getParentAccountID()
-     */
-    public KMMComplAcctID getParentAccountID() {
-    	try {
-    		// Cf. getID()
-    		if ( jwsdpPeer.getParentaccount().startsWith(KMMComplAcctID.SPEC_PREFIX.replace("::", "__")))
-    			return new KMMComplAcctID(jwsdpPeer.getParentaccount().replace("__", "::"));
-    		else
-    			return new KMMComplAcctID(jwsdpPeer.getParentaccount());
-    	} catch ( Exception exc ) {
-    		return null;
-    	}
-    }
+	/**
+	 * @see KMyMoneyAccount#getParentAccountID()
+	 */
+	public KMMComplAcctID getParentAccountID() {
+		try {
+			// Cf. getID()
+			if ( jwsdpPeer.getParentaccount().startsWith(KMMComplAcctID.SPEC_PREFIX.replace("::", "__")))
+				return new KMMComplAcctID(jwsdpPeer.getParentaccount().replace("__", "::"));
+			else
+				return new KMMComplAcctID(jwsdpPeer.getParentaccount());
+		} catch ( Exception exc ) {
+			return null;
+		}
+	}
 
-    /**
-     * @see KMyMoneyAccount#getChildren()
-     */
-    @Override
-    public List<KMyMoneyAccount> getChildren() {
-    	return getKMyMoneyFile().getAccountsByParentID(getID());
-    }
+	/**
+	 * @see KMyMoneyAccount#getChildren()
+	 */
+	@Override
+	public List<KMyMoneyAccount> getChildren() {
+		return getKMyMoneyFile().getAccountsByParentID(getID());
+	}
 
-    @Override
-    public List<KMyMoneyAccount> getChildrenRecursive() {
-    	return getChildrenRecursiveCore(getChildren());
-    }
+	@Override
+	public List<KMyMoneyAccount> getChildrenRecursive() {
+		return getChildrenRecursiveCore(getChildren());
+	}
 
-    private static List<KMyMoneyAccount> getChildrenRecursiveCore(Collection<KMyMoneyAccount> accts) {
-    	List<KMyMoneyAccount> result = new ArrayList<KMyMoneyAccount>();
-    	
-    	for ( KMyMoneyAccount acct : accts ) {
-    		result.add(acct);
-    		for ( KMyMoneyAccount childAcct : getChildrenRecursiveCore(acct.getChildren()) ) {
-    			result.add(childAcct);
-    		}
-    	}
-    	
-    	return result;
-    }
+	private static List<KMyMoneyAccount> getChildrenRecursiveCore(Collection<KMyMoneyAccount> accts) {
+		List<KMyMoneyAccount> result = new ArrayList<KMyMoneyAccount>();
+		
+		for ( KMyMoneyAccount acct : accts ) {
+			result.add(acct);
+			for ( KMyMoneyAccount childAcct : getChildrenRecursiveCore(acct.getChildren()) ) {
+				result.add(childAcct);
+			}
+		}
+		
+		return result;
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-    	return jwsdpPeer.getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMemo() {
-    	return jwsdpPeer.getDescription();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getNumber() {
-    	return jwsdpPeer.getNumber();
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Type getType() {
-    	try {
-    	    Type result = Type.valueOff( getTypeBigInt().intValue() );
-    	    return result;
-    	} catch ( Exception exc ) {
-    	    throw new UnknownAccountTypeException();
-    	}
-    }
-
-    /**
-     * <b>Using this method is discouraged.</b>
-     * Use {@link #getType()} whenever possible/applicable instead.
-     * 
-     * @return
-     * 
-     * @see #getType()
-     */
-    public BigInteger getTypeBigInt() {
-    	return jwsdpPeer.getType();
-    }
-
-    /**
+	/**
 	 * {@inheritDoc}
 	 */
-    @Override
+	@Override
+	public String getName() {
+		return jwsdpPeer.getName();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getMemo() {
+		return jwsdpPeer.getDescription();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getNumber() {
+		return jwsdpPeer.getNumber();
+	}
+
+	/**
+	 * <b>Using this method is discouraged.</b>
+	 * Use {@link #getType()} whenever possible/applicable instead.
+	 * 
+	 * @return
+	 * 
+	 * @see #getType()
+	 */
+	public BigInteger getTypeBigInt() {
+		return jwsdpPeer.getType();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Type getType() {
+		try {
+		    Type result = Type.valueOff( getTypeBigInt().intValue() );
+		    return result;
+		} catch ( Exception exc ) {
+		    throw new UnknownAccountTypeException();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public KMMQualifSecCurrID getQualifSecCurrID() {
 		KMMQualifSecCurrID result = null;
 
@@ -292,27 +292,27 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 
 		return result;
 	}
-    
-    // ----------------------------
+	
+	// ----------------------------
 
 	/**
-     * @see KMyMoneyAccount#getTransactionSplits()
-     */
-    @Override
-    public List<KMyMoneyTransactionSplit> getTransactionSplits() {
-    	if ( mySplitsNeedSorting ) {
-    		Collections.sort(mySplits);
-    		mySplitsNeedSorting = false;
-    	}
+	 * @see KMyMoneyAccount#getTransactionSplits()
+	 */
+	@Override
+	public List<KMyMoneyTransactionSplit> getTransactionSplits() {
+		if ( mySplitsNeedSorting ) {
+			Collections.sort(mySplits);
+			mySplitsNeedSorting = false;
+		}
 
-    	return mySplits;
-    }
+		return mySplits;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("argument <splt> is null");
 		}
@@ -327,7 +327,8 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
 								"new=" + splt.toString() + "\n" +
 								"old=" + old.toString());
-				LOGGER.error("addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
+				LOGGER.error(
+						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
 								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
 								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
 								"new=" + splt.toString() + "\n" +
@@ -341,74 +342,75 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			mySplits.add(splt);
 			mySplitsNeedSorting = true;
 		}
-    }
+	}
 
-    /**
-     * For internal use only.
-     *
-     * @param splt
-     * @param impl 
-     */
-    public void replaceTransactionSplit(
-    		final KMyMoneyTransactionSplit splt,
-    		final KMyMoneyTransactionSplitImpl impl) {
-    	if ( ! mySplits.remove(splt) ) {
-    		throw new IllegalArgumentException("Could not remove split from local list");
-    	}
+	/**
+	 * For internal use only.
+	 *
+	 * @param splt
+	 * @param impl 
+	 */
+	public void replaceTransactionSplit(
+			final KMyMoneyTransactionSplit splt,
+			final KMyMoneyTransactionSplitImpl impl) {
+		if ( ! mySplits.remove(splt) ) {
+			throw new IllegalArgumentException("Could not remove split from local list");
+		}
 
-    	mySplits.add(impl);
-    }
+		mySplits.add(impl);
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isClosed() {
-    	String val = getUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED);
-    	
-    	if ( val == null )
-    		return false;
-    	
-    	if ( val.equals(Const.KVP_VAL_ACCT_CLOSED) )
-    		return true;
-    	else
-    		return false;
-    }
-    
-    // ----------------------------
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasReconciliations() {
-    	return ( myRecons.size() > 0 );
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isClosed() {
+		String val = getUserDefinedAttribute(Const.KVP_KEY_ACCT_CLOSED);
+		
+		if ( val == null )
+			return false;
+		
+		if ( val.equals(Const.KVP_VAL_ACCT_CLOSED) )
+			return true;
+		else
+			return false;
+	}
+	
+	// ----------------------------
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasReconciliations() {
+		return ( myRecons.size() > 0 );
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<KMMAccountReconciliation> getReconciliations() {
-    	return myRecons;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<KMMAccountReconciliation> getReconciliations() {
+		return myRecons;
+	}
 
-    public void addReconciliation(final KMMAccountReconciliation rcon) {
-    	if ( rcon == null ) {
-    		throw new IllegalArgumentException("argument <rcon> is null");
-    	}
-    	
-    	// ::TODO check for date -- no duplicates allowed
-	    myRecons.add(rcon);
-    }
+	public void addReconciliation(final KMMAccountReconciliation rcon) {
+		if ( rcon == null ) {
+			throw new IllegalArgumentException("argument <rcon> is null");
+		}
+		
+		// ::TODO check for date -- no duplicates allowed
+		myRecons.add(rcon);
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
 			throw new IllegalArgumentException("argument <name> is null");
@@ -426,9 +428,10 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		return HasUserDefinedAttributesImpl.getUserDefinedAttributeCore(kvpList, name);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<String> getUserDefinedAttributeKeys() {
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
 			return null;
@@ -438,9 +441,10 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		return HasUserDefinedAttributesImpl.getUserDefinedAttributeKeysCore(kvpList);
 	}
 
-    // -----------------------------------------------------------------
+	// -----------------------------------------------------------------
 
-    public String toString() {
+	@Override
+	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("KMyMoneyAccountImpl [");
 
@@ -470,58 +474,58 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		buffer.append("]");
 
 		return buffer.toString();
-    }
+	}
 
-    // https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
-    @Override
-    public void printTree(StringBuilder buffer, String prefix, String childrenPrefix) {
-    	printTree(buffer, prefix, childrenPrefix, null);
-    }
-    
-    public void printTree(StringBuilder buffer, String prefix, String childrenPrefix,
-    					  KMyMoneyAccount.Type acctType) {
-    	// 1) Top node
-    	boolean hasChildrenMatchingRecurs = false;
-    	if ( acctType != null ) {
-    		hasChildrenMatchingRecurs = hasChildrenMatchingRecursive(this, acctType);
-    	}
-    	
-    	if ( acctType == null ||
-    		 this.getType() == acctType ||
-    	     hasChildrenMatchingRecurs ) {
-            buffer.append(prefix);
-            buffer.append(this.toString());
-            buffer.append('\n');
-    	}
+	// https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
+	@Override
+	public void printTree(StringBuilder buffer, String prefix, String childrenPrefix) {
+		printTree(buffer, prefix, childrenPrefix, null);
+	}
+	
+	public void printTree(StringBuilder buffer, String prefix, String childrenPrefix,
+						  KMyMoneyAccount.Type acctType) {
+		// 1) Top node
+		boolean hasChildrenMatchingRecurs = false;
+		if ( acctType != null ) {
+			hasChildrenMatchingRecurs = hasChildrenMatchingRecursive(this, acctType);
+		}
+		
+		if ( acctType == null ||
+			 this.getType() == acctType ||
+		     hasChildrenMatchingRecurs ) {
+	        buffer.append(prefix);
+	        buffer.append(this.toString());
+	        buffer.append('\n');
+		}
 
-    	// 2) Children
-        for ( Iterator<KMyMoneyAccount> it = getChildren().iterator(); it.hasNext(); ) {
-        	KMyMoneyAccountImpl next = (KMyMoneyAccountImpl) it.next();
+		// 2) Children
+	    for ( Iterator<KMyMoneyAccount> it = getChildren().iterator(); it.hasNext(); ) {
+	    	KMyMoneyAccountImpl next = (KMyMoneyAccountImpl) it.next();
 
-        	hasChildrenMatchingRecurs = false;
-        	if ( acctType != null ) {
-        		hasChildrenMatchingRecurs = hasChildrenMatchingRecursive(next, acctType);
-        	}
-        	
-        	if ( acctType == null ||
-           		 next.getType() == acctType ||
-           		 hasChildrenMatchingRecurs ) {
-                if ( it.hasNext() ) {
-                	next.printTree(buffer, childrenPrefix + "├── ", childrenPrefix + "│   ",
-                    		       acctType);
-                } else {
-                	next.printTree(buffer, childrenPrefix + "└── ", childrenPrefix + "    ",
-                				   acctType);
-            	}
-        	}
-        }
-    }
+	    	hasChildrenMatchingRecurs = false;
+	    	if ( acctType != null ) {
+	    		hasChildrenMatchingRecurs = hasChildrenMatchingRecursive(next, acctType);
+	    	}
+	    	
+	    	if ( acctType == null ||
+	    		 next.getType() == acctType ||
+	    		 hasChildrenMatchingRecurs ) {
+	    		if ( it.hasNext() ) {
+	    			next.printTree(buffer, childrenPrefix + "├── ", childrenPrefix + "│   ",
+	    					       acctType);
+	            } else {
+	            	next.printTree(buffer, childrenPrefix + "└── ", childrenPrefix + "    ",
+	            				   acctType);
+	        	}
+	    	}
+	    }
+	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 	// Helpers -- balance pre-computed
-    // We have to provide this indirection for methods calling this
-    // outside of this module, because the actual implementation is in
-    // a non-exported package.
+	// We have to provide this indirection for methods calling this
+	// outside of this module, because the actual implementation is in
+	// a non-exported package.
 
 	@Deprecated
 	public static String formatBalance(KMyMoneyAccountImpl acct, FixedPointNumber blnc) {
@@ -583,26 +587,26 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		return AccountBalanceHelper_BF.formatBalance( acct, blnc, lcl );
 	}
 	
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    public boolean hasChildrenMatching(KMyMoneyAccount acct, KMyMoneyAccount.Type acctType) {
-    	for ( KMyMoneyAccount chld : acct.getChildren() ) {
-    		if ( chld.getType() == acctType ) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+	public boolean hasChildrenMatching(KMyMoneyAccount acct, KMyMoneyAccount.Type acctType) {
+		for ( KMyMoneyAccount chld : acct.getChildren() ) {
+			if ( chld.getType() == acctType ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
-    public boolean hasChildrenMatchingRecursive(KMyMoneyAccount acct, KMyMoneyAccount.Type acctType) {
-    	for ( KMyMoneyAccount chld : acct.getChildrenRecursive() ) {
-    		if ( chld.getType() == acctType ) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+	public boolean hasChildrenMatchingRecursive(KMyMoneyAccount acct, KMyMoneyAccount.Type acctType) {
+		for ( KMyMoneyAccount chld : acct.getChildrenRecursive() ) {
+			if ( chld.getType() == acctType ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }

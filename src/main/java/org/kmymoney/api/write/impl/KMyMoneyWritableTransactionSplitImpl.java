@@ -29,24 +29,24 @@ import xyz.schnorxoborx.base.beanbase.IllegalTransactionSplitActionException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
- * Transaction-Split that can be newly created or removed from it's transaction.
+ * Transaction-Split that can be newly created or removed from its transaction.
  */
 public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSplitImpl 
-                                                  implements KMyMoneyWritableTransactionSplit 
+	                                             implements KMyMoneyWritableTransactionSplit 
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyWritableTransactionSplitImpl.class);
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
 	// Our helper to implement the KMyMoneyWritableObject-interface.
 	private final KMyMoneyWritableObjectImpl helper = new KMyMoneyWritableObjectImpl(getWritableKMyMoneyFile(), this);
 
 	// ---------------------------------------------------------------
-	
+
 	/**
 	 * @param jwsdpPeer   the JWSDP-object we are facading.
 	 * @param trx the transaction we belong to
-     * @param addSpltToAcct 
+	 * @param addSpltToAcct 
 	 * @param addSpltToPye 
 	 * @param addSpltToTags 
 	 */
@@ -54,19 +54,19 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	public KMyMoneyWritableTransactionSplitImpl(
 			final SPLIT jwsdpPeer,
 			final KMyMoneyWritableTransaction trx, 
-    		final boolean addSpltToAcct,
-    		final boolean addSpltToPye,
-    		final boolean addSpltToTags) {
+			final boolean addSpltToAcct,
+			final boolean addSpltToPye,
+			final boolean addSpltToTags) {
 		super(jwsdpPeer, trx, 
 			  addSpltToAcct, addSpltToPye, addSpltToTags);
 	}
 
-    public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplit splt) {
-    	super(splt.getJwsdpPeer(), splt.getTransaction(), 
-    		  true, true, true);
-    }
+	public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplit splt) {
+		super(splt.getJwsdpPeer(), splt.getTransaction(), 
+			  true, true, true);
+	}
 
-    /**
+	/**
 	 * create a new split and and add it to the given transaction.
 	 * @param trx transaction the transaction we will belong to
 	 * @param acct     the account we take money (or other things) from or give
@@ -96,12 +96,12 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		 trx.addSplit(this);
 	}
 
-    /**
+	/**
 	 * create a new split and and add it to the given transaction.
 	 * @param trx transaction the transaction we will belong to
 	 * @param acct     the account we take money (or other things) from or give
 	 *                    it to
-     * @param pye 
+	 * @param pye 
 	 */
 	public KMyMoneyWritableTransactionSplitImpl(
 			final KMyMoneyWritableTransactionImpl trx,
@@ -137,22 +137,22 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		 trx.addSplit(this);
 	}
 
-    public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplitImpl splt) {
-    	super(splt.getJwsdpPeer(), splt.getTransaction(), 
-    		  true, true, true);
-    }
+	public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplitImpl splt) {
+		super(splt.getJwsdpPeer(), splt.getTransaction(), 
+			  true, true, true);
+	}
 
-    public KMyMoneyWritableTransactionSplitImpl(
-    		final KMyMoneyTransactionSplitImpl split,
-    		final boolean addSpltToAcct,
-    		final boolean addSpltToPye,
-    		final boolean addSpltToTags) {
-    	super(split.getJwsdpPeer(), split.getTransaction(), 
-    		  addSpltToAcct, addSpltToPye, addSpltToTags);
-    }
+	public KMyMoneyWritableTransactionSplitImpl(
+			final KMyMoneyTransactionSplitImpl split,
+			final boolean addSpltToAcct,
+			final boolean addSpltToPye,
+			final boolean addSpltToTags) {
+		super(split.getJwsdpPeer(), split.getTransaction(), 
+			  addSpltToAcct, addSpltToPye, addSpltToTags);
+	}
 
 	// ---------------------------------------------------------------
-	
+
 	/**
 	 * Creates a new Transaction and add's it to the given KMyMoney file Don't modify
 	 * the ID of the new transaction!
@@ -194,7 +194,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		// must have an already built list of splits.
 		// Otherwise, it will create the list from the JAXB-Data
 		// thus 2 instances of this KMyMoneyWritableTransactionSplitImpl
-		// will exist. One created in getSplits() from this JAXB-Data
+		// will exist: One created in getSplits() from this JAXB-Data
 		// the other is this object.
 		trx.getSplits();
 
@@ -225,14 +225,14 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		// No:
 		// trx.getJwsdpPeer().getSPLITS().getSPLIT().add(jwsdpSplt);
 		file.setModified(true);
-    
-        	LOGGER.debug("createTransactionSplit_int: Created new transaction split (core): " + jwsdpSplt.getId());
+	
+	    	LOGGER.debug("createTransactionSplit_int: Created new transaction split (core): " + jwsdpSplt.getId());
 		
-        	return jwsdpSplt;
+	    	return jwsdpSplt;
 	}
 
 	// ---------------------------------------------------------------
-	
+
 	/**
 	 * @see KMyMoneyTransactionSplitImpl#getTransaction()
 	 */
@@ -315,25 +315,25 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	/**
 	 * @return true if the currency of transaction and account match
-     * 
-     * ::CHECK: What could we possibly need that for?
-     * 
-     * It is definitely *not* the case that a transaction's split's
-     * account's security/currency has to be the same as its resp.
-     * transaction's security/currency -- there are many real-world 
-     * instances where that is not / must not be the case (a dividend 
-     * transaction, for example).
-     * 
-     * This (or a similar) wrong assumption obviously was in one of
-     * the previous maintainers' mind, because such a check was
-     * coded into this lib before the current maintainer took over
-     * (and it took him a while to see the error).
-     * 
-     * It is, however, true that this condition must hold for at
-     * least *one* of a transaction's splits. But this is, by definition,
-     * a check to be performed on a transaction object, not a 
-     * single split object. For such a check, this could be a helper
-     * function.
+	 * 
+	 * ::CHECK: What could we possibly need that for?
+	 * 
+	 * It is definitely *not* the case that a transaction's split's
+	 * account's security/currency has to be the same as its resp.
+	 * transaction's security/currency -- there are many real-world 
+	 * instances where that is not / must not be the case (a dividend 
+	 * transaction, for example).
+	 * 
+	 * This (or a similar) wrong assumption obviously was in one of
+	 * the previous maintainers' mind, because such a check was
+	 * coded into this lib before the current maintainer took over
+	 * (and it took him a while to see the error).
+	 * 
+	 * It is, however, true that this condition must hold for at
+	 * least *one* of a transaction's splits. But this is, by definition,
+	 * a check to be performed on a transaction object, not a 
+	 * single split object. For such a check, this could be a helper
+	 * function.
 	 */
 	private boolean isSecCurrMatching() {
 		KMyMoneyAccount acct = getAccount();
@@ -362,6 +362,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalStateException("transaction's security/currency is not set");
 		}
 		
+		// Important: toString()
 		return acctSecCurrID.toString().equals( trxSecCurrID.toString() );
 	}
 
@@ -416,7 +417,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		FixedPointNumber oldVal = getValue();
 		jwsdpPeer.setValue(val.toKMyMoneyString());
 		getWritableKMyMoneyFile().setModified(true);
-		
+	
 		if ( oldVal == null || ! oldVal.equals(val) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("value", oldVal, val);
@@ -433,7 +434,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		BigFraction oldVal = getValueRat();
 		jwsdpPeer.setValue(val.toString().replaceAll("\\s", ""));
 		getWritableKMyMoneyFile().setModified(true);
-		
+
 		if ( oldVal == null || ! oldVal.equals(val) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("value", oldVal, val);
@@ -494,14 +495,14 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <num> is blank");
 		}
 	
-    	String oldNumber = getNumber();
-    	jwsdpPeer.setNumber(num);
-    	getKMyMoneyFile().setModified(true);
+		String oldNumber = getNumber();
+		jwsdpPeer.setNumber(num);
+		getKMyMoneyFile().setModified(true);
 
-    	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
-    	if ( propertyChangeSupport != null) {
-    		propertyChangeSupport.firePropertyChange("number", oldNumber, num);
-    	}
+		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+		if ( propertyChangeSupport != null) {
+			propertyChangeSupport.firePropertyChange("number", oldNumber, num);
+		}
 	}
 	
 	// ---------------------------------------------------------------
@@ -612,12 +613,12 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	}
 	
 	/**
-     * <b>Using this method is discouraged.</b>
-     * Use {@link #setAction(org.kmymoney.api.read.KMyMoneyTransactionSplit.Action)} whenever possible/applicable instead.
-     * 
-     * @return
-     * 
-     * @see #setAction(org.kmymoney.api.read.KMyMoneyTransactionSplit.Action)
+	 * <b>Using this method is discouraged.</b>
+	 * Use {@link #setAction(org.kmymoney.api.read.KMyMoneyTransactionSplit.Action)} whenever possible/applicable instead.
+	 * 
+	 * @return
+	 * 
+	 * @see #setAction(org.kmymoney.api.read.KMyMoneyTransactionSplit.Action)
 	 */
 	public void setActionStr(final String actStr) throws IllegalTransactionSplitActionException {
 		if ( actStr == null ) {
@@ -625,7 +626,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 
 		if ( actStr.isBlank() ) {
-			throw new IllegalArgumentException("argument <actStr> is null");
+			throw new IllegalArgumentException("argument <actStr> is blank");
 		}
 
 		String old = getJwsdpPeer().getAction();
@@ -655,12 +656,12 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	}
 
 	/**
-     * <b>Using this method is discouraged.</b>
-     * Use {@link #setReconState(org.kmymoney.api.read.KMyMoneyTransactionSplit.ReconState)} whenever possible/applicable instead.
-     * 
-     * @return
-     * 
-     * @see #setReconState(org.kmymoney.api.read.KMyMoneyTransactionSplit.ReconState)
+	 * <b>Using this method is discouraged.</b>
+	 * Use {@link #setReconState(org.kmymoney.api.read.KMyMoneyTransactionSplit.ReconState)} whenever possible/applicable instead.
+	 * 
+	 * @return
+	 * 
+	 * @see #setReconState(org.kmymoney.api.read.KMyMoneyTransactionSplit.ReconState)
 	 */
 	public void setReconStateInt(final int statInt) {
 		if ( statInt < 0 ) { // sic, 0 is allowed
@@ -701,10 +702,10 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("KMyMoneyWritableTransactionSplitImpl [");
 
@@ -751,7 +752,8 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		buffer.append(getPrice());
 
 		buffer.append("]");
+
 		return buffer.toString();
-    }
+	}
 
 }

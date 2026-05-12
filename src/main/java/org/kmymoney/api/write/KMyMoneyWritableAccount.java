@@ -11,6 +11,7 @@ import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 
@@ -95,8 +96,18 @@ public interface KMyMoneyWritableAccount extends KMyMoneyAccount,
 	 * @param secID
 	 * 
 	 * @see #getQualifSecCurrID()
+	 * @see #setCurrID(KMMCurrID)
 	 */
 	void setSecID(KMMSecID secID);
+	
+	/**
+	 * 
+	 * @param currID
+	 * 
+	 * @see #getQualifSecCurrID()
+	 * @see #setSecID(KMMSecID)
+	 */
+	void setCurrID(KMMCurrID currID);
 	
 	/**
 	 * 

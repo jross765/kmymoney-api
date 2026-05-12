@@ -49,10 +49,12 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyWritableTransactionImpl.class);
 
+	// ---------------------------------------------------------------
+
 	// Our helper to implement the KMyMoneyWritableObject-interface.
 	private final KMyMoneyWritableObjectImpl helper = new KMyMoneyWritableObjectImpl(getWritableKMyMoneyFile(), this);
 
-	// -----------------------------------------------------------
+	// ---------------------------------------------------------------
 
 	/**
 	 * @param kmmFile      the file we belong to
@@ -77,14 +79,34 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		super(trx.getJwsdpPeer(), trx.getKMyMoneyFile());
 
 		// ::TODO / ::CHECK
-		// System.err.println("NOT IMPLEMENTED YET");
-//	    for ( KMyMoeneyTransactionSplit splt : trx.getSplits() ) 
-//	    {
-//		addSplit(new KMyMoneyTransactionSplitImpl(splt.jwsdpPeer, trx));
-//	    }
+//		System.err.println("NOT IMPLEMENTED YET");
+//		for ( KMyMoeneyTransactionSplit splt : trx.getSplits() ) 
+//	   	{
+//			addSplit(new KMyMoneyTransactionSplitImpl(splt.jwsdpPeer, trx));
+//	    	}
 	}
 
-	// -----------------------------------------------------------
+	// ---------------------------------------------------------------
+
+	/**
+	 * The KMyMoney file is the top-level class to contain everything.
+	 *
+	 * @return the file we are associated with
+	 */
+	@Override
+	public KMyMoneyWritableFileImpl getWritableKMyMoneyFile() {
+		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	}
+
+	/**
+	 * The KMyMoney file is the top-level class to contain everything.
+	 *
+	 * @return the file we are associated with
+	 */
+	@Override
+	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	}
 
 	/**
 	 * The KMyMoney file is the top-level class to contain everything.
@@ -94,6 +116,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	public KMyMoneyWritableFileImpl getWritableFile() {
 		return (KMyMoneyWritableFileImpl) getKMyMoneyFile();
 	}
+
+	// -----------------------------------------------------------
 
 	/**
 	 * Create a new split for a split found in the jaxb-data.
@@ -113,6 +137,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		if ( helper.getPropertyChangeSupport() != null ) {
 			 helper.getPropertyChangeSupport().firePropertyChange("splits", null, getWritableSplits());
 		}
+
 		return kmmTrxSplt;
 	}
 
@@ -158,6 +183,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		if ( helper.getPropertyChangeSupport() != null ) {
 			helper.getPropertyChangeSupport().firePropertyChange("splits", null, getWritableSplits());
 		}
+		
 		return splt;
 	}
 
@@ -248,7 +274,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 				}
 			}
 		}
-		
+
 		KMyMoneyWritableAccountImpl account = (KMyMoneyWritableAccountImpl) splt.getAccount();
 		if ( account != null ) {
 			account.removeTransactionSplit(splt);
@@ -262,8 +288,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		}
 	}
 
-    /**
-     * {@inheritDoc}
+	/**
+	 * {@inheritDoc}
 	 */
 	public KMyMoneyWritableTransactionSplit getWritableSplitByID(final KMMSpltID spltID) {
 		// alt:
@@ -343,6 +369,10 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	 * @see KMyMoneyWritableTransaction#setDatePosted(LocalDateTime)
 	 */
 	public void setDatePosted(final LocalDate datePosted) {
+		if ( datePosted == null ) {
+			throw new IllegalArgumentException("argument <datePosted> is null");
+		}
+
 		this.postDate = datePosted;
 		
 		try {
@@ -401,27 +431,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		return new KMMSpltID(maxSpltNo + 1);
 	}
 
-	// ---------------------------------------------------------------
-
-	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 *
-	 * @return the file we are associated with
-	 */
-	public KMyMoneyWritableFileImpl getWritableKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-	}
-
-	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 *
-	 * @return the file we are associated with
-	 */
-	@Override
-	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-	}
-	
 	// ---------------------------------------------------------------
 
 	@Override
@@ -499,42 +508,42 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			                             name, value);
 	}
 
-    // ---------------------------------------------------------------
-    
-    @Override
-    public String toString() {
-	StringBuffer buffer = new StringBuffer();
-	buffer.append("KMyMoneyWritableTransactionImpl [");
+	// ---------------------------------------------------------------
 
-	buffer.append("id=");
-	buffer.append(getID());
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("KMyMoneyWritableTransactionImpl [");
 
-	buffer.append(", balance=");
-	buffer.append(getBalanceFormatted());
+		buffer.append("id=");
+		buffer.append(getID());
 
-	buffer.append(", memo='");
-	buffer.append(getMemo() + "'");
+		buffer.append(", balance=");
+		buffer.append(getBalanceFormatted());
 
-	buffer.append(", #splits=");
-	buffer.append(getSplitsCount());
+		buffer.append(", memo='");
+		buffer.append(getMemo() + "'");
 
-	buffer.append(", date-posted=");
-	try {
-	    buffer.append(getDatePosted().format(DATE_POSTED_FORMAT));
-	} catch (Exception e) {
-	    buffer.append(getDatePosted().toString());
+		buffer.append(", #splits=");
+		buffer.append(getSplitsCount());
+
+		buffer.append(", date-posted=");
+		try {
+			buffer.append(getDatePosted().format(DATE_POSTED_FORMAT));
+		} catch (Exception e) {
+			buffer.append(getDatePosted().toString());
+		}
+
+		buffer.append(", date-entered=");
+		try {
+			buffer.append(getDateEntered().format(DATE_ENTERED_FORMAT));
+		} catch (Exception e) {
+			buffer.append(getDateEntered().toString());
+		}
+
+		buffer.append("]");
+
+		return buffer.toString();
 	}
-
-	buffer.append(", date-entered=");
-	try {
-	    buffer.append(getDateEntered().format(DATE_ENTERED_FORMAT));
-	} catch (Exception e) {
-	    buffer.append(getDateEntered().toString());
-	}
-
-	buffer.append("]");
-
-	return buffer.toString();
-    }
 
 }
