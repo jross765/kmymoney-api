@@ -21,6 +21,8 @@ public class FileStats_Cache implements FileStats {
 	private FileCurrencyManager    currMgr = null;
 	private FilePriceManager       prcMgr  = null;
 
+	private FileBudgetManager      bdgtMgr = null;
+
 	// ---------------------------------------------------------------
 
 	public FileStats_Cache(
@@ -31,7 +33,8 @@ public class FileStats_Cache implements FileStats {
 			final FileTagManager tagMgr, 
 			final FileSecurityManager secMgr, 
 			final FileCurrencyManager currMgr,
-			final FilePriceManager prcMgr) {
+			final FilePriceManager prcMgr,
+			final FileBudgetManager bdgtMgr) {
 		this.instMgr = instMgr;
 		this.acctMgr = acctMgr;
 		this.trxMgr  = trxMgr;
@@ -40,6 +43,7 @@ public class FileStats_Cache implements FileStats {
 		this.secMgr  = secMgr;
 		this.currMgr = currMgr;
 		this.prcMgr  = prcMgr;
+		this.bdgtMgr = bdgtMgr;
 	}
 
 	public FileStats_Cache(final KMyMoneyFileImpl kmmFile) {
@@ -51,6 +55,7 @@ public class FileStats_Cache implements FileStats {
 		this.secMgr  = kmmFile.getSecMgr();
 		this.currMgr = kmmFile.getCurrMgr();
 		this.prcMgr  = kmmFile.getPrcMgr();
+		this.bdgtMgr = kmmFile.getBdgtMgr();
 	}
 
 	// ---------------------------------------------------------------
@@ -109,6 +114,13 @@ public class FileStats_Cache implements FileStats {
 	@Override
 	public int getNofEntriesPrices() {
 		return prcMgr.getNofEntriesPriceMap();
+	}
+
+	// ----------------------------
+
+	@Override
+	public int getNofEntriesBudgets() {
+		return bdgtMgr.getNofEntriesBudgetMap();
 	}
 
 }

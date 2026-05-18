@@ -3,7 +3,7 @@
 <KMYMONEY-FILE>
   <FILEINFO>
     <CREATION_DATE date="2023-10-14"/>
-    <LAST_MODIFIED_DATE date="2026-05-18T09:23:12+02:00"/>
+    <LAST_MODIFIED_DATE date="2026-05-18T12:00:38+02:00"/>
     <VERSION id="1"/>
     <FIXVERSION id="10"/>
     <APPVERSION id="5.2.2-1651c51"/>
@@ -422,7 +422,7 @@
     </TRANSACTION>
   </TRANSACTIONS>
   <KEYVALUEPAIRS>
-    <PAIR key="LastModificationDate" value="2026-05-18T09:23:12+02:00"/>
+    <PAIR key="LastModificationDate" value="2026-05-18T12:00:38+02:00"/>
     <PAIR key="kmm-baseCurrency" value="EUR"/>
     <PAIR key="kmm-id" value="{1f7ec5d2-f982-48eb-9ae3-22095e2362ee}"/>
   </KEYVALUEPAIRS>
@@ -488,6 +488,10 @@
   <REPORTS/>
   <BUDGETS>
     <BUDGET id="B000001" name="Budget 2026" start="2026-01-01" version="2">
+      <ACCOUNT id="A000037" budgetlevel="monthbymonth" budgetsubaccounts="0">
+        <PERIOD amount="750/1" start="2026-03-01"/>
+        <PERIOD amount="1500/1" start="2026-07-01"/>
+      </ACCOUNT>
       <ACCOUNT id="A000040" budgetlevel="yearly" budgetsubaccounts="0">
         <PERIOD amount="100/1" start="2026-01-01"/>
       </ACCOUNT>

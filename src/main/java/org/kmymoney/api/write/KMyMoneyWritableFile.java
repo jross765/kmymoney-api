@@ -8,6 +8,7 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.write.hlp.HasWritableUserDefinedAttributes;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Acct;
+import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Bdgt;
 import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Curr;
 import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Inst;
 import org.kmymoney.api.write.hlp.fil.KMyMoneyWritableFile_Prc;
@@ -31,6 +32,7 @@ public interface KMyMoneyWritableFile extends KMyMoneyFile,
                                               KMyMoneyWritableFile_Curr,
                                               KMyMoneyWritableFile_Sec,
                                               KMyMoneyWritableFile_Prc,
+                                              KMyMoneyWritableFile_Bdgt,
                                               HasWritableUserDefinedAttributes
 {
 	public enum CompressMode {

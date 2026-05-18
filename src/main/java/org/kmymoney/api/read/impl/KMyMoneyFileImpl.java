@@ -27,6 +27,7 @@ import org.kmymoney.api.generated.PRICES;
 import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.KMMSecCurr;
 import org.kmymoney.api.read.KMyMoneyAccount;
+import org.kmymoney.api.read.KMyMoneyBudget;
 import org.kmymoney.api.read.KMyMoneyCurrency;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyInstitution;
@@ -42,6 +43,7 @@ import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.api.read.impl.hlp.fil.FileAccountManager;
+import org.kmymoney.api.read.impl.hlp.fil.FileBudgetManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager;
 import org.kmymoney.api.read.impl.hlp.fil.FileInstitutionManager;
 import org.kmymoney.api.read.impl.hlp.fil.FilePayeeManager;
@@ -60,6 +62,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
@@ -123,6 +126,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     protected FileTagManager         tagMgr  = null;
     protected FileSecurityManager    secMgr  = null;
     protected FileCurrencyManager    currMgr = null;
+    protected FileBudgetManager      bdgtMgr = null;
     
     // ----------------------------
 
@@ -983,6 +987,41 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 
     // ---------------------------------------------------------------
     
+	@Override
+	public KMyMoneyBudget getBudgetByID(KMMBdgtID bdgtID) {
+		if ( bdgtID == null ) {
+			throw new IllegalArgumentException("argument <bdgtID> is null");
+		}
+
+		if ( ! bdgtID.isSet() ) {
+			throw new IllegalArgumentException("argument <bdgtID> is not set");
+		}
+
+		return bdgtMgr.getBudgetByID(bdgtID);
+	}
+
+	@Override
+	public Collection<KMyMoneyBudget> getBudgetsByName(String expr) {
+    	return bdgtMgr.getBudgetsByName(expr);
+	}
+
+	@Override
+	public Collection<KMyMoneyBudget> getBudgetsByName(String expr, boolean relaxed) {
+    	return bdgtMgr.getBudgetsByName(expr, relaxed);
+	}
+
+	@Override
+	public KMyMoneyBudget getBudgetByNameUniq(String expr) throws NoEntryFoundException, TooManyEntriesFoundException {
+    	return bdgtMgr.getBudgetsByNameUniq(expr);
+	}
+
+	@Override
+	public Collection<KMyMoneyBudget> getBudgets() {
+    	return bdgtMgr.getBudgets();
+	}
+
+    // ---------------------------------------------------------------
+    
     /**
      * @return the underlying JAXB-element
      */
@@ -1024,6 +1063,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	trxMgr  = new FileTransactionManager(this, withProgBar);
     	secMgr  = new FileSecurityManager(this);
     	currMgr = new FileCurrencyManager(this);
+    	bdgtMgr = new FileBudgetManager(this);
 	}
 
     // ---------------------------------------------------------------
@@ -1269,6 +1309,11 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     	return prcMgr;
     }
     
+    @SuppressWarnings("exports")
+    public FileBudgetManager getBdgtMgr() {
+    	return bdgtMgr;
+    }
+    
     // ---------------------------------------------------------------
     
     public void dump() {
@@ -1312,6 +1357,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 			strm.println("  No. of currencies:         " + stats.getNofEntriesCurrencies(KMMFileStats.Type.RAW));
 			strm.println("  No. of price pairs:        " + stats.getNofEntriesPricePairs(KMMFileStats.Type.RAW));
 			strm.println("  No. of prices:             " + stats.getNofEntriesPrices(KMMFileStats.Type.RAW));
+			strm.println("  No. of budgets:            " + stats.getNofEntriesBudgets(KMMFileStats.Type.RAW));
     	} catch (Exception e) {
     		strm.println("ERROR"); 
     	}
@@ -1374,6 +1420,12 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
         		strm.println("   o " + prc.toString());
         	}
     	}
+    	
+    	strm.println("");
+    	strm.println("Budgets:");
+    	for ( KMyMoneyBudget bdgt : getBudgets() ) {
+    		strm.println(" - " + bdgt.toString());
+    	}
     }
     // ---------------------------------------------------------------
     
@@ -1410,6 +1462,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     		result += "    No. of currencies:         " + stats.getNofEntriesCurrencies(KMMFileStats.Type.RAW) + "\n";
     		result += "    No. of price pairs:        " + stats.getNofEntriesPricePairs(KMMFileStats.Type.RAW) + "\n";
     		result += "    No. of prices:             " + stats.getNofEntriesPrices(KMMFileStats.Type.RAW) + "\n";
+    		result += "    No. of budgets:            " + stats.getNofEntriesBudgets(KMMFileStats.Type.RAW) + "\n";
     	} catch (Exception e) {
     		result += "ERROR\n"; 
     	}

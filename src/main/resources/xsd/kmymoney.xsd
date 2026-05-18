@@ -10,22 +10,22 @@
   <xs:element name="KMYMONEY-FILE">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="FILEINFO"/>
-        <xs:element ref="USER"/>
-        <xs:element ref="INSTITUTIONS"/>
-        <xs:element ref="PAYEES"/>
-        <xs:element ref="COSTCENTERS"/>
-        <xs:element ref="TAGS"/>
-        <xs:element ref="ACCOUNTS"/>
-        <xs:element ref="TRANSACTIONS"/>
-        <xs:element ref="KEYVALUEPAIRS"/>
-        <xs:element ref="SCHEDULES"/>
-        <xs:element ref="SECURITIES"/>
-        <xs:element ref="CURRENCIES"/>
-        <xs:element ref="PRICES"/>
-        <xs:element ref="REPORTS"/>
-        <xs:element ref="BUDGETS"/>
-        <xs:element ref="ONLINEJOBS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="FILEINFO"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="USER"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="INSTITUTIONS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="PAYEES"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="COSTCENTERS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="TAGS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="ACCOUNTS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="TRANSACTIONS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="SCHEDULES"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="SECURITIES"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="CURRENCIES"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="PRICES"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="REPORTS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="BUDGETS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="ONLINEJOBS"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -106,8 +106,8 @@
       <xs:complexContent>
         <xs:extension base="BASEADDRESS">
           <xs:sequence>
-            <xs:element minOccurs="0" ref="ACCOUNTIDS"/>
-            <xs:element minOccurs="0" ref="KEYVALUEPAIRS"/>
+            <xs:element minOccurs="0" maxOccurs="1" ref="ACCOUNTIDS"/>
+            <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
           </xs:sequence>
           <xs:attribute name="id" use="required" type="xs:NCName"/>
           <xs:attribute name="manager" use="required"/>
@@ -167,10 +167,17 @@
   
   <xs:element name="COSTCENTERS">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="COSTCENTER"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   
   <!-- ::TODO -->
+  <xs:element name="COSTCENTER">
+    <xs:complexType>
+    </xs:complexType>
+  </xs:element>
   
   <!-- ============================================================== -->
   
@@ -197,7 +204,7 @@
   <xs:element name="ACCOUNTS">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="ACCOUNT"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ACCOUNT"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -218,7 +225,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="SPLITS"/>
-        <xs:element minOccurs="0" ref="KEYVALUEPAIRS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
       </xs:sequence>
       <xs:attribute name="commodity" use="required" type="xs:NCName"/>
       <xs:attribute name="entrydate" use="required"/>
@@ -231,7 +238,7 @@
   <xs:element name="SPLITS">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="SPLIT"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="SPLIT"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -309,7 +316,7 @@
   <xs:element name="SECURITY">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="KEYVALUEPAIRS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
       </xs:sequence>
       <xs:attribute name="id" use="required" type="xs:NCName"/>
       <xs:attribute name="name" use="required"/>
@@ -328,7 +335,8 @@
   <xs:element name="CURRENCIES">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="CURRENCY"/>
+        <!-- CAUTION: At least one currency must be there -->
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="CURRENCY"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -456,19 +464,47 @@
   
   <xs:element name="BUDGETS">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="BUDGET"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   
-  <!-- ::TODO -->
+  <xs:element name="BUDGET">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ACCOUNT"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="start" use="required" type="xs:date"/>
+      <xs:attribute name="version" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PERIOD">
+    <xs:complexType>
+      <xs:attribute name="amount" use="required"/>
+      <xs:attribute name="start" use="required" type="xs:date"/>
+    </xs:complexType>
+  </xs:element>
   
   <!-- ============================================================== -->
   
   <xs:element name="ONLINEJOBS">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ONLINEJOB"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   
   <!-- ::TODO -->
+  <xs:element name="ONLINEJOB">
+    <xs:complexType>
+    </xs:complexType>
+  </xs:element>
+  
   
   <!-- ============================================================== -->
   <!-- ============================================================== -->
@@ -502,7 +538,7 @@
   <xs:element name="KEYVALUEPAIRS">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="PAIR"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="PAIR"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -519,10 +555,13 @@
   <xs:element name="ACCOUNT">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" ref="SUBACCOUNTS"/>
-        <xs:element minOccurs="0" ref="ONLINEBANKING"/>
-        <xs:element minOccurs="0" ref="RECONCILIATIONS"/>
-        <xs:element minOccurs="0" ref="KEYVALUEPAIRS"/>
+        <xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" ref="SUBACCOUNTS"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="PERIOD"/>
+          <xs:element minOccurs="0" maxOccurs="1" ref="ONLINEBANKING"/>
+        </xs:choice>
+        <xs:element minOccurs="0" maxOccurs="1" ref="RECONCILIATIONS"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
       </xs:sequence>
       <xs:attribute name="currency" type="xs:NCName"/>
       <xs:attribute name="description"/>
@@ -535,6 +574,10 @@
       <xs:attribute name="opened"/>
       <xs:attribute name="parentaccount" type="xs:anyURI"/>
       <xs:attribute name="type" type="xs:integer"/>
+      
+      <!-- For budgets only: -->
+      <xs:attribute name="budgetlevel" use="required"/>
+      <xs:attribute name="budgetsubaccounts" use="required" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
   
@@ -543,7 +586,7 @@
   <xs:element name="SUBACCOUNTS">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="SUBACCOUNT"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="SUBACCOUNT"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -564,10 +607,12 @@
     </xs:complexType>
   </xs:element>
 
+  <!-- ============================ -->
+  
   <xs:element name="RECONCILIATIONS">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="RECONCILIATION"/>
+      <xs:sequence>   
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="RECONCILIATION"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -1,6 +1,7 @@
 package org.kmymoney.api.write.hlp;
 
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
@@ -14,14 +15,16 @@ public interface IDManager {
 
 	KMMAcctID getNewAccountID();
 
-	KMMTrxID getNewTransactionID();
+	KMMTrxID  getNewTransactionID();
 
 	KMMSpltID getNewSplitID();
 
-	KMMPyeID getNewPayeeID();
+	KMMPyeID  getNewPayeeID();
 
-	KMMTagID getNewTagID();
+	KMMTagID  getNewTagID();
 
-	KMMSecID getNewSecurityID();
+	KMMSecID  getNewSecurityID();
+
+	KMMBdgtID getNewBudgetID();
 
 }

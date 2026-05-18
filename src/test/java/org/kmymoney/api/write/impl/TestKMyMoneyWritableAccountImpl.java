@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
@@ -725,11 +726,22 @@ public class TestKMyMoneyWritableAccountImpl {
 		document.getDocumentElement().normalize();
 		//      System.err.println("xxxx XML normalized");
 
-		NodeList nList = document.getElementsByTagName("ACCOUNT");
-		assertEquals(ConstTest.Stats.NOF_ACCT + 1, nList.getLength());
+		// getElementsByTagName("ACCOUNT") will not do, because
+		// this would also return the sub-nodes of all budgets
+		NodeList nList0 = document.getElementsByTagName("ACCOUNTS");
+		assertEquals(1, nList0.getLength());
+		NodeList temp = nList0.item(0).getChildNodes();
+		ArrayList<Node> nList1 = new ArrayList<Node>();
+		for ( int i = 0; i < temp.getLength(); i++ ) {
+			Node nd = temp.item(i);
+			if ( nd.getNodeName().equals("ACCOUNT") ) {
+				nList1.add(nd);
+			}
+		}
+		assertEquals(ConstTest.Stats.NOF_ACCT + 1, nList1.size());
 
 		// Last (new) node
-		Node lastNode = nList.item(nList.getLength() - 1);
+		Node lastNode = nList1.get(nList1.size() - 1);
 		assertEquals(Node.ELEMENT_NODE, lastNode.getNodeType());
 		Element elt = (Element) lastNode;
 		assertEquals("" + KMyMoneyAccount.Type.LIABILITY.getCode(), elt.getAttribute("type"));
@@ -789,11 +801,22 @@ public class TestKMyMoneyWritableAccountImpl {
 		document.getDocumentElement().normalize();
 		//      System.err.println("xxxx XML normalized");
 
-		NodeList nList = document.getElementsByTagName("ACCOUNT");
-		assertEquals(ConstTest.Stats.NOF_ACCT + 3, nList.getLength());
+		// getElementsByTagName("ACCOUNT") will not do, because
+		// this would also return the sub-nodes of all budgets
+		NodeList nList0 = document.getElementsByTagName("ACCOUNTS");
+		assertEquals(1, nList0.getLength());
+		NodeList temp = nList0.item(0).getChildNodes();
+		ArrayList<Node> nList1 = new ArrayList<Node>();
+		for ( int i = 0; i < temp.getLength(); i++ ) {
+			Node nd = temp.item(i);
+			if ( nd.getNodeName().equals("ACCOUNT") ) {
+				nList1.add(nd);
+			}
+		}
+		assertEquals(ConstTest.Stats.NOF_ACCT + 3, nList1.size());
 
 		// Last three nodes (the new ones)
-		Node node = nList.item(nList.getLength() - 3);
+		Node node = nList1.get(nList1.size() - 3);
 		assertEquals(Node.ELEMENT_NODE, node.getNodeType());
 		Element elt = (Element) node;
 		assertEquals("" + KMyMoneyAccount.Type.LIABILITY.getCode(), elt.getAttribute("type"));
@@ -801,7 +824,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals("SNAF", elt.getAttribute("name"));
 		assertEquals("Stuff never accounted for", elt.getAttribute("description"));
 
-		node = nList.item(nList.getLength() - 2);
+		node = nList1.get(nList1.size() - 2);
 		assertEquals(Node.ELEMENT_NODE, node.getNodeType());
 		elt = (Element) node;
 		assertEquals("" + KMyMoneyAccount.Type.CHECKING.getCode(), elt.getAttribute("type"));
@@ -809,7 +832,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals("BAHAMAS SECRET", elt.getAttribute("name"));
 		assertEquals("My very VERY secret account on the Bahamas", elt.getAttribute("description"));
 
-		node = nList.item(nList.getLength() - 1);
+		node = nList1.get(nList1.size() - 1);
 		assertEquals(Node.ELEMENT_NODE, node.getNodeType());
 		elt = (Element) node;
 		assertEquals("" + KMyMoneyAccount.Type.CASH.getCode(), elt.getAttribute("type"));

@@ -91,4 +91,11 @@ public class FileStats_Raw implements FileStats {
 		return result;
 	}
 
+	// ----------------------------
+
+	@Override
+	public int getNofEntriesBudgets() {
+		return kmmFile.getRootElement().getBUDGETS().getBUDGET().size();
+	}
+
 }

@@ -8,7 +8,7 @@ public interface KMyMoneyWritableFile_Inst {
 	/**
 	 * @param instID 
 	 * @param id the unique id of the institution to look for
-	 * @return the customer or null if it's not found
+	 * @return the institution or null if it's not found
 	 * 
 	 * @see #getInstitutionByID(KMMInstID)
 	 */
@@ -24,7 +24,7 @@ public interface KMyMoneyWritableFile_Inst {
 
 	/**
 	 *
-	 * @param inst the transaction to remove.
+	 * @param inst the institution to remove.
 	 */
 	void removeInstitution(KMyMoneyWritableInstitution inst);
 

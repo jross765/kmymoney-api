@@ -140,6 +140,16 @@ public class KMMFileStats {
 		return FileStats.ERROR; // Compiler happy
 	}
 	
+	public int getNofEntriesBudgets(Type type) {
+		if ( type == Type.RAW ) {
+			return raw.getNofEntriesBudgets();
+		} else if ( type == Type.CACHE ) {
+			return che.getNofEntriesBudgets();
+		}
+
+		return FileStats.ERROR; // Compiler happy
+	}
+	
 	// ---------------------------------------------------------------
 	
 	public boolean equals(KMMFileStats other) {
@@ -188,6 +198,11 @@ public class KMMFileStats {
 			return false;
 		}
 									
+		if ( other.getNofEntriesBudgets(Type.RAW)     != getNofEntriesBudgets(Type.RAW) ||
+			 other.getNofEntriesBudgets(Type.CACHE)   != getNofEntriesBudgets(Type.CACHE)) {
+				return false;
+		}
+										
 		return true;
 	}
 

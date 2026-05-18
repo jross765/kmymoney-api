@@ -8,6 +8,7 @@ import org.kmymoney.api.pricedb.ComplexPriceTable;
 import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
 import org.kmymoney.api.read.hlp.KMyMoneyObject;
 import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Acct;
+import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Bdgt;
 import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Curr;
 import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Inst;
 import org.kmymoney.api.read.hlp.fil.KMyMoneyFile_Prc;
@@ -32,6 +33,7 @@ public interface KMyMoneyFile extends KMyMoneyObject,
 									  KMyMoneyFile_Curr,
 									  KMyMoneyFile_Prc,
 									  KMyMoneyFile_Tag,
+									  KMyMoneyFile_Bdgt,
 									  HasUserDefinedAttributes 
 {
 

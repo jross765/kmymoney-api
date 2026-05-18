@@ -28,6 +28,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.ACCOUNT;
+import org.kmymoney.api.generated.BUDGET;
 import org.kmymoney.api.generated.CURRENCY;
 import org.kmymoney.api.generated.INSTITUTION;
 import org.kmymoney.api.generated.KEYVALUEPAIRS;
@@ -43,6 +44,7 @@ import org.kmymoney.api.generated.TRANSACTION;
 import org.kmymoney.api.read.KMMSecCurr;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyAccount.Type;
+import org.kmymoney.api.read.KMyMoneyBudget;
 import org.kmymoney.api.read.KMyMoneyCurrency;
 import org.kmymoney.api.read.KMyMoneyInstitution;
 import org.kmymoney.api.read.KMyMoneyPayee;
@@ -53,6 +55,7 @@ import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
+import org.kmymoney.api.read.impl.KMyMoneyBudgetImpl;
 import org.kmymoney.api.read.impl.KMyMoneyCurrencyImpl;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.KMyMoneyInstitutionImpl;
@@ -65,6 +68,7 @@ import org.kmymoney.api.read.impl.KMyMoneyTransactionImpl;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
 import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
 import org.kmymoney.api.write.KMyMoneyWritableAccount;
+import org.kmymoney.api.write.KMyMoneyWritableBudget;
 import org.kmymoney.api.write.KMyMoneyWritableCurrency;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritableInstitution;
@@ -87,6 +91,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
@@ -350,6 +355,7 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		trxMgr  = new org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager(this, withProgBar);
 		secMgr  = new org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager(this);
 		currMgr = new org.kmymoney.api.write.impl.hlp.fil.FileCurrencyManager(this);
+		bdgtMgr = new org.kmymoney.api.write.impl.hlp.fil.FileBudgetManager(this);
 	}
 
 	// ---------------------------------------------------------------
@@ -406,6 +412,11 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	
 	protected PRICE createPriceType() {
 		PRICE retval = getObjectFactory().createPRICE();
+		return retval;
+	}
+	
+	protected BUDGET createBudgetType() {
+		BUDGET retval = getObjectFactory().createBUDGET();
 		return retval;
 	}
 	
@@ -1529,6 +1540,45 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	}
 
 	// ---------------------------------------------------------------
+	
+	@Override
+	public KMyMoneyWritableBudget getWritableBudgetByID(KMMBdgtID bdgtID) {
+		if ( bdgtID == null ) {
+			throw new IllegalArgumentException("argument <bdgtID> is null");
+		}
+
+		if ( ! bdgtID.isSet() ) {
+			throw new IllegalArgumentException("argument <bdgtID> is not set");
+		}
+
+		KMyMoneyBudget bdgt = super.getBudgetByID(bdgtID);
+		return new KMyMoneyWritableBudgetImpl((KMyMoneyBudgetImpl) bdgt);
+	}
+
+	/**
+	 * This overridden method creates the writable version of the returned object.
+	 *
+	 * @return the new budget
+	 */
+	@Override
+	public KMyMoneyWritableBudget createWritableBudget(final String name) {
+		KMyMoneyWritableBudgetImpl inst = new KMyMoneyWritableBudgetImpl(this);
+		inst.setName(name);
+		((org.kmymoney.api.write.impl.hlp.fil.FileBudgetManager) super.bdgtMgr)
+			.addBudget(inst);
+		
+		return inst;
+	}
+
+	@Override
+	public void removeBudget(KMyMoneyWritableBudget bdgt) {
+		((org.kmymoney.api.write.impl.hlp.fil.FileBudgetManager) super.bdgtMgr)
+			.removeBudget(bdgt);
+		getRootElement().getBUDGETS().getBUDGET().remove(((KMyMoneyWritableBudgetImpl) bdgt).getJwsdpPeer());
+		setModified(true);
+	}
+	
+	// ---------------------------------------------------------------
 	// ::TODO Description
 	// ---------------------------------------------------------------
 	
@@ -1674,6 +1724,26 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		return new KMMSecID(counter);
 	}
 	
+	@Override
+	public KMMBdgtID getNewBudgetID() {
+		int counter = 0;
+		
+		for ( KMyMoneyBudget bdgt : getBudgets() ) {
+			try {
+				String coreID = bdgt.getID().get().substring(1);
+				if ( Integer.parseInt(coreID) > counter ) {
+					counter = Integer.parseInt(coreID);
+				}
+			} catch (Exception e) {
+				throw new CannotGenerateKMMIDException();
+			}
+		}
+		
+		counter++;
+		
+		return new KMMBdgtID(counter);
+	}
+
 	// ---------------------------------------------------------------
 
 	@Override

@@ -26,6 +26,8 @@ public class ConstTest extends Const {
     	public static final int NOF_PRCPR     = 4;
     	public static final int NOF_PRC       = 20;
     
+    	public static final int NOF_BDGT      = 1;
+        
     }
 
 }

@@ -118,6 +118,12 @@ public class TestKMyMoneyFileImpl {
 		assertEquals(ConstTest.Stats.NOF_PRC, kmmFileStats.getNofEntriesPrices(KMMFileStats.Type.CACHE));
 	}
 
+	@Test
+	public void test09() throws Exception {
+		assertEquals(ConstTest.Stats.NOF_BDGT, kmmFileStats.getNofEntriesBudgets(KMMFileStats.Type.RAW));
+		assertEquals(ConstTest.Stats.NOF_BDGT, kmmFileStats.getNofEntriesBudgets(KMMFileStats.Type.CACHE));
+	}
+
 	// ---------------------------------------------------------------
 
 	@Test
@@ -153,6 +159,7 @@ public class TestKMyMoneyFileImpl {
 		assertEquals(kmmFile.getCurrencies().toString(), kmmFile2.getCurrencies().toString());
 		assertEquals(kmmFile.getPricePairs().toString(), kmmFile2.getPricePairs().toString());
 		assertEquals(kmmFile.getPrices().toString(), kmmFile2.getPrices().toString());
+		assertEquals(kmmFile.getBudgets().toString(), kmmFile2.getBudgets().toString());
 	}
 
 	// ---------------------------------------------------------------

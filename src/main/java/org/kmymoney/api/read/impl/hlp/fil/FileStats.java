@@ -34,4 +34,8 @@ public interface FileStats {
 
     int getNofEntriesPrices();
 
+    // ----------------------------
+    
+    int getNofEntriesBudgets();
+
 }
