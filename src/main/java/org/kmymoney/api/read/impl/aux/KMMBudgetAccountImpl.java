@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl 
 							      implements KMMBudgetAccount 
 {
-    @SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMMBudgetAccountImpl.class);
 
     // -----------------------------------------------------------
@@ -27,7 +26,7 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 
     // -----------------------------------------------------------
     
-    protected KMyMoneyBudget parent = null;
+    protected final KMyMoneyBudget parent;
 
     // -----------------------------------------------------------
 
@@ -60,10 +59,19 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
     // -----------------------------------------------------------------
 
 	@Override
+	public KMyMoneyBudget getParent() {
+		return parent;
+	}
+
+    // -----------------------------------------------------------------
+
+	@Override
 	public KMMAcctID getAcctID() {
 		return new KMMAcctID(jwsdpPeer.getId());
 	}
 
+	// ::TODO move that mapping into the enum type,
+	// analogously to the other enums.
 	@Override
 	public Level getLevel() {
 		if ( jwsdpPeer.getBudgetlevel() == null ) {
@@ -87,7 +95,7 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 			return false;
 		}
 		
-		if ( jwsdpPeer.getBudgetsubaccounts() == BigInteger.ONE ) {
+		if ( jwsdpPeer.getBudgetsubaccounts().equals( BigInteger.ONE ) ) {
 			return true;
 		} else {
 			return false;
@@ -134,6 +142,12 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 			result += ", includes-sub-accounts=" + includesSubAccounts();
 		} catch (Exception e) {
 			result += ", includes-sub-accounts=" + "ERROR";
+		}
+
+		try {
+			result += ", nof-periods=" + getPeriods().size();
+		} catch (Exception e) {
+			result += ", nof-periods=" + getAcctID();
 		}
 
 		result += "]";

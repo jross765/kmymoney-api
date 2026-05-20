@@ -1,6 +1,7 @@
 package org.kmymoney.api.read.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyBudget;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.aux.KMMBudgetAccount;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 
 import junit.framework.JUnit4TestAdapter;
@@ -61,6 +63,7 @@ public class TestKMyMoneyBudgetImpl {
 	@Test
 	public void test01_1() throws Exception {
 		bdgt = kmmFile.getBudgetByID(BDGT_1_ID);
+		assertNotEquals(null, bdgt);
 
 		assertEquals(BDGT_1_ID, bdgt.getID());
 		assertEquals("Budget 2026", bdgt.getName());
@@ -73,25 +76,66 @@ public class TestKMyMoneyBudgetImpl {
 		assertEquals("A000043", bdgt.getAccounts().get(3).getAcctID().toString());
 		assertEquals("A000044", bdgt.getAccounts().get(4).getAcctID().toString());
 
+		assertEquals(2, bdgt.getPeriods(new KMMAcctID("A000037")).size());
+		assertEquals(1, bdgt.getPeriods(new KMMAcctID("A000040")).size());
+		assertEquals(1, bdgt.getPeriods(new KMMAcctID("A000041")).size());
+		assertEquals(1, bdgt.getPeriods(new KMMAcctID("A000043")).size());
+		assertEquals(1, bdgt.getPeriods(new KMMAcctID("A000044")).size());
+
 		KMMBudgetAccount bdgtAcct = bdgt.getAccounts().get(0);
 		assertEquals(KMMBudgetAccount.Level.MONTH_BY_MONTH, bdgtAcct.getLevel());
+		// .
 		assertEquals(2, bdgtAcct.getPeriods().size());
+		assertEquals(LocalDate.of(2026, 3, 1), bdgtAcct.getPeriods().get(0).getStart());
+		assertEquals(750.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("750,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted());
+		// .
+		assertEquals(LocalDate.of(2026, 7, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart());
+		assertEquals(1500.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted());
 		
 		bdgtAcct = bdgt.getAccounts().get(1);
 		assertEquals(KMMBudgetAccount.Level.YEARLY, bdgtAcct.getLevel());
+		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
+		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
+		assertEquals(100.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("100,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted());
+		// .
+		// The rest is redundant, because there is only one period for this account:
+//		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart());
+//		assertEquals(100.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+//		assertEquals("100,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted());
 		
 		bdgtAcct = bdgt.getAccounts().get(2);
 		assertEquals(KMMBudgetAccount.Level.MONTHLY, bdgtAcct.getLevel());
+		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
+		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
+		assertEquals(800.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("800,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted());
+		// .
+		// The eest is redundant, cf. above
 		
 		bdgtAcct = bdgt.getAccounts().get(3);
 		assertEquals(KMMBudgetAccount.Level.YEARLY, bdgtAcct.getLevel());
+		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
+		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
+		assertEquals(12000.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("12.000,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted());
+		// .
+		// The eest is redundant, cf. above
 		
 		bdgtAcct = bdgt.getAccounts().get(4);
 		assertEquals(KMMBudgetAccount.Level.MONTHLY, bdgtAcct.getLevel());
+		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
+		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
+		assertEquals(200.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("200,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted());
+		// .
+		// The eest is redundant, cf. above
 	}
 
 }

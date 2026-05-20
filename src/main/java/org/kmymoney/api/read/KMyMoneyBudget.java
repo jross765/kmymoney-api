@@ -4,14 +4,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.kmymoney.api.read.aux.KMMBudgetAccount;
+import org.kmymoney.api.read.aux.KMMBudgetPeriod;
 import org.kmymoney.api.read.hlp.KMyMoneyObject;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 
 public interface KMyMoneyBudget extends KMyMoneyObject
 {
 
-    KMMBdgtID getID() throws InvalidQualifSecCurrIDException;
+    KMMBdgtID getID();
     
     String getName();
     
@@ -19,10 +20,10 @@ public interface KMyMoneyBudget extends KMyMoneyObject
     
     String getStartStr();
     
-    String getVersion();
-    
     // ---------------------------------------------------------------
     
     List<KMMBudgetAccount> getAccounts();
+	
+    List<KMMBudgetPeriod>  getPeriods(KMMAcctID acctID);
 	
 }

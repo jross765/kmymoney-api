@@ -2,15 +2,18 @@ package org.kmymoney.api.read.impl.aux;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.PERIOD;
+import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.aux.KMMBudgetAccount;
 import org.kmymoney.api.read.aux.KMMBudgetPeriod;
+import org.kmymoney.api.read.impl.hlp.AmountFormatter_BF;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +24,13 @@ public class KMMBudgetPeriodImpl extends KMyMoneyObjectImpl
     @SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMMBudgetPeriodImpl.class);
 
-    protected static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
-    
     // -----------------------------------------------------------
 
     protected final PERIOD jwsdpPeer;
 
     // -----------------------------------------------------------
     
-    protected KMMBudgetAccount parent = null;
+    protected final KMMBudgetAccount parent;
 
     // -----------------------------------------------------------
 
@@ -62,9 +63,11 @@ public class KMMBudgetPeriodImpl extends KMyMoneyObjectImpl
     // -----------------------------------------------------------------
 
 	@Override
-	public BigFraction getAmount() {
-		return BigFraction.parse(jwsdpPeer.getAmount());
+	public KMMBudgetAccount getParent() {
+		return parent;
 	}
+
+    // -----------------------------------------------------------------
 
 	@Override
     public LocalDate getStart() {
@@ -89,18 +92,39 @@ public class KMMBudgetPeriodImpl extends KMyMoneyObjectImpl
 		return jwsdpPeer.getStart().toString();
     }
 
+    // ----------------------------
+
+	@Override
+	public BigFraction getAmount() {
+		return BigFraction.parse(jwsdpPeer.getAmount());
+	}
+
+	@Override
+	public String getAmountFormatted() {
+		return getAmountFormatted(Locale.getDefault());
+	}
+
+	public String getAmountFormatted(final Locale lcl) {
+		KMyMoneyAccount acct = kmmFile.getAccountByID(parent.getAcctID());
+    	return AmountFormatter_BF.formatAmount( getKMyMoneyFile(),
+    											getAmount(), acct.getQualifSecCurrID(), lcl );	}
+
     // -----------------------------------------------------------------
 
     @Override
     public String toString() {
 		String result = "KMMBudgetPeriodImpl [";
 
-		result += "amount=" + getAmount();
+		try {
+			result += "start=" + getStart();
+		} catch (Exception e) {
+			result += "start=" + "ERROR";
+		}
 
 		try {
-			result += ", start=" + getStart();
+			result += ", amount=" + getAmountFormatted();
 		} catch (Exception e) {
-			result += ", start=" + "ERROR";
+			result += ", amount=" + "ERROR";
 		}
 
 		result += "]";

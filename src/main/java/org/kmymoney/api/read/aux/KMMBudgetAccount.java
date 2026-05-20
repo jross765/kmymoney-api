@@ -2,6 +2,7 @@ package org.kmymoney.api.read.aux;
 
 import java.util.List;
 
+import org.kmymoney.api.read.KMyMoneyBudget;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 
 public interface KMMBudgetAccount {
@@ -12,6 +13,10 @@ public interface KMMBudgetAccount {
 		MONTH_BY_MONTH
 	}
 	
+	// ---------------------------------------------------------------
+	
+	KMyMoneyBudget getParent();
+
 	// ---------------------------------------------------------------
 
     KMMAcctID getAcctID();

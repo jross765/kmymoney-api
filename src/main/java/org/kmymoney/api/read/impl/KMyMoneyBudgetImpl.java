@@ -11,8 +11,10 @@ import org.kmymoney.api.generated.BUDGET;
 import org.kmymoney.api.read.KMyMoneyBudget;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.aux.KMMBudgetAccount;
+import org.kmymoney.api.read.aux.KMMBudgetPeriod;
 import org.kmymoney.api.read.impl.aux.KMMBudgetAccountImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,15 +97,6 @@ public class KMyMoneyBudgetImpl extends KMyMoneyObjectImpl
 		return jwsdpPeer.getStart().toString();
     }
 
-	@Override
-	public String getVersion() {
-    	if ( jwsdpPeer.getVersion() == null ) {
-    		return null;
-    	}
-
-    	return jwsdpPeer.getVersion();
-	}
-
     // -----------------------------------------------------------
     
     @Override
@@ -124,6 +117,19 @@ public class KMyMoneyBudgetImpl extends KMyMoneyObjectImpl
 		return result;
     }
 
+	@Override
+	public List<KMMBudgetPeriod> getPeriods(KMMAcctID acctID) {
+		// List<KMMBudgetPeriod> result = new ArrayList<GCshBudgetPeriod>();
+
+		for ( KMMBudgetAccount acct : getAccounts() ) {
+			if ( acct.getAcctID().equals( acctID ) ) {
+				return acct.getPeriods();
+			}
+		}
+		
+		return null;
+	}
+
     // -----------------------------------------------------------------
     
     @Override
@@ -133,9 +139,9 @@ public class KMyMoneyBudgetImpl extends KMyMoneyObjectImpl
 		result += "id=" + getID() + ", ";
 		result += "name='" + getName() + "', ";
 		result += "start=" + getStart() + ", ";
-		result += "version='" + getVersion() + "', ";
 		
-		result += "nof-entries=" + getAccounts().size();
+		// result += "nof-periods=" + getNofPeriods() + ", ";
+		result += "nof-accounts=" + getAccounts().size();
 		
 		result += "]";
 

@@ -6,10 +6,18 @@ import org.apache.commons.numbers.fraction.BigFraction;
 
 public interface KMMBudgetPeriod {
 	
-    BigFraction getAmount();
-    
+	KMMBudgetAccount getParent();
+
+	// ---------------------------------------------------------------
+
     LocalDate getStart();
 
     String    getStartStr();
+
+    // ----------------------------
+    
+    BigFraction getAmount();
+    
+    String      getAmountFormatted();
 
 }

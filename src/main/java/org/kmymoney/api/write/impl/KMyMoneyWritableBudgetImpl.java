@@ -173,7 +173,6 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 
 		result += ", name='" + getName() + "'";
 		result += ", start=" + getStart();
-		result += ", version='" + getVersion() + "'";
 
 		result += "]";
 
