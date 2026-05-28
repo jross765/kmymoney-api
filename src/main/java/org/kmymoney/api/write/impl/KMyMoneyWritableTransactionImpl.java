@@ -98,24 +98,16 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 	}
 
-	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 *
-	 * @return the file we are associated with
-	 */
-	@Override
-	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-	}
-
-	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 *
-	 * @return the file we are associated with
-	 */
-	public KMyMoneyWritableFileImpl getWritableFile() {
-		return (KMyMoneyWritableFileImpl) getKMyMoneyFile();
-	}
+//	/**
+//	 * The KMyMoney file is the top-level class to contain everything.
+//	 *
+//	 * @return the file we are associated with
+//	 */
+//	@Override
+//	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//	}
+//
 
 	// -----------------------------------------------------------
 
@@ -258,7 +250,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	public void remove(final KMyMoneyWritableTransactionSplit splt) {
 		jwsdpPeer.getSPLITS().getSPLIT()
 			.remove(((KMyMoneyWritableTransactionSplitImpl) splt).getJwsdpPeer());
-		getWritableFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 		
 		if ( mySplits == null ) { 
 			// important!
@@ -280,7 +272,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			account.removeTransactionSplit(splt);
 		}
 
-		getWritableFile().removeTransactionSplit(splt);
+		getWritableKMyMoneyFile().removeTransactionSplit(splt);
 		// there is no count for splits up to now
 		// getWritableFile().decrementCountDataFor()
 		if ( helper.getPropertyChangeSupport() != null ) {
@@ -340,7 +332,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	 * @see KMyMoneyWritableTransaction#remove()
 	 */
 	public void remove() {
-		getWritableFile().removeTransaction(this);
+		getWritableKMyMoneyFile().removeTransaction(this);
 //		Collection<KMyMoneyWritableTransactionSplit> c = new LinkedList<KMyMoneyWritableTransactionSplit>();
 //		c.addAll(getWritableSplits());
 //		for ( KMyMoneyWritableTransactionSplit element : c ) {
@@ -362,7 +354,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	public void setDateEntered(final LocalDate dateEntered) {
 		this.entryDate = dateEntered;
 		jwsdpPeer.setEntrydate(DATE_ENTERED_FORMAT.format(dateEntered));
-		getWritableFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 	}
 
 	/**
@@ -389,7 +381,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			throw new DateMappingException();
 		}
 
-		getWritableFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 	}
 
 	/**
@@ -403,7 +395,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
 		String old = jwsdpPeer.getMemo();
 		jwsdpPeer.setMemo(desc);
-		getWritableFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		if ( old == null || ! old.equals(desc) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
@@ -452,7 +444,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
-			ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
+			ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
 			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
 			jwsdpPeer.setKEYVALUEPAIRS(newKVPs);
 		}

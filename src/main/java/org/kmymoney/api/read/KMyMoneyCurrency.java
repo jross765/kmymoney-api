@@ -3,6 +3,7 @@ package org.kmymoney.api.read;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.kmymoney.api.read.hlp.KMyMoneyObject;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
@@ -14,7 +15,7 @@ import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
  * <br>
  * Cf. <a href="https://en.wikipedia.org/wiki/Currency">Wikipedia</a>
  */
-public interface KMyMoneyCurrency {
+public interface KMyMoneyCurrency extends KMyMoneyObject {
 
     /**
      * @return Returns the technical ID (in this particular case, the ISO currency code) 

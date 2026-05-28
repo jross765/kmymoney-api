@@ -141,6 +141,9 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
     	// ---
     	      
     	Type(int code) {
+    		if ( code <= 0 )
+    			throw new IllegalArgumentException( "argument <code> is <= 0" );
+
     	    this.code = code;
     	}
     	      

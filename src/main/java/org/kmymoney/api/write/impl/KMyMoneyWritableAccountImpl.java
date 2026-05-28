@@ -211,13 +211,13 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-	}
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//	}
 
 	// ---------------------------------------------------------------
 
@@ -877,7 +877,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
-			ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
+			ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
 			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
 			jwsdpPeer.setKEYVALUEPAIRS(newKVPs);
 		}

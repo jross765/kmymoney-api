@@ -1,8 +1,11 @@
 package org.kmymoney.api.write.aux;
 
 import org.kmymoney.api.read.aux.KMMAddress;
+import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 
-public interface KMMWritableAddress extends KMMAddress {
+public interface KMMWritableAddress extends KMMAddress,
+                                            KMyMoneyWritableObject
+{
 
 	/**
 	 * 
@@ -16,7 +19,7 @@ public interface KMMWritableAddress extends KMMAddress {
 	 * 
 	 * @param city
 	 * 
-	 * @see #getCity()c
+	 * @see #getCity()
 	 */
     void  setCity(String city);
 
@@ -31,7 +34,7 @@ public interface KMMWritableAddress extends KMMAddress {
 
     /**
      * 
-     * @param county
+     * @param country
      * 
      * @see #getCountry()
      */

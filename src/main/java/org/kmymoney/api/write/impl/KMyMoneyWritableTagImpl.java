@@ -124,8 +124,8 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
     @Override
     public void remove() {
     	TAG peer = jwsdpPeer;
-    	(getKMyMoneyFile()).getRootElement().getTAGS().getTAG().remove(peer);
-    	(getKMyMoneyFile()).removeTag(this);
+    	getKMyMoneyFile().getRootElement().getTAGS().getTAG().remove(peer);
+    	getWritableKMyMoneyFile().removeTag(this);
     }
 
     // ---------------------------------------------------------------
@@ -140,15 +140,15 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
     	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
     }
 
-    /**
-     * The KMyMoney file is the top-level class to contain everything.
-     *
-     * @return the file we are associated with
-     */
-    @Override
-    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-    }
+//    /**
+//     * The KMyMoney file is the top-level class to contain everything.
+//     *
+//     * @return the file we are associated with
+//     */
+//    @Override
+//    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//    }
 
     // ---------------------------------------------------------------
 
@@ -167,7 +167,7 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
 
     	String oldName = getName();
     	jwsdpPeer.setName(name);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null) {
@@ -192,7 +192,7 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
 
 		String oldNotes = getNotes();
 		jwsdpPeer.setNotes(notes);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {

@@ -1,10 +1,12 @@
 package org.kmymoney.api.read.aux;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.read.hlp.KMyMoneyObject;
 
-public interface KMMBudgetPeriod {
+public interface KMMBudgetPeriod extends KMyMoneyObject {
 	
 	KMMBudgetAccount getParent();
 
@@ -19,5 +21,7 @@ public interface KMMBudgetPeriod {
     BigFraction getAmount();
     
     String      getAmountFormatted();
+
+    String      getAmountFormatted(Locale lcl);
 
 }

@@ -6,6 +6,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.RECONCILIATION;
+import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.aux.KMMAccountReconciliation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +19,27 @@ public class KMMAccountReconciliationImpl implements KMMAccountReconciliation {
 
 	// ---------------------------------------------------------------
 
-	private RECONCILIATION jwsdpPeer = null;
+	protected final RECONCILIATION jwsdpPeer;
+	
+	protected final KMyMoneyFile myFile;
 	
 	// ---------------------------------------------------------------
 
 	@SuppressWarnings("exports")
-	public KMMAccountReconciliationImpl(final RECONCILIATION newPeer) {
+	public KMMAccountReconciliationImpl(
+			final RECONCILIATION newPeer,
+			final KMyMoneyFile kmmFile) {
+		super();
+		
 		this.jwsdpPeer = newPeer;
+		this.myFile = kmmFile;
+	}
+
+	// ---------------------------------------------------------------
+
+	@Override
+	public KMyMoneyFile getKMyMoneyFile() {
+		return myFile;
 	}
 
 	// ---------------------------------------------------------------

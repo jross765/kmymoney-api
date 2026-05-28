@@ -107,15 +107,15 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
     	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
     }
 
-    /**
-     * The KMyMoney file is the top-level class to contain everything.
-     *
-     * @return the file we are associated with
-     */
-    @Override
-    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-    }
+//    /**
+//     * The KMyMoney file is the top-level class to contain everything.
+//     *
+//     * @return the file we are associated with
+//     */
+//    @Override
+//    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//    }
 
     // ---------------------------------------------------------------
 
@@ -134,7 +134,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
 
     	String oldName = getName();
     	jwsdpPeer.setName(name);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if (propertyChangeSupport != null) {
@@ -154,7 +154,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
 
     	String oldSymb = getSymbol();
     	jwsdpPeer.setSymbol(symb);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -174,7 +174,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
 		
 		BigInteger oldPP = getPP();
 		jwsdpPeer.setPp(pp);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {
@@ -196,7 +196,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
 			oldMthd = RoundingMethod.UNKNOWN;
 		}
 		jwsdpPeer.setRoundingMethod(mthd.getCode());
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {
@@ -216,7 +216,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
 		
 		BigInteger oldSAF = getSAF();
 		jwsdpPeer.setSaf(saf);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {
@@ -236,7 +236,7 @@ public class KMyMoneyWritableCurrencyImpl extends KMyMoneyCurrencyImpl
 		
 		BigInteger oldSCF = getSCF();
 		jwsdpPeer.setPp(scf);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {

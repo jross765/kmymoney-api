@@ -77,8 +77,8 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	 */
 	public void remove() throws ObjectCascadeException {
 		SECURITY peer = jwsdpPeer;
-		(getKMyMoneyFile()).getRootElement().getSECURITIES().getSECURITY().remove(peer);
-		(getKMyMoneyFile()).removeSecurity(this);
+		getKMyMoneyFile().getRootElement().getSECURITIES().getSECURITY().remove(peer);
+		getWritableKMyMoneyFile().removeSecurity(this);
 	}
 
 	// ---------------------------------------------------------------
@@ -153,7 +153,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 
 		String oldSymb = getSymbol();
 		jwsdpPeer.setSymbol(symb);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -220,7 +220,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 
 		BigInteger oldType = getTypeBigInt();
 		jwsdpPeer.setType(type);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -244,7 +244,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		}
 		
 		jwsdpPeer.setName(name);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -264,7 +264,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		
 		BigInteger oldPP = getPP();
 		jwsdpPeer.setPp(pp);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -284,7 +284,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		
 		KMMSecCurr.RoundingMethod oldMeth = getRoundingMethod();
 		jwsdpPeer.setRoundingMethod(meth.getCode());
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -304,7 +304,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		
 		BigInteger oldSAF = getSAF();
 		jwsdpPeer.setSaf(saf);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -324,7 +324,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 
 		KMMQualifCurrID oldCurrID = getTradingCurrency();
 		jwsdpPeer.setTradingCurrency(currID.getCurrID().get().getCurrencyCode());
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -344,7 +344,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 
 		String oldMkt = getTradingMarket();
 		jwsdpPeer.setTradingMarket(mkt);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if (propertyChangeSupport != null) {
@@ -363,15 +363,15 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 	}
 
-	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 *
-	 * @return the file we are associated with
-	 */
-	@Override
-	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-	}
+//	/**
+//	 * The KMyMoney file is the top-level class to contain everything.
+//	 *
+//	 * @return the file we are associated with
+//	 */
+//	@Override
+//	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//	}
 
 	// ---------------------------------------------------------------
 
@@ -394,7 +394,7 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
-			ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
+			ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
 			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
 			jwsdpPeer.setKEYVALUEPAIRS(newKVPs);
 		}

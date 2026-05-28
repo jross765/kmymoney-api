@@ -3,6 +3,7 @@ package org.kmymoney.api.write.impl.aux;
 import org.kmymoney.api.generated.ADDRESS;
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.read.impl.aux.KMMAddressImpl;
+import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.aux.KMMWritableAddress;
 import org.kmymoney.api.write.impl.KMyMoneyWritableFileImpl;
 import org.kmymoney.api.write.impl.KMyMoneyWritableInstitutionImpl;
@@ -22,31 +23,51 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
     // ---------------------------------------------------------------
 
     @SuppressWarnings("exports")
-    public KMMWritableAddressImpl(final ADDRESS jwsdpPeer) {
-    	super(jwsdpPeer);
+    public KMMWritableAddressImpl(
+    		final ADDRESS jwsdpPeer,
+    		final KMyMoneyWritableFile kmmFile) {
+    	super(jwsdpPeer, kmmFile);
     }
 
     public KMMWritableAddressImpl(final KMMAddressImpl addr) {
-    	super(addr.getJwsdpPeer());
+    	super(addr.getJwsdpPeer(), addr.getKMyMoneyFile());
     }
 
 	public KMMWritableAddressImpl(final KMyMoneyWritableInstitutionImpl inst) {
-		super(createAddress_int(inst.getWritableKMyMoneyFile(), inst));
+		super(createAddress_int(inst.getWritableKMyMoneyFile(), inst), inst.getKMyMoneyFile());
 
 		inst.setAddress(this);
 	}
 
 	public KMMWritableAddressImpl(final KMyMoneyWritablePayeeImpl pye) {
-		super(createAddress_int(pye.getWritableKMyMoneyFile(), pye));
+		super(createAddress_int(pye.getWritableKMyMoneyFile(), pye), pye.getKMyMoneyFile());
 
 		pye.setAddress(this);
 	}
 
 	// ---------------------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public KMyMoneyWritableFileImpl getWritableKMyMoneyFile() {
+		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+	}
+
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//	}
+
+	// ---------------------------------------------------------------
 	
 	/**
-	 * Creates a new Transaction and add's it to the given KMyMoney file Don't modify
-	 * the ID of the new transaction!
+	 * Creates a new Transaction and add's it to the given KMyMoney file.
+	 * Don't modify the ID of the new object!
 	 */
 	protected static ADDRESS createAddress_int(
 			final KMyMoneyWritableFileImpl file, 
@@ -68,7 +89,7 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
 		ADDRESS jwsdpAddr = fact.createADDRESS();
 		
 		// NO, not here but in the calling method:
-		// trx.addAddress(new KMyMoneyWritableAddressImpl(jwsdpAddr, pye.getKMyMoneyFile(), pye));
+		// trx.addAddress(new KMyMoneyWritableAddressImpl(jwsdpAddr, inst.getKMyMoneyFile(), inst));
 		file.setModified(true);
     
         LOGGER.debug("createAddress_int: Created new address (core)");
@@ -77,8 +98,8 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
 	}
 
 	/**
-	 * Creates a new Transaction and add's it to the given KMyMoney file Don't modify
-	 * the ID of the new transaction!
+	 * Creates a new Transaction and add's it to the given KMyMoney file.
+	 * Don't modify the ID of the new object!
 	 */
 	protected static ADDRESS createAddress_int(
 			final KMyMoneyWritableFileImpl file, 
@@ -103,7 +124,7 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
 		// trx.addAddress(new KMyMoneyWritableAddressImpl(jwsdpAddr, pye.getKMyMoneyFile(), pye));
 		file.setModified(true);
     
-        LOGGER.debug("createAddress_int: Created new address (core)");
+        LOGGER.debug("createAddress_int: Created new address (core): " + jwsdpAddr);
 		
         return jwsdpAddr;
 	}
@@ -111,48 +132,48 @@ public class KMMWritableAddressImpl extends KMMAddressImpl
     // ---------------------------------------------------------------
 
 	@Override
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		getJwsdpPeer().setStreet(street);		
 	}
 
 	@Override
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		getJwsdpPeer().setCity(city);		
 	}
 
 	@Override
 	@Deprecated
-	public void setCounty(String county) {
+	public void setCounty(final String county) {
 		getJwsdpPeer().setCounty(county);		
 	}
 
 	@Override
-	public void setCountry(String country) {
+	public void setCountry(final String country) {
 		getJwsdpPeer().setCountry(country);		
 	}
 
 	@Override
-	public void setState(String state) {
+	public void setState(final String state) {
 		getJwsdpPeer().setState(state);		
 	}
 
 	@Override
-	public void setPostCode(String postCode) {
+	public void setPostCode(final String postCode) {
 		getJwsdpPeer().setPostcode(postCode);		
 	}
 
 	@Override
-	public void setZip(String zip) {
+	public void setZip(final String zip) {
 		getJwsdpPeer().setZip(zip);		
 	}
 
 	@Override
-	public void setZipCode(String zipCode) {
+	public void setZipCode(final String zipCode) {
 		getJwsdpPeer().setZipcode(zipCode);		
 	}
 
 	@Override
-	public void setTelephone(String telephone) {
+	public void setTelephone(final String telephone) {
 		getJwsdpPeer().setTelephone(telephone);		
 	}
     

@@ -123,7 +123,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		
 			if ( jwsdpRecons != null ) {
 				for ( RECONCILIATION elt : jwsdpRecons ) {
-					KMMAccountReconciliationImpl newElt = new KMMAccountReconciliationImpl(elt);
+					KMMAccountReconciliationImpl newElt = new KMMAccountReconciliationImpl(elt, kmmFile);
 					myRecons.add(newElt);
 				}
 			}

@@ -72,6 +72,8 @@ public class TestKMMBudgetPeriodImpl {
 		assertNotEquals(null, bdgtAcct);
 		assertEquals(bdgt, bdgtAcct.getParent());
 		
+		assertEquals(2, bdgtAcct.getPeriods().size());
+		
 		KMMBudgetPeriod bdgtPrd = bdgtAcct.getPeriods().get(0);
 		assertNotEquals(null, bdgtPrd);
 		assertEquals(bdgt, bdgtAcct.getParent());
@@ -80,6 +82,15 @@ public class TestKMMBudgetPeriodImpl {
 		assertEquals("2026-03-01", bdgtPrd.getStartStr());
 		assertEquals(750.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals("750,00 €", bdgtPrd.getAmountFormatted());
+
+		bdgtPrd = bdgtAcct.getPeriods().get(1);
+		assertNotEquals(null, bdgtPrd);
+		assertEquals(bdgt, bdgtAcct.getParent());
+		
+		assertEquals(LocalDate.of(2026, 7, 1), bdgtPrd.getStart());
+		assertEquals("2026-07-01", bdgtPrd.getStartStr());
+		assertEquals(1500.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("1.500,00 €", bdgtPrd.getAmountFormatted());
 	}
 
 }

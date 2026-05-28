@@ -12,7 +12,6 @@ import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
-import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
@@ -75,7 +74,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	public KMyMoneyWritableTransactionSplitImpl(
 			final KMyMoneyWritableTransactionImpl trx,
 			final KMyMoneyAccount acct) {
-		super(createTransactionSplit_int(trx.getWritableFile(), 
+		super(createTransactionSplit_int(trx.getWritableKMyMoneyFile(), 
 				                         trx, acct, null, null,
 				                         trx.getNewSplitID()),
 		      trx,
@@ -108,7 +107,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			final KMyMoneyAccount acct,
 			final KMyMoneyPayee pye,
 			final Collection<KMyMoneyTag> tagList) {
-		super(createTransactionSplit_int(trx.getWritableFile(), 
+		super(createTransactionSplit_int(trx.getWritableKMyMoneyFile(), 
 				                         trx, acct, pye, tagList,
 				                         trx.getNewSplitID()),
 		      trx,
@@ -497,7 +496,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	
 		String oldNumber = getNumber();
 		jwsdpPeer.setNumber(num);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null) {
@@ -559,7 +558,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <tagID> is not set");
 		}
 		
-		ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
+		ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
 		SPLIT.TAG jwsdpSpltTag = fact.createSPLITTAG();
 		jwsdpSpltTag.setId(tagID.toString());
 		
@@ -692,15 +691,15 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 	}
 
-	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 *
-	 * @return the file we are associated with
-	 */
-	@Override
-	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-	}
+//	/**
+//	 * The KMyMoney file is the top-level class to contain everything.
+//	 *
+//	 * @return the file we are associated with
+//	 */
+//	@Override
+//	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//	}
 
 	// ---------------------------------------------------------------
 

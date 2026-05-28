@@ -1,6 +1,7 @@
 package org.kmymoney.api.read.impl.aux;
 
 import org.kmymoney.api.generated.ADDRESS;
+import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.aux.KMMAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,19 +13,24 @@ public class KMMAddressImpl implements KMMAddress {
 
 	// ---------------------------------------------------------------
 
-	/**
-	 * The JWSDP-object we are wrapping.
-	 */
+	// The JWSDP-object we are wrapping.
 	private final ADDRESS jwsdpPeer;
 
+    protected final KMyMoneyFile myFile;
+    
 	// ---------------------------------------------------------------
 
 	/**
 	 * @param newPeer the JWSDP-object we are wrapping.
 	 */
 	@SuppressWarnings("exports")
-	public KMMAddressImpl(final ADDRESS newPeer) {
-		jwsdpPeer = newPeer;
+	public KMMAddressImpl(
+			final ADDRESS newPeer,
+			final KMyMoneyFile kmmFile) {
+		super();
+		
+		this.jwsdpPeer = newPeer;
+		this.myFile = kmmFile;
 	}
 
 	// ---------------------------------------------------------------
@@ -36,6 +42,10 @@ public class KMMAddressImpl implements KMMAddress {
 	public ADDRESS getJwsdpPeer() {
 		return jwsdpPeer;
 	}
+
+    public KMyMoneyFile getKMyMoneyFile() {
+    	return myFile;
+    }
 
 	// -----------------------------------------------------------
 

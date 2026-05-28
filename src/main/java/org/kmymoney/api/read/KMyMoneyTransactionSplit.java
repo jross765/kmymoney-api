@@ -64,7 +64,13 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     	// ---
 	      
     	Action(String code) {
-    		this.code = code;
+    		if ( code == null )
+    			throw new IllegalArgumentException( "argument <code> is null" );
+
+    		if ( code.isBlank() )
+    			throw new IllegalArgumentException( "argument <code> is blank" );
+
+    		this.code = code.trim();
     	}
 	      
     	// ---
@@ -100,6 +106,9 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
     	// ---
 	      
     	ReconState(int index) {
+    		if ( index < 0 )
+    			throw new IllegalArgumentException( "argument <index> is < 0" );
+
     		this.index = index;
     	}
 	      

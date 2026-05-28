@@ -118,16 +118,39 @@ public class KMyMoneyBudgetImpl extends KMyMoneyObjectImpl
     }
 
 	@Override
-	public List<KMMBudgetPeriod> getPeriods(KMMAcctID acctID) {
-		// List<KMMBudgetPeriod> result = new ArrayList<GCshBudgetPeriod>();
+	public KMMBudgetAccount getAccount(final KMMAcctID acctID) {
+		if ( acctID == null ) {
+			throw new IllegalArgumentException("argument <acctID> is null");
+		}
+
+		if ( ! acctID.isSet() ) {
+			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
 
 		for ( KMMBudgetAccount acct : getAccounts() ) {
-			if ( acct.getAcctID().equals( acctID ) ) {
-				return acct.getPeriods();
+			if ( acct.getAcctID().equals(acctID) ) {
+				return acct;
 			}
 		}
 		
 		return null;
+	}
+
+    protected void addAccount(final KMMBudgetAccountImpl bdgtAcct) {
+    	if ( ! jwsdpPeer.getACCOUNT().contains( bdgtAcct.getJwsdpPeer() ) ) {
+    		jwsdpPeer.getACCOUNT().add( bdgtAcct.getJwsdpPeer() );
+    	}
+
+//    	List<KMMBudgetAccount> accts = getAccounts();
+//    	if ( ! accts.contains(bdgtAcct) ) {
+//    		accts.add(bdgtAcct);
+//    	}
+    }
+
+    @Override
+	public List<KMMBudgetPeriod> getPeriods(KMMAcctID acctID) {
+    	KMMBudgetAccount acct = getAccount(acctID);
+    	return acct.getPeriods();
 	}
 
     // -----------------------------------------------------------------

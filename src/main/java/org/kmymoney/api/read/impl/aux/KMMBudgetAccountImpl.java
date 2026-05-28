@@ -70,23 +70,17 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 		return new KMMAcctID(jwsdpPeer.getId());
 	}
 
-	// ::TODO move that mapping into the enum type,
-	// analogously to the other enums.
 	@Override
 	public Level getLevel() {
 		if ( jwsdpPeer.getBudgetlevel() == null ) {
 			return null;
 		}
 		
-		if ( jwsdpPeer.getBudgetlevel().equals("monthly") ) {
-			return Level.MONTHLY;
-		} else if ( jwsdpPeer.getBudgetlevel().equals("yearly") ) {
-			return Level.YEARLY;
-		} else if ( jwsdpPeer.getBudgetlevel().equals("monthbymonth") ) {
-			return Level.MONTH_BY_MONTH;
+		if ( jwsdpPeer.getBudgetlevel().isBlank() ) {
+			return null;
 		}
 		
-		return null; // Compiler happy
+		return Level.valueOff( jwsdpPeer.getBudgetlevel() );
 	}
 
 	@Override
@@ -119,6 +113,17 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 
 		return result;
 	}
+
+    protected void addPeriod(final KMMBudgetPeriodImpl bdgtPrd) {
+    	if ( ! jwsdpPeer.getPERIOD().contains( bdgtPrd.getJwsdpPeer() ) ) {
+    		jwsdpPeer.getPERIOD().add( bdgtPrd.getJwsdpPeer() );
+    	}
+
+//    	List<KMMBudgetPeriod> prds = getPeriods();
+//    	if ( ! prds.contains(bdgtPrd) ) {
+//    		prds.add(bdgtPrd);
+//    	}
+    }
 
     // -----------------------------------------------------------------
 

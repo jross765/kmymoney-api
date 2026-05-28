@@ -1,13 +1,11 @@
 package org.kmymoney.api.read.impl.aux;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.numbers.fraction.BigFraction;
-import org.kmymoney.api.Const;
 import org.kmymoney.api.generated.PERIOD;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
@@ -104,6 +102,7 @@ public class KMMBudgetPeriodImpl extends KMyMoneyObjectImpl
 		return getAmountFormatted(Locale.getDefault());
 	}
 
+	@Override
 	public String getAmountFormatted(final Locale lcl) {
 		KMyMoneyAccount acct = kmmFile.getAccountByID(parent.getAcctID());
     	return AmountFormatter_BF.formatAmount( getKMyMoneyFile(),
@@ -116,9 +115,9 @@ public class KMMBudgetPeriodImpl extends KMyMoneyObjectImpl
 		String result = "KMMBudgetPeriodImpl [";
 
 		try {
-			result += "start=" + getStart();
+			result += "start-date=" + getStart();
 		} catch (Exception e) {
-			result += "start=" + "ERROR";
+			result += "start-date=" + "ERROR";
 		}
 
 		try {

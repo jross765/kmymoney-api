@@ -1,6 +1,8 @@
 package org.kmymoney.api.read.aux;
 
-public interface KMMAddress {
+import org.kmymoney.api.read.hlp.KMyMoneyObject;
+
+public interface KMMAddress extends KMyMoneyObject {
 
     /**
      * @return the street of the address

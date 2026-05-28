@@ -228,6 +228,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     		jwsdpPeer.getSPLITS().getSPLIT().add(impl.getJwsdpPeer());
     	}
 
+    	// ::TODO ::CHECK: The following code is useless, isn't it?
     	Collection<KMyMoneyTransactionSplit> splits = getSplits();
     	if ( ! splits.contains(impl) ) {
     		splits.add(impl);

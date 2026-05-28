@@ -126,8 +126,8 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
     @Override
     public void remove() {
     	INSTITUTION peer = jwsdpPeer;
-    	(getKMyMoneyFile()).getRootElement().getINSTITUTIONS().getINSTITUTION().remove(peer);
-    	(getKMyMoneyFile()).removeInstitution(this);
+    	getKMyMoneyFile().getRootElement().getINSTITUTIONS().getINSTITUTION().remove(peer);
+    	getWritableKMyMoneyFile().removeInstitution(this);
     }
 
     // ---------------------------------------------------------------
@@ -142,15 +142,15 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
     	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
     }
 
-    /**
-     * The KMyMoney file is the top-level class to contain everything.
-     *
-     * @return the file we are associated with
-     */
-    @Override
-    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-    }
+//    /**
+//     * The KMyMoney file is the top-level class to contain everything.
+//     *
+//     * @return the file we are associated with
+//     */
+//    @Override
+//    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//    }
 
     // ---------------------------------------------------------------
 
@@ -158,7 +158,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
      * @see KMyMoneyWritableInstitution#getWritableAddress()
      */
     public KMMWritableAddress getWritableAddress() {
-    	return new KMMWritableAddressImpl(jwsdpPeer.getADDRESS());
+    	return new KMMWritableAddressImpl(jwsdpPeer.getADDRESS(), getWritableKMyMoneyFile());
     }
 
     // ---------------------------------------------------------------
@@ -178,7 +178,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 
     	String oldName = getName();
     	jwsdpPeer.setName(name);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null) {
@@ -202,7 +202,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 	
 		String oldSortCode = getSortCode();
 		jwsdpPeer.setSortcode(sortCode);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 	
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {
@@ -224,7 +224,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 		{
 
 			if ( jwsdpPeer.getADDRESS() == null ) {
-				jwsdpPeer.setADDRESS(getKMyMoneyFile().getObjectFactory().createADDRESS());
+				jwsdpPeer.setADDRESS(getWritableKMyMoneyFile().getObjectFactory().createADDRESS());
 			}
 
 			jwsdpPeer.getADDRESS().setCity(adr.getCity());
@@ -237,7 +237,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 			jwsdpPeer.getADDRESS().setZipcode(adr.getZipCode());
 		}
 
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
     }
 
     // ---------------------------------------------------------------
@@ -310,7 +310,7 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
-			ObjectFactory fact = getKMyMoneyFile().getObjectFactory();
+			ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
 			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
 			jwsdpPeer.setKEYVALUEPAIRS(newKVPs);
 		}

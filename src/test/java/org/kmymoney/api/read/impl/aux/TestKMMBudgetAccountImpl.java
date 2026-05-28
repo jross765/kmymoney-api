@@ -13,6 +13,7 @@ import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.aux.KMMBudgetAccount;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.TestKMyMoneyBudgetImpl;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMBdgtID;
 
 import junit.framework.JUnit4TestAdapter;
@@ -20,6 +21,8 @@ import junit.framework.JUnit4TestAdapter;
 public class TestKMMBudgetAccountImpl {
 	public static final KMMBdgtID BDGT_1_ID = TestKMyMoneyBudgetImpl.BDGT_1_ID;
 	// public static final KMMBdgtID BDGT_2_ID = new KMMBdgtID("xyz");
+
+	private static final KMMAcctID ACCT_1_ID = TestKMyMoneyBudgetImpl.ACCT_1_ID;
 
 	// -----------------------------------------------------------------
 
@@ -70,7 +73,7 @@ public class TestKMMBudgetAccountImpl {
 		assertNotEquals(null, bdgtAcct);
 		assertEquals(bdgt, bdgtAcct.getParent());
 		
-		assertEquals("A000037", bdgtAcct.getAcctID().toString());
+		assertEquals(ACCT_1_ID, bdgtAcct.getAcctID());
 		assertEquals(KMMBudgetAccount.Level.MONTH_BY_MONTH, bdgtAcct.getLevel());
 		assertEquals(false, bdgtAcct.includesSubAccounts());
 		

@@ -47,7 +47,13 @@ public interface KMyMoneyPrice extends Comparable<KMyMoneyPrice>,
     	// ---
     	      
     	Source(String code) {
-    	    this.code = code;
+    		if ( code == null )
+    			throw new IllegalArgumentException( "argument <code> is null" );
+
+    		if ( code.isBlank() )
+    			throw new IllegalArgumentException( "argument <code> is blank" );
+
+    	    this.code = code.trim();
     	}
     	      
     	// ---

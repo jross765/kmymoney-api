@@ -31,15 +31,6 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 	void setCurrencyID(String id);
 
 	/**
-	 * The KMyMoney file is the top-level class to contain everything.
-	 * 
-	 * @return the file we are associated with
-	 * 
-	 * @see #getKMyMoneyFile()
-	 */
-	KMyMoneyWritableFile getWritableFile();
-
-	/**
 	 * @param dateEntered the day (time is ignored) that this transaction has been
 	 *                    entered into the system
 	 *                    

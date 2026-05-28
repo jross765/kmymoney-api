@@ -24,6 +24,8 @@ public interface KMyMoneyBudget extends KMyMoneyObject
     
     List<KMMBudgetAccount> getAccounts();
 	
+    KMMBudgetAccount getAccount(KMMAcctID acctID);
+	
     List<KMMBudgetPeriod>  getPeriods(KMMAcctID acctID);
 	
 }

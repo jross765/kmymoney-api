@@ -23,10 +23,19 @@ public class KMMSecCurr {
     	// ---
 
     	Type(BigInteger code) {
+    		if ( code == null )
+    			throw new IllegalArgumentException( "argument <code> is null" );
+
+    		if ( code.intValue() < 0 )
+    			throw new IllegalArgumentException( "argument <code> is < 0" );
+
     	    this.code = code;
     	}
 
     	Type(int code) {
+    		if ( code < 0 )
+    			throw new IllegalArgumentException( "argument <code> is < 0" );
+
     	    this.code = BigInteger.valueOf(code);
     	}
 
@@ -88,10 +97,19 @@ public class KMMSecCurr {
     	// ---
 
     	RoundingMethod(BigInteger code) {
+    		if ( code == null )
+    			throw new IllegalArgumentException( "argument <code> is null" );
+
+    		if ( code.intValue() < 0 )
+    			throw new IllegalArgumentException( "argument <code> < 0" );
+
     	    this.code = code;
     	}
 
     	RoundingMethod(int code) {
+    		if ( code < 0 )
+    			throw new IllegalArgumentException( "argument <code> is < 0" );
+
     	    this.code = BigInteger.valueOf(code);
     	}
 

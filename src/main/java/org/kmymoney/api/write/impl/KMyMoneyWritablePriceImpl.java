@@ -94,15 +94,15 @@ public class KMyMoneyWritablePriceImpl extends KMyMoneyPriceImpl
     	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
     }
 
-    /**
-     * The KMyMoney file is the top-level class to contain everything.
-     *
-     * @return the file we are associated with
-     */
-    @Override
-    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-    }
+//    /**
+//     * The KMyMoney file is the top-level class to contain everything.
+//     *
+//     * @return the file we are associated with
+//     */
+//    @Override
+//    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//    }
 
     // ---------------------------------------------------------------
     

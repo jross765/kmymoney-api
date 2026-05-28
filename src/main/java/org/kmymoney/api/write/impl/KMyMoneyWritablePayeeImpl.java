@@ -143,8 +143,8 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     @Override
     public void remove() {
     	PAYEE peer = jwsdpPeer;
-    	(getKMyMoneyFile()).getRootElement().getPAYEES().getPAYEE().remove(peer);
-    	(getKMyMoneyFile()).removePayee(this);
+    	getKMyMoneyFile().getRootElement().getPAYEES().getPAYEE().remove(peer);
+    	getWritableKMyMoneyFile().removePayee(this);
     }
 
     // ---------------------------------------------------------------
@@ -159,15 +159,15 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
     }
 
-    /**
-     * The KMyMoney file is the top-level class to contain everything.
-     *
-     * @return the file we are associated with
-     */
-    @Override
-    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
-    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
-    }
+//    /**
+//     * The KMyMoney file is the top-level class to contain everything.
+//     *
+//     * @return the file we are associated with
+//     */
+//    @Override
+//    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
+//    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
+//    }
 
     // ---------------------------------------------------------------
 
@@ -175,7 +175,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
      * @see KMyMoneyWritablePayee#getWritableAddress()
      */
     public KMMWritableAddress getWritableAddress() {
-    	return new KMMWritableAddressImpl(jwsdpPeer.getADDRESS());
+    	return new KMMWritableAddressImpl(jwsdpPeer.getADDRESS(), getWritableKMyMoneyFile());
     }
 
     // ---------------------------------------------------------------
@@ -195,7 +195,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
     	String oldName = getName();
     	jwsdpPeer.setName(name);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null) {
@@ -220,7 +220,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 		{
 
 			if ( jwsdpPeer.getADDRESS() == null ) {
-				jwsdpPeer.setADDRESS(getKMyMoneyFile().getObjectFactory().createADDRESS());
+				jwsdpPeer.setADDRESS(getWritableKMyMoneyFile().getObjectFactory().createADDRESS());
 			}
 
 			jwsdpPeer.getADDRESS().setCity(adr.getCity());
@@ -233,7 +233,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 			jwsdpPeer.getADDRESS().setZipcode(adr.getZipCode());
 		}
 
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
     }
 
     /**
@@ -252,7 +252,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
 		String oldNotes = getNotes();
 		jwsdpPeer.setNotes(notes);
-		getKMyMoneyFile().setModified(true);
+		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
 		if ( propertyChangeSupport != null ) {
@@ -282,7 +282,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 			// I think this branch cannot practically be reached
 			e.printStackTrace();
 		}
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -305,7 +305,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
     	String oldEml = getEmail();
     	jwsdpPeer.setEmail(eml);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -328,7 +328,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
     	String oldRef = getReference();
     	jwsdpPeer.setReference(ref);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -353,7 +353,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
     	String oldPatt = getIDPattern();
     	jwsdpPeer.setIdpattern(patt);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -376,7 +376,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
     	String oldTpl = getURLTemplate();
     	jwsdpPeer.setUrltemplate(tpl);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -394,7 +394,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	boolean oldEnbl = getMatchingEnabled();
     	BigInteger enblRaw = ( enbl == true ? BigInteger.ONE : BigInteger.ZERO );
     	jwsdpPeer.setMatchingenabled(enblRaw);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -458,7 +458,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 
     	String oldKeysRaw = getMatchKeysRaw();
     	jwsdpPeer.setReference(keysRaw);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -474,7 +474,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	boolean oldVal = getUsingMatchKey();
     	BigInteger valRaw = ( val == true ? BigInteger.ONE : BigInteger.ZERO );
     	jwsdpPeer.setUsingmatchkey(valRaw);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {
@@ -490,7 +490,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	boolean oldVal = getUsingMatchKey();
     	BigInteger valRaw = ( val == true ? BigInteger.ONE : BigInteger.ZERO );
     	jwsdpPeer.setMatchignorecase(valRaw);
-    	getKMyMoneyFile().setModified(true);
+    	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
     	if ( propertyChangeSupport != null ) {

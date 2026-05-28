@@ -110,7 +110,7 @@ public class KMyMoneyPayeeImpl extends KMyMoneyObjectImpl
 		if ( jwsdpPeer.getADDRESS() == null )
 			return null;
 
-		return new KMMAddressImpl(jwsdpPeer.getADDRESS());
+		return new KMMAddressImpl(jwsdpPeer.getADDRESS(), kmmFile);
 	}
 
     /**
