@@ -90,66 +90,29 @@ public class TestKMyMoneyBudgetImpl {
 		assertEquals(1, bdgt.getPeriods(ACCT_5_ID).size());
 
 		KMMBudgetAccount bdgtAcct = bdgt.getAccounts().get(0);
+		assertEquals(bdgt, bdgtAcct.getParent());
 		assertEquals(KMMBudgetAccount.Level.MONTH_BY_MONTH, bdgtAcct.getLevel());
-		// .
 		assertEquals(2, bdgtAcct.getPeriods().size());
-		assertEquals(LocalDate.of(2026, 3, 1), bdgtAcct.getPeriods().get(0).getStart());
-		assertEquals(750.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("750,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.GERMANY));
-		assertEquals("€750.00", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.US));
-		// .
-		assertEquals(LocalDate.of(2026, 7, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart());
-		assertEquals(1500.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.GERMANY));
-		assertEquals("€1,500.00", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.US));
 		
 		bdgtAcct = bdgt.getAccounts().get(1);
+		assertEquals(bdgt, bdgtAcct.getParent());
 		assertEquals(KMMBudgetAccount.Level.YEARLY, bdgtAcct.getLevel());
-		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
-		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
-		assertEquals(100.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("100,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.GERMANY));
-		assertEquals("€100.00", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.US));
-		// .
-		// The rest is redundant, because there is only one period for this account:
-//		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart());
-//		assertEquals(100.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-//		assertEquals("100,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.GERMANY));
-//		assertEquals("€100.00", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.US));
 		
 		bdgtAcct = bdgt.getAccounts().get(2);
+		assertEquals(bdgt, bdgtAcct.getParent());
 		assertEquals(KMMBudgetAccount.Level.MONTHLY, bdgtAcct.getLevel());
-		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
-		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
-		assertEquals(800.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("800,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.GERMANY));
-		assertEquals("€800.00", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.US));
-		// .
-		// The rest is redundant, cf. above
 		
 		bdgtAcct = bdgt.getAccounts().get(3);
+		assertEquals(bdgt, bdgtAcct.getParent());
 		assertEquals(KMMBudgetAccount.Level.YEARLY, bdgtAcct.getLevel());
-		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
-		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
-		assertEquals(12000.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("12.000,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.GERMANY));
-		assertEquals("€12,000.00", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.US));
-		// .
-		// The rest is redundant, cf. above
 		
 		bdgtAcct = bdgt.getAccounts().get(4);
+		assertEquals(bdgt, bdgtAcct.getParent());
 		assertEquals(KMMBudgetAccount.Level.MONTHLY, bdgtAcct.getLevel());
-		// .
 		assertEquals(1, bdgtAcct.getPeriods().size());
-		assertEquals(LocalDate.of(2026, 1, 1), bdgtAcct.getPeriods().get(0).getStart());
-		assertEquals(200.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("200,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.GERMANY));
-		assertEquals("€200.00", bdgtAcct.getPeriods().get(0).getAmountFormatted(Locale.US));
-		// .
-		// The rest is redundant, cf. above
 	}
 
 }

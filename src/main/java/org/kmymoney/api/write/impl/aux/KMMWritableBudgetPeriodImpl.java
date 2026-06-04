@@ -47,8 +47,7 @@ public class KMMWritableBudgetPeriodImpl extends KMMBudgetPeriodImpl
     	super(bdgtPrd.getParent(), bdgtPrd.getJwsdpPeer(), bdgtPrd.getKMyMoneyFile());
     }
 
-	public KMMWritableBudgetPeriodImpl(
-			final KMMWritableBudgetAccountImpl bdgtAcct) {
+	public KMMWritableBudgetPeriodImpl(final KMMWritableBudgetAccountImpl bdgtAcct) {
 		super(bdgtAcct,
 			  createBudgetPeriod_int(bdgtAcct.getWritableKMyMoneyFile(), bdgtAcct), 
 			  bdgtAcct.getKMyMoneyFile());

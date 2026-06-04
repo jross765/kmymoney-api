@@ -22,10 +22,16 @@ public interface KMyMoneyBudget extends KMyMoneyObject
     
     // ---------------------------------------------------------------
     
+    boolean hasAccounts();
+    
     List<KMMBudgetAccount> getAccounts();
 	
     KMMBudgetAccount getAccount(KMMAcctID acctID);
 	
+    // ---------------------------------------------------------------
+    
+    boolean hasPeriods(KMMAcctID acctID);
+    
     List<KMMBudgetPeriod>  getPeriods(KMMAcctID acctID);
 	
 }

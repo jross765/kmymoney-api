@@ -91,14 +91,20 @@ public class KMyMoneyBudgetImpl extends KMyMoneyObjectImpl
 
     @Override
     public String getStartStr() {
-		if ( jwsdpPeer.getStart() == null )
+		if ( jwsdpPeer.getStart() == null ) {
 			return null;
+		}
 
 		return jwsdpPeer.getStart().toString();
     }
 
     // -----------------------------------------------------------
     
+	@Override
+	public boolean hasAccounts() {
+		return ( getAccounts().size() > 0 );
+	}
+
     @Override
     public List<KMMBudgetAccount> getAccounts() {
 		List<KMMBudgetAccount> result = new ArrayList<KMMBudgetAccount>();
@@ -140,12 +146,14 @@ public class KMyMoneyBudgetImpl extends KMyMoneyObjectImpl
     	if ( ! jwsdpPeer.getACCOUNT().contains( bdgtAcct.getJwsdpPeer() ) ) {
     		jwsdpPeer.getACCOUNT().add( bdgtAcct.getJwsdpPeer() );
     	}
-
-//    	List<KMMBudgetAccount> accts = getAccounts();
-//    	if ( ! accts.contains(bdgtAcct) ) {
-//    		accts.add(bdgtAcct);
-//    	}
     }
+
+    // -----------------------------------------------------------------
+    
+	@Override
+	public boolean hasPeriods(KMMAcctID acctID) {
+		return ( getPeriods(acctID).size() > 0 );
+	}
 
     @Override
 	public List<KMMBudgetPeriod> getPeriods(KMMAcctID acctID) {

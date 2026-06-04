@@ -14,7 +14,7 @@ public interface KMMWritableBudgetAccount extends KMMBudgetAccount,
 {
 	
     void setAcctID(KMMAcctID acctID);
-    
+
     void setLevel(Level lvl);
     
     void setIncludesSubAccounts(boolean val);

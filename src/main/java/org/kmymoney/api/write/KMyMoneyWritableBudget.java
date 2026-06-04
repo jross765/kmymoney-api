@@ -19,8 +19,8 @@ public interface KMyMoneyWritableBudget extends KMyMoneyBudget,
                                                 KMyMoneyWritableObject
 {
 
-    void remove();
-   
+    void remove() throws ObjectCascadeException;
+
 	// ---------------------------------------------------------------
 
     void setName(String name);

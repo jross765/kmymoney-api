@@ -102,7 +102,7 @@ public class KMMWritableBudgetAccountImpl extends KMMBudgetAccountImpl
 		// This is needed because transaction.addAccount() later
 		// must have an already built account.
 		// Otherwise, it will create it from the JAXB-Data
-		// thus 2 instances of this KMyMoneyWritableAddressImpl
+		// thus 2 instances of this KMyMoneyWritableAccountImpl
 		// will exist. One created in getAccounts() from this JAXB-Data
 		// the other is this object.
 		bdgt.getAccounts();
@@ -115,7 +115,7 @@ public class KMMWritableBudgetAccountImpl extends KMMBudgetAccountImpl
 		jwsdpBdgtAcct.setBudgetsubaccounts(BigInteger.ZERO);
 		
 		// NO, not here but in the calling method:
-		// trx.addAccount(new KMyMoneyWritableBudgetAccountImpl(jwsdpBdgtAcct, bdgt.getKMyMoneyFile(), bdgt));
+		// bdgt.addAccount(new KMyMoneyWritableBudgetAccountImpl(jwsdpBdgtAcct, bdgt.getKMyMoneyFile(), bdgt));
 		file.setModified(true);
     
         LOGGER.debug("createBudgetAccount_int: Created new budget account (core): " + jwsdpBdgtAcct);
@@ -127,11 +127,13 @@ public class KMMWritableBudgetAccountImpl extends KMMBudgetAccountImpl
 
 	@Override
 	public void setAcctID(final KMMAcctID acctID) {
-		if ( acctID == null )
+		if ( acctID == null ) {
 			throw new IllegalArgumentException("argument <acctID> is null");
+		}
 		
-		if ( ! acctID.isSet() )
+		if ( ! acctID.isSet() ) {
 			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
 		
 		jwsdpPeer.setId(acctID.toString());
 	}
@@ -159,9 +161,13 @@ public class KMMWritableBudgetAccountImpl extends KMMBudgetAccountImpl
 		if ( getPeriods().size() == 0 )
 			return;
 		
+		// ---
+		
 		for ( int i = jwsdpPeer.getPERIOD().size(); i >= 0; i-- ) {
 			jwsdpPeer.getPERIOD().remove(i);
 		}
+		
+		getWritableKMyMoneyFile().setModified(true);
 	}
 
 	@Override
@@ -179,7 +185,7 @@ public class KMMWritableBudgetAccountImpl extends KMMBudgetAccountImpl
 		// ---
 		
 		jwsdpPeer.getPERIOD()
-			.remove(((KMMBudgetPeriodImpl) bdgtPrd).getJwsdpPeer());
+			.remove( ((KMMBudgetPeriodImpl) bdgtPrd).getJwsdpPeer() );
 		
 		getWritableKMyMoneyFile().setModified(true);
 	}
@@ -230,7 +236,7 @@ public class KMMWritableBudgetAccountImpl extends KMMBudgetAccountImpl
 
     // ---------------------------------------------------------------
 
-    @Override
+	@Override
 	public String toString() {
 		String result = "KMMWritableBudgetAccountImpl [";
 

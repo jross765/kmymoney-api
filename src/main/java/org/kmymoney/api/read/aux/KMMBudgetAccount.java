@@ -62,14 +62,16 @@ public interface KMMBudgetAccount extends KMyMoneyObject {
 
 	// ---------------------------------------------------------------
 
-    KMMAcctID getAcctID();
+	KMMAcctID getAcctID();
     
-    Level getLevel();
-    
-    boolean includesSubAccounts();
+	Level getLevel();
+
+	boolean includesSubAccounts();
 
 	// ---------------------------------------------------------------
+    
+	boolean hasPeriods();
 
-    List<KMMBudgetPeriod> getPeriods();
+	List<KMMBudgetPeriod> getPeriods();
 
 }

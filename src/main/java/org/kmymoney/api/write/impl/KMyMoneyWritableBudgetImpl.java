@@ -26,6 +26,7 @@ import org.kmymoney.api.read.impl.aux.KMMBudgetPeriodImpl;
 import org.kmymoney.api.write.KMyMoneyWritableBudget;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
+import org.kmymoney.api.write.ObjectCascadeException;
 import org.kmymoney.api.write.aux.KMMWritableBudgetAccount;
 import org.kmymoney.api.write.aux.KMMWritableBudgetPeriod;
 import org.kmymoney.api.write.impl.aux.KMMWritableBudgetAccountImpl;
@@ -127,7 +128,7 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 	}
 
     /**
-     * Creates a new Transaction and add's it to the given KMyMoney file Don't modify
+     * Creates a new budget and adds it to the given KMyMoney file Don't modify
      * the ID of the new transaction!
      *
      * @param file the file we will belong to
@@ -137,6 +138,10 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
     protected static BUDGET createBudget_int(
     		final KMyMoneyWritableFileImpl file, 
     		final KMMBdgtID newID) {
+		if ( file == null ) {
+			throw new IllegalArgumentException("argument <file> is null");
+		}
+
 		if ( newID == null ) {
 			throw new IllegalArgumentException("argument <newID> is null");
 		}
@@ -168,11 +173,22 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 
     /**
      * Delete this Budget and remove it from the file.
+     * @throws ObjectCascadeException 
      *
      * @see KMyMoneyWritableBudget#remove()
      */
     @Override
-    public void remove() {
+    public void remove() throws ObjectCascadeException {
+    	if ( hasAccounts() ) {
+    		throw new ObjectCascadeException();
+    	}
+    	
+//    	for ( KMMBudgetAccount bdgtAcct : getAccounts() ) {
+//    		if ( bdgtAcct.hasPeriods() ) {
+//        		throw new ObjectCascadeException();
+//    		}
+//    	}
+
     	BUDGET peer = jwsdpPeer;
     	getKMyMoneyFile().getRootElement().getBUDGETS().getBUDGET().remove(peer);
     	getWritableKMyMoneyFile().removeBudget(this);
@@ -250,9 +266,9 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 		getWritableKMyMoneyFile().setModified(true);
 
 		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
-    	if ( propertyChangeSupport != null) {
-    		propertyChangeSupport.firePropertyChange("start", oldStartDate, startDate);
-    	}
+		if ( propertyChangeSupport != null) {
+			propertyChangeSupport.firePropertyChange("start", oldStartDate, startDate);
+		}
 	}
 
     // ---------------------------------------------------------------
@@ -265,8 +281,19 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 		if ( getAccounts().size() == 0 )
 			return;
 		
+		// ---
+		
+		List<KMMBudgetAccount> oldAccts = getAccounts();
+		
 		for ( int i = jwsdpPeer.getACCOUNT().size(); i >= 0; i-- ) {
 			jwsdpPeer.getACCOUNT().remove(i);
+		}
+
+		getWritableKMyMoneyFile().setModified(true);
+
+		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+		if ( propertyChangeSupport != null) {
+			propertyChangeSupport.firePropertyChange("accounts", oldAccts, null);
 		}
 	}
 
@@ -284,10 +311,17 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 		
 		// ---
 		
+		List<KMMBudgetAccount> oldAccts = getAccounts();
+		
 		jwsdpPeer.getACCOUNT()
 			.remove(((KMMBudgetAccountImpl) bdgtAcct).getJwsdpPeer());
 		
 		getWritableKMyMoneyFile().setModified(true);
+
+		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+		if ( propertyChangeSupport != null) {
+			propertyChangeSupport.firePropertyChange("accounts", oldAccts, getAccounts());
+		}
 	}
 
 	public void addAccount(final KMMWritableBudgetAccountImpl bdgtAcct) {
@@ -323,8 +357,17 @@ public class KMyMoneyWritableBudgetImpl extends KMyMoneyBudgetImpl
 
 	@Override
 	public void clearPeriods(KMMAcctID acctID) {
+		List<KMMBudgetPeriod> oldPrds = getPeriods(acctID);
+		
 		for ( KMMWritableBudgetAccount bdgtAcct : getWritableAccounts() ) {
 			bdgtAcct.clearPeriods();
+		}
+		
+		getWritableKMyMoneyFile().setModified(true);
+
+		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
+		if ( propertyChangeSupport != null) {
+			propertyChangeSupport.firePropertyChange("periods", oldPrds, getAccounts());
 		}
 	}
 

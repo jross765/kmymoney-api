@@ -70,6 +70,8 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 		return new KMMAcctID(jwsdpPeer.getId());
 	}
 
+    // -----------------------------------------------------------------
+
 	@Override
 	public Level getLevel() {
 		if ( jwsdpPeer.getBudgetlevel() == null ) {
@@ -96,6 +98,13 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
 		}
 	}
 
+	// -----------------------------------------------------------------
+
+	@Override
+	public boolean hasPeriods() {
+		return ( getPeriods().size() > 0 );
+	}
+
 	@Override
 	public List<KMMBudgetPeriod> getPeriods() {
 		List<KMMBudgetPeriod> result = new ArrayList<KMMBudgetPeriod>();
@@ -118,11 +127,6 @@ public class KMMBudgetAccountImpl extends KMyMoneyObjectImpl
     	if ( ! jwsdpPeer.getPERIOD().contains( bdgtPrd.getJwsdpPeer() ) ) {
     		jwsdpPeer.getPERIOD().add( bdgtPrd.getJwsdpPeer() );
     	}
-
-//    	List<KMMBudgetPeriod> prds = getPeriods();
-//    	if ( ! prds.contains(bdgtPrd) ) {
-//    		prds.add(bdgtPrd);
-//    	}
     }
 
     // -----------------------------------------------------------------

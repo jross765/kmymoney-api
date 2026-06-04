@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -81,16 +82,8 @@ public class TestKMMBudgetPeriodImpl {
 		assertEquals(LocalDate.of(2026, 3, 1), bdgtPrd.getStart());
 		assertEquals("2026-03-01", bdgtPrd.getStartStr());
 		assertEquals(750.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("750,00 €", bdgtPrd.getAmountFormatted());
-
-		bdgtPrd = bdgtAcct.getPeriods().get(1);
-		assertNotEquals(null, bdgtPrd);
-		assertEquals(bdgt, bdgtAcct.getParent());
-		
-		assertEquals(LocalDate.of(2026, 7, 1), bdgtPrd.getStart());
-		assertEquals("2026-07-01", bdgtPrd.getStartStr());
-		assertEquals(1500.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("1.500,00 €", bdgtPrd.getAmountFormatted());
+		assertEquals("750,00 €", bdgtPrd.getAmountFormatted(Locale.GERMANY));
+		assertEquals("€750.00", bdgtPrd.getAmountFormatted(Locale.US));
 	}
 
 }

@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNotEquals;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Locale;
 
+import org.apache.commons.numbers.fraction.BigFraction;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import org.kmymoney.api.read.aux.KMMBudgetPeriod;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.write.KMyMoneyWritableBudget;
 import org.kmymoney.api.write.aux.KMMWritableBudgetAccount;
+import org.kmymoney.api.write.aux.KMMWritableBudgetPeriod;
 import org.kmymoney.api.write.impl.KMyMoneyWritableFileImpl;
 import org.kmymoney.api.write.impl.TestKMyMoneyWritableBudgetImpl;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
@@ -30,10 +33,6 @@ public class TestKMMWritableBudgetAccountImpl {
 	// private static final KMMBdgtID BDGT_2_ID = TestKMyMoneyWritableBudgetImpl.BDGT_2_ID;
 
 	private static final KMMAcctID ACCT_1_ID = TestKMyMoneyWritableBudgetImpl.ACCT_1_ID;
-//	private static final KMMAcctID ACCT_2_ID = TestKMyMoneyWritableBudgetImpl.ACCT_2_ID;
-//	private static final KMMAcctID ACCT_3_ID = TestKMyMoneyWritableBudgetImpl.ACCT_3_ID;
-//	private static final KMMAcctID ACCT_4_ID = TestKMyMoneyWritableBudgetImpl.ACCT_4_ID;
-//	private static final KMMAcctID ACCT_5_ID = TestKMyMoneyWritableBudgetImpl.ACCT_5_ID;
 	private static final KMMAcctID ACCT_6_ID = new KMMAcctID("A000031");
 
 	// -----------------------------------------------------------------
@@ -101,15 +100,20 @@ public class TestKMMWritableBudgetAccountImpl {
 		assertEquals(ACCT_1_ID, bdgtAcct.getAcctID());
 		assertEquals(KMMBudgetAccount.Level.MONTH_BY_MONTH, bdgtAcct.getLevel());
 		assertEquals(false, bdgtAcct.includesSubAccounts());
-		// .
+
 		assertEquals(2, bdgtAcct.getPeriods().size());
-		assertEquals(LocalDate.of(2026, 3, 1), bdgtAcct.getPeriods().get(0).getStart());
-		assertEquals(750.0, bdgtAcct.getPeriods().get(0).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("750,00 €", bdgtAcct.getPeriods().get(0).getAmountFormatted());
-		// .
-		assertEquals(LocalDate.of(2026, 7, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart());
-		assertEquals(1500.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
-		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted());
+		
+		KMMBudgetPeriod bdgtPrd = bdgtAcct.getPeriods().get(0);
+		assertEquals(LocalDate.of(2026, 3, 1), bdgtPrd.getStart());
+		assertEquals(750.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("750,00 €", bdgtPrd.getAmountFormatted(Locale.GERMANY));
+		assertEquals("€750.00", bdgtPrd.getAmountFormatted(Locale.US));
+
+		bdgtPrd = bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1);
+		assertEquals(LocalDate.of(2026, 7, 1), bdgtPrd.getStart());
+		assertEquals(1500.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals("1.500,00 €", bdgtPrd.getAmountFormatted(Locale.GERMANY));
+		assertEquals("€1,500.00", bdgtPrd.getAmountFormatted(Locale.US));
 	}
 
 	// -----------------------------------------------------------------
@@ -127,6 +131,8 @@ public class TestKMMWritableBudgetAccountImpl {
 		KMMWritableBudgetAccount bdgtAcct = bdgt.getWritableAccounts().get(0);
 		assertNotEquals(null, bdgtAcct);
 		assertEquals(ACCT_1_ID, bdgtAcct.getAcctID());
+
+		assertEquals(2, bdgtAcct.getPeriods().size()); // unchanged
 		
 		// ----------------------------
 		// Modify the object
@@ -175,11 +181,13 @@ public class TestKMMWritableBudgetAccountImpl {
 		KMMBudgetPeriod bdgtPrd = bdgtAcct.getPeriods().get(0);
 		assertEquals(LocalDate.of(2026, 3, 1), bdgtPrd.getStart()); // unchanged
 		assertEquals(750.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
-		assertEquals("750,00 €", bdgtPrd.getAmountFormatted()); // unchanged
+		assertEquals("750,00 €", bdgtPrd.getAmountFormatted(Locale.GERMANY)); // unchanged
+		assertEquals("€750.00", bdgtPrd.getAmountFormatted(Locale.US)); // unchanged
 		// .
 		assertEquals(LocalDate.of(2026, 7, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart()); // unchanged
 		assertEquals(1500.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
-		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted()); // unchanged
+		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.GERMANY)); // unchanged
+		assertEquals("€1,500.00", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.US)); // unchanged
 	}
 
 	private void test02_1_check_persisted(File outFile) throws Exception {
@@ -201,11 +209,13 @@ public class TestKMMWritableBudgetAccountImpl {
 		KMMBudgetPeriod bdgtPrd = bdgtAcct.getPeriods().get(0);
 		assertEquals(LocalDate.of(2026, 3, 1), bdgtPrd.getStart()); // unchanged
 		assertEquals(750.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
-		assertEquals("750,00 €", bdgtPrd.getAmountFormatted()); // unchanged
+		assertEquals("750,00 €", bdgtPrd.getAmountFormatted(Locale.GERMANY)); // unchanged
+		assertEquals("€750.00", bdgtPrd.getAmountFormatted(Locale.US)); // unchanged
 		// .
 		assertEquals(LocalDate.of(2026, 7, 1), bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getStart()); // unchanged
 		assertEquals(1500.0, bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
-		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted()); // unchanged
+		assertEquals("1.500,00 €", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.GERMANY)); // unchanged
+		assertEquals("€1,500.00", bdgtAcct.getPeriods().get(bdgtAcct.getPeriods().size() - 1).getAmountFormatted(Locale.US)); // unchanged
 	}
 
 	// -----------------------------------------------------------------
@@ -236,7 +246,9 @@ public class TestKMMWritableBudgetAccountImpl {
 		// ----------------------------
 		// Modify the object
 		
-		// ::TODO: Create periods
+		bdgtAcct.createWritablePeriod(LocalDate.of(2027, 3, 1), BigFraction.of(100));
+		bdgtAcct.createWritablePeriod(LocalDate.of(2027, 4, 1), BigFraction.of(200));
+		bdgtAcct.createWritablePeriod(LocalDate.of(2027, 5, 1), BigFraction.of(300));
 
 		// ----------------------------
 		// Check whether the object has actually been modified
@@ -261,15 +273,27 @@ public class TestKMMWritableBudgetAccountImpl {
 
 	// ---------------------------------------------------------------
 
-	private void test03_1_check_memory(KMyMoneyWritableBudget bdgt, KMMWritableBudgetAccount bdgtAcct) throws Exception {
+	private void test03_1_check_memory(KMyMoneyWritableBudget bdgt, 
+									   KMMWritableBudgetAccount bdgtAcct) throws Exception {
 		assertEquals(6, bdgt.getAccounts().size()); // changed
 		
 		assertEquals(ACCT_6_ID, bdgtAcct.getAcctID());
 		assertEquals(KMMBudgetAccount.Level.YEARLY, bdgtAcct.getLevel());
 		assertEquals(false, bdgtAcct.includesSubAccounts());
 		
-		assertEquals(0, bdgtAcct.getPeriods().size());
-		// ::TODO: periods
+		assertEquals(3, bdgtAcct.getPeriods().size());
+
+		KMMWritableBudgetPeriod bdgtPrd = bdgtAcct.getWritablePeriods().get(0);
+		assertEquals(LocalDate.of(2027, 3, 1), bdgtPrd.getStart());
+		assertEquals(100.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+
+		bdgtPrd = bdgtAcct.getWritablePeriods().get(1);
+		assertEquals(LocalDate.of(2027, 4, 1), bdgtPrd.getStart());
+		assertEquals(200.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+
+		bdgtPrd = bdgtAcct.getWritablePeriods().get(2);
+		assertEquals(LocalDate.of(2027, 5, 1), bdgtPrd.getStart());
+		assertEquals(300.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
 	}
 
 	private void test03_1_check_persisted(File outFile) throws Exception {
@@ -290,8 +314,19 @@ public class TestKMMWritableBudgetAccountImpl {
 		assertEquals(KMMBudgetAccount.Level.YEARLY, bdgtAcct.getLevel());
 		assertEquals(false, bdgtAcct.includesSubAccounts());
 		
-		assertEquals(0, bdgtAcct.getPeriods().size());
-		// ::TODO: periods
+		assertEquals(3, bdgtAcct.getPeriods().size());
+
+		KMMBudgetPeriod bdgtPrd = bdgtAcct.getPeriods().get(0);
+		assertEquals(LocalDate.of(2027, 3, 1), bdgtPrd.getStart());
+		assertEquals(100.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+
+		bdgtPrd = bdgtAcct.getPeriods().get(1);
+		assertEquals(LocalDate.of(2027, 4, 1), bdgtPrd.getStart());
+		assertEquals(200.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
+
+		bdgtPrd = bdgtAcct.getPeriods().get(2);
+		assertEquals(LocalDate.of(2027, 5, 1), bdgtPrd.getStart());
+		assertEquals(300.0, bdgtPrd.getAmount().doubleValue(), ConstTest.DIFF_TOLERANCE);
 	}
 
 	// ------------------------------
@@ -355,6 +390,7 @@ public class TestKMMWritableBudgetAccountImpl {
 		assertEquals(ACCT_1_ID, bdgtAcct.getAcctID()); // unchanged
 		assertEquals(KMMBudgetAccount.Level.MONTH_BY_MONTH, bdgtAcct.getLevel()); // unchanged
 		assertEquals(false, bdgtAcct.includesSubAccounts()); // unchanged
+		
 		assertEquals(2, bdgtAcct.getPeriods().size()); // unchanged
 		
 		// However, the budget account cannot newly be instantiated any more,
