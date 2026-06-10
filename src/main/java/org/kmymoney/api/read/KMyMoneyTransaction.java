@@ -8,6 +8,7 @@ import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.TRANSACTION;
 import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
@@ -140,6 +141,8 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @see #getSplits()
      */
     KMyMoneyTransactionSplit getSplitByID(KMMSpltID spltID);
+
+    KMyMoneyTransactionSplit getSplitByAccountID(KMMAcctID acctID);
 
     /**
      *

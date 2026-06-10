@@ -9,6 +9,7 @@ import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.write.hlp.HasWritableUserDefinedAttributes;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 
 /**
@@ -61,6 +62,8 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 	 * @see KMyMoneyTransaction#getSplitByID(KMMSpltID)
 	 */
 	KMyMoneyWritableTransactionSplit getWritableSplitByID(KMMSpltID spltID);
+
+	KMyMoneyWritableTransactionSplit getWritableSplitByAccountID(KMMAcctID acctID); // sic, not KMMCompAcctID
 
 	/**
 	 * @return 

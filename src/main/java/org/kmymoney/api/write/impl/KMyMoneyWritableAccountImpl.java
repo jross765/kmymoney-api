@@ -93,7 +93,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if (addSplits) {
 			if ( ! acct.isRootAccount() ) {
 				for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) acct.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
-					if ( splt.getAccountID().equals(acct.getID()) ) {
+					if ( splt.getAccountID().equals( acct.getID().getStdID() ) ) {
 						super.addTransactionSplit(splt);
 					// NO:
 //				    addTransactionSplit(new KMyMoneyTransactionSplitImpl(splt.getJwsdpPeer(), splt.getTransaction(), 
@@ -261,7 +261,17 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
-		if ( ! splt.getAccountID().equals(getID()) ) {
+		// Note: In a way, this is checked below as well.
+		// However, whereas below we perform the check on the business
+		// logic level, we focus here on a technical aspect that happens
+		// to logically overlap with that: In the next statement, we call 
+		// getID().getStdID(), and this is (technically) only allowed when 
+		// getID().getType() returns "standard type".
+		if ( getID().getType() == KMMComplAcctID.Type.SPECIAL ) {
+			throw new UnsupportedOperationException("account has special ID -- this method is only supported for accounts with standard ID");
+		}
+
+		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
 			throw new IllegalArgumentException("split " + splt.getID() + " does not belong to account " + getID());
 		}
 

@@ -6,8 +6,8 @@ import java.util.Locale;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
-import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
@@ -161,7 +161,7 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
      * 
      * @see #getAccount()
      */
-    KMMComplAcctID getAccountID();
+    KMMAcctID getAccountID(); // sic, not KMMComplAcctID
 
     /**
      * @return the account we transfer from/to.

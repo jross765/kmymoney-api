@@ -15,8 +15,8 @@ import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
-import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
@@ -134,14 +134,14 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	 * @see KMyMoneyTransactionSplit#getAccountID()
 	 */
 	@Override
-	public KMMComplAcctID getAccountID() {
+	public KMMAcctID getAccountID() {
 		if ( jwsdpPeer.getAccount() == null )
 			return null;
 		
 		if ( jwsdpPeer.getAccount().isBlank() )
 			return null;
 
-		return new KMMComplAcctID( jwsdpPeer.getAccount() );
+		return new KMMAcctID( jwsdpPeer.getAccount() );
 	}
 
 	/**

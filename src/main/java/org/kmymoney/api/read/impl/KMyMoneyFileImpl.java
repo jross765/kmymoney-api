@@ -694,7 +694,7 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
 		}
 
 		for ( KMyMoneyTransactionSplit splt : trx.getSplits() ) {
-			if ( splt.getAccountID().getStdID().equals(acctID) )
+			if ( splt.getAccountID().equals(acctID) )
 			return splt;
 		}
 

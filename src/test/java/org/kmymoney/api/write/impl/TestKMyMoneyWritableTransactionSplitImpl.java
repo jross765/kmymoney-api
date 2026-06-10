@@ -117,7 +117,7 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 
 		assertEquals(TRXSPLT_01_ID, splt.getQualifID());
 		assertEquals(TRX_01_ID, splt.getTransactionID());
-		assertEquals(ACCT_1_ID, splt.getAccountID());
+		assertEquals(ACCT_1_ID.getStdID(), splt.getAccountID());
 		assertEquals(null, splt.getAction());
 		
 		assertEquals(10000.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
@@ -146,7 +146,7 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 
 		assertEquals(TRXSPLT_18_ID, splt.getQualifID());
 		assertEquals(TRX_18_ID, splt.getTransactionID());
-		assertEquals(ACCT_8_ID, splt.getAccountID());
+		assertEquals(ACCT_8_ID.getStdID(), splt.getAccountID());
 		assertEquals(KMyMoneyTransactionSplit.Action.BUY_SHARES, splt.getAction());
 		
 		assertEquals(1800.00, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
@@ -292,7 +292,7 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertEquals(ConstTest.Stats.NOF_TRX_SPLT, kmmInFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.CACHE));
 
 		assertEquals(TRX_01_ID, splt.getTransactionID()); // unchanged
-		assertEquals(ACCT_2_ID, splt.getAccountID()); // changed
+		assertEquals(ACCT_2_ID.getStdID(), splt.getAccountID()); // changed
 		assertEquals(null, splt.getAction()); // unchanged
 		assertEquals(-123.45, splt.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE); // changed
 		assertEquals(-67.8901, splt.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE); // changed
@@ -313,7 +313,7 @@ public class TestKMyMoneyWritableTransactionSplitImpl {
 		assertNotEquals(null, splt);
 
 		assertEquals(TRX_01_ID, splt.getTransactionID()); // unchanged
-		assertEquals(ACCT_2_ID, splt.getAccountID()); // changed
+		assertEquals(ACCT_2_ID.getStdID(), splt.getAccountID()); // changed
 		assertEquals(null, splt.getAction()); // unchanged
 		
 		// Caution: value differs from that in test02_1_check_memory() on purpose

@@ -24,6 +24,7 @@ import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
@@ -247,11 +248,11 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      */
     public KMyMoneyTransactionSplit getSplitByID(final KMMSpltID spltID) {
 		if ( spltID == null ) {
-			throw new IllegalArgumentException("split-ID is null");
+			throw new IllegalArgumentException("argument <splitID> is null");
 		}
 
 		if ( ! spltID.isSet() ) {
-			throw new IllegalArgumentException("split-ID is not set");
+			throw new IllegalArgumentException("argument <splitID> is not set");
 		}
 
 		for (KMyMoneyTransactionSplit split : getSplits()) {
@@ -263,6 +264,29 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		
 		return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public KMyMoneyTransactionSplit getSplitByAccountID(KMMAcctID acctID) {
+		if ( acctID == null ) {
+			throw new IllegalArgumentException("argument <acctID> is null");
+		}
+
+		if ( ! acctID.isSet() ) {
+			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
+
+		for (KMyMoneyTransactionSplit split : getSplits()) {
+			if (split.getAccountID().equals(acctID)) {
+				return split;
+			}
+
+		}
+		
+		return null;
+	}
 
     /**
      * {@inheritDoc}

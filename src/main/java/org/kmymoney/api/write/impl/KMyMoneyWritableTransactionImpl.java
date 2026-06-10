@@ -33,6 +33,7 @@ import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
+import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
@@ -283,6 +284,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public KMyMoneyWritableTransactionSplit getWritableSplitByID(final KMMSpltID spltID) {
 		// alt:
 		// return (KMyMoneyWritableTransactionSplit) super.getSplitByID(id);
@@ -293,14 +295,30 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		if ( ! spltID.isSet() ) {
 			throw new IllegalArgumentException("argument <spltID> is not set");
 		}
-		// ::TODO
-//		if ( ! spltID.isSet() ) {
-//			throw new IllegalArgumentException("transaction split ID is not set");
-//		}
 
 		KMyMoneyTransactionSplit splt = super.getSplitByID(spltID);
 		// ::TODO
-		// !!! Diese nicht-triviale Änderung nochmal ganz genau abtesten !!!
+		// !!! Diese nicht-triviale Aenderung nochmal ganz genau abtesten !!!
+		return new KMyMoneyWritableTransactionSplitImpl((KMyMoneyTransactionSplitImpl) splt, 
+														false, false, false);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public KMyMoneyWritableTransactionSplit getWritableSplitByAccountID(KMMAcctID acctID) {
+		if ( acctID == null ) {
+			throw new IllegalArgumentException("argument <acctID> is null");
+		}
+
+		if ( ! acctID.isSet() ) {
+			throw new IllegalArgumentException("argument <acctID> is not set");
+		}
+
+		KMyMoneyTransactionSplit splt = super.getSplitByAccountID(acctID);
+		// ::TODO
+		// !!! Diese nicht-triviale Aenderung nochmal ganz genau abtesten !!!
 		return new KMyMoneyWritableTransactionSplitImpl((KMyMoneyTransactionSplitImpl) splt, 
 														false, false, false);
 	}
@@ -308,7 +326,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	/**
 	 * @see KMyMoneyWritableTransaction#getWritableSplits()
 	 */
-	@SuppressWarnings("unchecked")
 	public Collection<? extends KMyMoneyWritableTransactionSplit> getWritableSplits() {
 		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
 		
@@ -389,8 +406,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	 */
 	public void setMemo(final String desc) {
 		if ( desc == null ) {
-			throw new IllegalArgumentException(
-					"argument <desc> is null. Please use the empty string instead of null for an empty description");
+			throw new IllegalArgumentException("argument <desc> is null. Please use the empty string instead of null for an empty description");
 		}
 
 		String old = jwsdpPeer.getMemo();

@@ -333,7 +333,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		KMyMoneyTransactionSplit splt1 = (KMyMoneyTransactionSplit) trx.getSplits().toArray()[0];
 		KMyMoneyTransactionSplit splt2 = (KMyMoneyTransactionSplit) trx.getSplits().toArray()[1];
 
-		assertEquals(ACCT_1_ID, splt1.getAccountID());
+		assertEquals(ACCT_1_ID.getStdID(), splt1.getAccountID());
 		assertEquals(KMyMoneyTransactionSplit.Action.WITHDRAWAL, splt1.getAction());
 		
 		assertEquals(-100, splt1.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
@@ -391,7 +391,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		KMyMoneyTransactionSplit splt1 = (KMyMoneyTransactionSplit) trx.getSplits().toArray()[0];
 		KMyMoneyTransactionSplit splt2 = (KMyMoneyTransactionSplit) trx.getSplits().toArray()[1];
 
-		assertEquals(ACCT_1_ID, splt1.getAccountID());
+		assertEquals(ACCT_1_ID.getStdID(), splt1.getAccountID());
 		assertEquals(KMyMoneyTransactionSplit.Action.WITHDRAWAL, splt1.getAction());
 		
 		assertEquals(-100, splt1.getShares().doubleValue(), ConstTest.DIFF_TOLERANCE);
