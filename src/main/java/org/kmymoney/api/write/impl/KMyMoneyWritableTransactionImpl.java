@@ -58,12 +58,19 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	// ---------------------------------------------------------------
 
 	/**
-	 * @param kmmFile      the file we belong to
+	 * @param kmmFile   the file we belong to
 	 * @param jwsdpPeer the JWSDP-object we are facading.
 	 */
 	@SuppressWarnings("exports")
 	public KMyMoneyWritableTransactionImpl(final TRANSACTION jwsdpPeer, final KMyMoneyFileImpl kmmFile) {
 		super(jwsdpPeer, kmmFile);
+
+		// repair a broken file
+		if ( jwsdpPeer.getPostdate() == null ) {
+			LOGGER.warn("Repairing broken transaction " + jwsdpPeer.getId() + " with no post-date");
+			XMLGregorianCalendar datePosted = jwsdpPeer.getEntrydate();
+			jwsdpPeer.setPostdate(datePosted);
+		}
 	}
 
 	/**
@@ -108,7 +115,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 //	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
 //		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 //	}
-//
 
 	// -----------------------------------------------------------
 
@@ -124,19 +130,20 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		    final boolean addToAcct,
 		    final boolean addToPye,
 		    final boolean addToTags) {
-		KMyMoneyWritableTransactionSplitImpl kmmTrxSplt = 
+		KMyMoneyWritableTransactionSplitImpl splt = 
 				new KMyMoneyWritableTransactionSplitImpl(jwsdpSplt, this,
 						                                 addToAcct, addToPye, addToTags);
 		if ( helper.getPropertyChangeSupport() != null ) {
 			 helper.getPropertyChangeSupport().firePropertyChange("splits", null, getWritableSplits());
 		}
 
-		return kmmTrxSplt;
+		return splt;
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#createWritableSplit(KMyMoneyAccount)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public KMyMoneyWritableTransactionSplit createWritableSplit(final KMyMoneyAccount acct) {
 		if ( acct == null ) {
 			throw new IllegalArgumentException("argument <acct> is null");
@@ -147,6 +154,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		if ( helper.getPropertyChangeSupport() != null ) {
 			 helper.getPropertyChangeSupport().firePropertyChange("splits", null, getWritableSplits());
 		}
+		
 		return splt;
 	}
 
@@ -181,8 +189,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * Creates a new Transaction and add's it to the given KMyMoney file Don't modify
-	 * the ID of the new transaction!
+	 * Creates a new transaction and add's it to the given KMyMoney file.
+	 * Don't modify the ID of the new transaction!
 	 */
 	protected static TRANSACTION createTransaction_int(
 			final KMyMoneyWritableFileImpl file, 
@@ -200,9 +208,18 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
 		jwsdpTrx.setId(newID.toString());
 
-		{
-			String dateEntered = DATE_ENTERED_FORMAT.format(LocalDateTime.now());
-			jwsdpTrx.setEntrydate(dateEntered);
+		try {
+	        // https://stackoverflow.com/questions/835889/java-util-date-to-xmlgregoriancalendar
+			// https://simplesolution.dev/java-convert-localdate-to-calendar/
+	        GregorianCalendar cal = new GregorianCalendar();
+	        ZonedDateTime zonedDateTime = ZonedDateTime.now();
+	        Instant instant = zonedDateTime.toInstant();
+	        Date date = Date.from(instant);
+	        cal.setTime(date);
+	        XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+	        jwsdpTrx.setEntrydate(xmlCal);
+		} catch ( DatatypeConfigurationException exc ) {
+			throw new DateMappingException();
 		}
 
 		try {
@@ -221,7 +238,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		}
 
 		{
-			jwsdpTrx.setCommodity(file.getDefaultCurrencyIDStr());
+			jwsdpTrx.setCommodity(file.getDefaultCurrencyID().toString());
 		}
 
 		{
@@ -255,10 +272,11 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		
 		if ( mySplits == null ) { 
 			// important!
+			@SuppressWarnings("unused")
 			List<KMyMoneyTransactionSplit> dummy = getSplits();
 		} else {
 			// That does not work with writable splits:
-		    // mySplits.remove(impl);
+			// mySplits.remove(impl);
 			// Instead:
 			for ( int i = 0; i < mySplits.size(); i++ ) {
 				if ( mySplits.get(i).getID().equals(splt.getID())) {
@@ -324,8 +342,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#getWritableSplits()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Collection<? extends KMyMoneyWritableTransactionSplit> getWritableSplits() {
 		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
 		
@@ -346,8 +365,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#remove()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void remove() {
 		getWritableKMyMoneyFile().removeTransaction(this);
 //		Collection<KMyMoneyWritableTransactionSplit> c = new LinkedList<KMyMoneyWritableTransactionSplit>();
@@ -368,15 +388,35 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	/**
 	 * @see KMyMoneyWritableTransaction#setDateEntered(LocalDateTime)
 	 */
+	@Override
 	public void setDateEntered(final LocalDate dateEntered) {
+		if ( dateEntered == null ) {
+			throw new IllegalArgumentException("argument <dateEntered> is null");
+		}
+
 		this.entryDate = dateEntered;
-		jwsdpPeer.setEntrydate(DATE_ENTERED_FORMAT.format(dateEntered));
+		
+		try {
+	        // https://stackoverflow.com/questions/835889/java-util-date-to-xmlgregoriancalendar
+			// https://simplesolution.dev/java-convert-localdate-to-calendar/
+	        GregorianCalendar cal = new GregorianCalendar();
+	        ZonedDateTime zonedDateTime = dateEntered.atStartOfDay(ZoneId.systemDefault());
+	        Instant instant = zonedDateTime.toInstant();
+	        Date date = Date.from(instant);
+	        cal.setTime(date);
+	        XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+			jwsdpPeer.setEntrydate(xmlCal);
+		} catch ( DatatypeConfigurationException exc ) {
+			throw new DateMappingException();
+		}
+
 		getWritableKMyMoneyFile().setModified(true);
 	}
 
 	/**
 	 * @see KMyMoneyWritableTransaction#setDatePosted(LocalDateTime)
 	 */
+	@Override
 	public void setDatePosted(final LocalDate datePosted) {
 		if ( datePosted == null ) {
 			throw new IllegalArgumentException("argument <datePosted> is null");

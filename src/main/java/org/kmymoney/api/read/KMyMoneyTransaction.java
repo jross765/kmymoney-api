@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.TRANSACTION;
 import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
+import org.kmymoney.api.read.hlp.KMyMoneyObject;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
@@ -23,6 +24,7 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  * @see KMyMoneyTransactionSplit
  */
 public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
+											 KMyMoneyObject,
                                              HasUserDefinedAttributes
 {
 
@@ -57,26 +59,16 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
 //    public static final int INVEST_ACTION_INVALID           = 10;
     
     // ---------------------------------------------------------------
-	    
+
     @SuppressWarnings("exports")
     TRANSACTION getJwsdpPeer();
-
-    /**
-     * The KMyMoney file is the top-level class to contain everything.
-     * 
-     * @return the file we are associated with
-     */
-    KMyMoneyFile getKMyMoneyFile();
 
     // ----------------------------------------------------------------
 
     /**
      *
      * @return the unique-id to identify this object with across name- and
-     *         hirarchy-changes
-     */
-    /**
-     * @return
+     *         hierarchy-changes
      */
     KMMTrxID getID();
 
@@ -85,6 +77,8 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      *         lines and non-ascii-characters)
      */
     String getMemo();
+
+    // ----------------------------------------------------------------
 
     /**
      *
@@ -96,11 +90,12 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
     LocalDate getDateEntered();
 
     /**
+     * 
      * @return the date the transaction was entered into the system
      * 
      * @see #getDateEntered()
-    */
-    String getDateEnteredFormatted();
+     */
+	String getDateEnteredFormatted();
     
     /**
      *
@@ -109,7 +104,7 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @see #getDatePostedFormatted()
      * @see #getDateEntered()
      */
-    LocalDate getDatePosted();
+	LocalDate getDatePosted();
 
     /**
      *
@@ -127,8 +122,6 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      * @return all splits of this transaction.
      * 
      * @see #getSplitByID(KMMSpltID)
-     * @see #getFirstSplit()
-     * @see #getSecondSplit()
      */
     List<KMyMoneyTransactionSplit> getSplits();
 
@@ -153,6 +146,8 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
     /**
      *
      * @return true if the sum of all splits adds up to zero.
+     * 
+     * @see #getBalance()
      */
     boolean isBalanced();
 
@@ -206,6 +201,8 @@ public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
      */
 	@Deprecated
     FixedPointNumber getNegatedBalance();
+
+    BigFraction      getNegatedBalanceRat();
 
     /**
      * The result is in the currency of the transaction.

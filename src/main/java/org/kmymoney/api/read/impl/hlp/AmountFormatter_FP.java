@@ -21,6 +21,7 @@ public class AmountFormatter_FP
 	
 	// ---------------------------------------------------------------
 
+	@Deprecated
 	public static String formatAmount(KMyMoneyFile kmmFile, 
 									  FixedPointNumber amt, KMMQualifSecCurrID secCurrID) {
 		if ( amt == null ) {
@@ -36,6 +37,7 @@ public class AmountFormatter_FP
 							amt, secCurrID, lcl);
 	}
 	
+	@Deprecated
 	public static String formatAmount(KMyMoneyFile kmmFile,
 									  FixedPointNumber amt, KMMQualifSecCurrID secCurrID, Locale lcl) {
 		if ( amt == null ) {

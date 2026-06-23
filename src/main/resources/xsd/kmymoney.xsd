@@ -227,11 +227,11 @@
         <xs:element ref="SPLITS"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
       </xs:sequence>
-      <xs:attribute name="commodity" use="required" type="xs:NCName"/>
-      <xs:attribute name="entrydate" use="required"/>
       <xs:attribute name="id" use="required"/>
-      <xs:attribute name="memo" use="required"/>
+      <xs:attribute name="commodity" use="required" type="xs:NCName"/>
+      <xs:attribute name="entrydate" use="required" type="xs:date"/>
       <xs:attribute name="postdate" use="required" type="xs:date"/>
+      <xs:attribute name="memo" use="required"/>
     </xs:complexType>
   </xs:element>
   

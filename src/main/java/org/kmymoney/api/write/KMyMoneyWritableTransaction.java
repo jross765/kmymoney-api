@@ -14,8 +14,6 @@ import org.kmymoney.base.basetypes.simple.KMMSpltID;
 
 /**
  * Transaction that can be modified.<br/>
- * For PropertyChange-Listeners we support the properties: "description" and
- * "splits".
  * 
  * @see KMyMoneyTransaction
  */

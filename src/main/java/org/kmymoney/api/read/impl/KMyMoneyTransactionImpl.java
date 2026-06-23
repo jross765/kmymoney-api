@@ -49,17 +49,19 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     // the JWSDP-object we are facading.
     protected final TRANSACTION jwsdpPeer;
 
-    // ---------------------------------------------------------------
+    protected List<KMyMoneyTransactionSplit> mySplits = null;
 
-    /**
-     * @see KMyMoneyTransaction#getDatePosted()
-     */
-    protected LocalDate postDate;
+    // ---------------------------------------------------------------
 
     /**
      * @see KMyMoneyTransaction#getDateEntered()
      */
     protected LocalDate entryDate;
+
+    /**
+     * @see KMyMoneyTransaction#getDatePosted()
+     */
+    protected LocalDate postDate;
 
     // ---------------------------------------------------------------
 
@@ -75,6 +77,14 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 	    final KMyMoneyFile kmmFile) {
     	super(kmmFile);
 
+    	if ( peer == null ) {
+    		throw new IllegalArgumentException("argument <peer> is null");
+    	}
+
+    	if ( kmmFile == null ) {
+    		throw new IllegalArgumentException("argument <kmmFile> is null");
+    	}
+
     	this.jwsdpPeer = peer;
     }
 
@@ -82,7 +92,25 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     public KMyMoneyTransactionImpl(final KMyMoneyTransaction trx) {
     	super(trx.getKMyMoneyFile());
 
+    	if ( trx.getJwsdpPeer() == null ) {
+    		throw new IllegalArgumentException("Transaction not correctly initialized: null jwsdpPeer given");
+    	}
+
+    	if ( trx.getKMyMoneyFile() == null ) {
+    		throw new IllegalArgumentException("Transaction not correctly initialized: null file given");
+    	}
+
     	jwsdpPeer = trx.getJwsdpPeer();
+    }
+
+    // ---------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("exports")
+    public TRANSACTION getJwsdpPeer() {
+    	return jwsdpPeer;
     }
 
     // ---------------------------------------------------------------
@@ -94,6 +122,9 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     	return getBalance().equals(new FixedPointNumber());
     }
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public boolean isBalancedRat() {
     	return getBalanceRat().equals(BigFraction.ZERO);
@@ -127,13 +158,14 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		return Currency.getInstance(kmmCurrID);
 	}
 
-    /**
+	/**
      * {@inheritDoc}
      */
+    @Deprecated
     public FixedPointNumber getBalance() {
     	FixedPointNumber fp = new FixedPointNumber();
 
-    	for (KMyMoneyTransactionSplit split : getSplits()) {
+    	for ( KMyMoneyTransactionSplit split : getSplits() ) {
     		fp.add(split.getValue());
     	}
 
@@ -171,8 +203,18 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
+    @Deprecated
     public FixedPointNumber getNegatedBalance() {
     	return getBalance().multiply(new FixedPointNumber("-100/100"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BigFraction getNegatedBalanceRat() {
+    	return getBalanceRat().negate();
     }
 
     /**
@@ -194,7 +236,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public KMMTrxID getID() {
-    	return new KMMTrxID(jwsdpPeer.getId());
+    	return new KMMTrxID( jwsdpPeer.getId() );
     }
 
     /**
@@ -205,21 +247,6 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     }
 
     // ----------------------------
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("exports")
-    public TRANSACTION getJwsdpPeer() {
-    	return jwsdpPeer;
-    }
-
-    // ----------------------------
-
-    /**
-     * @see #getSplits()
-     */
-    protected List<KMyMoneyTransactionSplit> mySplits = null;
 
     /**
      * @param impl the split to add to mySplits
@@ -255,7 +282,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 			throw new IllegalArgumentException("argument <splitID> is not set");
 		}
 
-		for (KMyMoneyTransactionSplit split : getSplits()) {
+		for ( KMyMoneyTransactionSplit split : getSplits() ) {
 			if (split.getID().equals(spltID)) {
 				return split;
 			}
@@ -278,7 +305,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 			throw new IllegalArgumentException("argument <acctID> is not set");
 		}
 
-		for (KMyMoneyTransactionSplit split : getSplits()) {
+		for ( KMyMoneyTransactionSplit split : getSplits() ) {
 			if (split.getAccountID().equals(acctID)) {
 				return split;
 			}
@@ -326,7 +353,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * @return the new split-instance
      */
     protected KMyMoneyTransactionSplitImpl createSplit(
-    		final SPLIT jwsdpSplt, 
+    		final SPLIT jwsdpSplt,
     		final boolean addToAcct,
     		final boolean addToPye,
     		final boolean addToTags) {
@@ -338,9 +365,9 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public LocalDate getDateEntered() {
-    	if (entryDate == null) {
-    		String dateStr = jwsdpPeer.getEntrydate();
-    		entryDate = LocalDate.parse(dateStr);
+    	if ( entryDate == null ) {
+    		XMLGregorianCalendar cal = jwsdpPeer.getEntrydate();
+    		entryDate = LocalDate.of(cal.getYear(), cal.getMonth(), cal.getDay());
     	}
 
     	return entryDate;
@@ -374,7 +401,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public LocalDate getDatePosted() {
-    	if (postDate == null) {
+    	if ( postDate == null ) {
     		XMLGregorianCalendar cal = jwsdpPeer.getPostdate();
     		postDate = LocalDate.of(cal.getYear(), cal.getMonth(), cal.getDay());
     	}
@@ -416,7 +443,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		return HasUserDefinedAttributesImpl.getUserDefinedAttributeKeysCore(kvpList);
 	}
 
-    // ---------------------------------------------------------------
+	// ---------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -433,7 +460,11 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		buffer.append(getMemo() + "'");
 
 		buffer.append(", #splits=");
-		buffer.append(getSplitsCount());
+		try {
+			buffer.append(getSplitsCount());
+		} catch (Exception e) {
+			buffer.append("ERROR");
+		}
 
 		buffer.append(", date-posted=");
 		try {
@@ -453,7 +484,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 
 		return buffer.toString();
     }
-    
+
     /**
      * sorts primarily on the date the transaction happened and secondarily on the
      * date it was entered.
@@ -463,12 +494,13 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     public int compareTo(final KMyMoneyTransaction otherTrx) {
     	try {
     		int compare = otherTrx.getDatePosted().compareTo(getDatePosted());
-    		if (compare != 0) {
+    		if ( compare != 0 ) {
     			return compare;
     		}
 
     		return otherTrx.getDateEntered().compareTo(getDateEntered());
-    	} catch (Exception e) {
+    	} catch ( Exception e ) {
+			// ::TODO
     		e.printStackTrace();
     		return 0;
     	}
