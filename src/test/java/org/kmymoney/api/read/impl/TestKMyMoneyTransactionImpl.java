@@ -102,4 +102,19 @@ public class TestKMyMoneyTransactionImpl {
 		assertEquals("S0001", trx.getSplits().get(0).getID().toString());
 		assertEquals("S0002", trx.getSplits().get(1).getID().toString());
 	}
+
+	@Test
+	public void test04() throws Exception {
+		trx = kmmFile.getTransactionByID(TRX_1_ID);
+		assertNotEquals(null, trx);
+
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+				+ "<TRANSACTION id=\"T000000000000000001\" commodity=\"EUR\" entrydate=\"2023-11-03\" postdate=\"2023-01-01\" memo=\"\">\n"
+				+ "    <SPLITS>\n"
+				+ "        <SPLIT account=\"A000004\" action=\"\" bankid=\"\" id=\"S0001\" memo=\"\" number=\"\" payee=\"P000004\" price=\"1/1\" reconciledate=\"\" reconcileflag=\"0\" shares=\"10000/1\" value=\"10000/1\"/>\n"
+				+ "        <SPLIT account=\"A000053\" action=\"\" bankid=\"\" id=\"S0002\" memo=\"\" number=\"\" payee=\"P000004\" price=\"1/1\" reconciledate=\"\" reconcileflag=\"0\" shares=\"-10000/1\" value=\"-10000/1\"/>\n"
+				+ "    </SPLITS>\n"
+				+ "</TRANSACTION>\n", trx.toXMLString());
+	}
+
 }

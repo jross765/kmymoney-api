@@ -1,5 +1,6 @@
 package org.kmymoney.api.read.impl;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
@@ -24,6 +25,9 @@ import org.kmymoney.base.basetypes.simple.KMMTrxID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import xyz.schnorxoborx.base.beanbase.MappingException;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
@@ -510,6 +514,20 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 		buffer.append("]");
 		return buffer.toString();
+	}
+
+	@Override
+	public String toXMLString() {
+		try {
+			JAXBContext context = JAXBContext.newInstance(SPLIT.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			StringWriter writer = new StringWriter();
+			marshaller.marshal(jwsdpPeer, writer);
+			return writer.toString();
+		} catch (JAXBException e) {
+			throw new RuntimeException("Failed to convert KMyMoneyTranscationSplitImpl to XML", e);
+		}
 	}
 
 }

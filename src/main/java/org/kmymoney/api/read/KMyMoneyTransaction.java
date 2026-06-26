@@ -8,6 +8,7 @@ import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.TRANSACTION;
 import org.kmymoney.api.read.hlp.HasUserDefinedAttributes;
 import org.kmymoney.api.read.hlp.KMyMoneyObject;
+import org.kmymoney.api.read.hlp.GeneratesXml;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
@@ -25,7 +26,8 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  */
 public interface KMyMoneyTransaction extends Comparable<KMyMoneyTransaction>,
 											 KMyMoneyObject,
-                                             HasUserDefinedAttributes
+                                             HasUserDefinedAttributes,
+                                             GeneratesXml
 {
 
     // For the following enumarations, cf.:

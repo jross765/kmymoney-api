@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.generated.SPLIT;
+import org.kmymoney.api.read.hlp.GeneratesXml;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
@@ -26,7 +27,8 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  * 
  * @see KMyMoneyTransaction
  */
-public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransactionSplit>
+public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransactionSplit>,
+												  GeneratesXml
 {
 
     // For the following states cf.:
