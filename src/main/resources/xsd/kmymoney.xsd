@@ -224,7 +224,7 @@
   <xs:element name="TRANSACTION">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="SPLITS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="SPLITS"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
       </xs:sequence>
       <xs:attribute name="id" use="required"/>
@@ -251,6 +251,7 @@
             <xs:attribute name="id" type="xs:NCName" use="required"/>
           </xs:complexType>
         </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
       </xs:sequence>
       <xs:attribute name="account" use="required" type="xs:NCName"/>
       <xs:attribute name="action"/>

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.generated.KEYVALUEPAIRS;
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.read.KMyMoneyAccount;
@@ -12,8 +13,10 @@ import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
+import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
+import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
@@ -700,6 +703,83 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 //	public KMyMoneyWritableFileImpl getKMyMoneyFile() {
 //		return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 //	}
+
+	// ---------------------------------------------------------------
+
+	@Override
+	public void addUserDefinedAttribute(final String name, final String value) {
+		if ( name == null ) {
+			throw new IllegalArgumentException("argument <name> is null");
+		}
+		
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is emptys");
+		}
+
+		if ( value == null ) {
+			throw new IllegalArgumentException("argument <value> is null");
+		}
+		
+		if ( value.isBlank() ) {
+			throw new IllegalArgumentException("argument <value> is blank");
+		}
+
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
+			ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
+			KEYVALUEPAIRS newKVPs = fact.createKEYVALUEPAIRS();
+			jwsdpPeer.setKEYVALUEPAIRS(newKVPs);
+		}
+		
+		HasWritableUserDefinedAttributesImpl
+			.addUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
+			                             name, value);
+	}
+
+	@Override
+	public void removeUserDefinedAttribute(final String name) {
+		if ( name == null ) {
+			throw new IllegalArgumentException("argument <name> is null");
+		}
+		
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
+		}
+
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
+			throw new KVPListDoesNotContainKeyException();
+		}
+		
+		HasWritableUserDefinedAttributesImpl
+			.removeUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
+											name);
+	}
+
+	@Override
+	public void setUserDefinedAttribute(final String name, final String value) {
+		if ( name == null ) {
+			throw new IllegalArgumentException("argument <name> is null");
+		}
+		
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
+		}
+
+		if ( value == null ) {
+			throw new IllegalArgumentException("argument <value> is null");
+		}
+		
+		if ( value.isBlank() ) {
+			throw new IllegalArgumentException("argument <value> is blank");
+		}
+
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
+			throw new KVPListDoesNotContainKeyException();
+		}
+		
+		HasWritableUserDefinedAttributesImpl
+			.setUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
+			                             name, value);
+	}
 
 	// ---------------------------------------------------------------
 

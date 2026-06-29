@@ -3,9 +3,11 @@ package org.kmymoney.api.read.impl;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.numbers.fraction.BigFraction;
+import org.kmymoney.api.generated.PAIR;
 import org.kmymoney.api.generated.SPLIT;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
@@ -13,6 +15,7 @@ import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
+import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
@@ -457,6 +460,40 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			e.printStackTrace();
 			return 0;
 		}
+	}
+
+    // ---------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+	public String getUserDefinedAttribute(final String name) {
+		if ( name == null ) {
+			throw new IllegalArgumentException("argument <name> is null");
+		}
+
+		if ( name.isBlank() ) {
+			throw new IllegalArgumentException("argument <name> is blank");
+		}
+
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {
+			return null;
+		}
+		
+		List<PAIR> kvpList = jwsdpPeer.getKEYVALUEPAIRS().getPAIR();
+		return HasUserDefinedAttributesImpl.getUserDefinedAttributeCore(kvpList, name);
+	}
+
+    /**
+     * {@inheritDoc}
+     */
+	public List<String> getUserDefinedAttributeKeys() {
+		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {
+			return null;
+		}
+		
+		List<PAIR> kvpList = jwsdpPeer.getKEYVALUEPAIRS().getPAIR();
+		return HasUserDefinedAttributesImpl.getUserDefinedAttributeKeysCore(kvpList);
 	}
 
 	// ---------------------------------------------------------------

@@ -5,6 +5,7 @@ import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.write.hlp.HasWritableUserDefinedAttributes;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
@@ -20,7 +21,8 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  * @see KMyMoneyTransactionSplit
  */
 public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSplit,
-                                                          KMyMoneyWritableObject
+                                                          KMyMoneyWritableObject,
+                                                          HasWritableUserDefinedAttributes
 {
 
 	/**

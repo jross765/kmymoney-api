@@ -195,8 +195,10 @@ public class TestKMyMoneyTransactionSplitImpl {
 		splt = kmmFile.getTransactionSplitByID(TRXSPLT_01_ID);
 		assertNotEquals(null, splt);
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-				+ "<SPLIT account=\"A000004\" action=\"\" bankid=\"\" id=\"S0001\" memo=\"\" number=\"\" payee=\"P000004\" price=\"1/1\" reconciledate=\"\" reconcileflag=\"0\" shares=\"10000/1\" value=\"10000/1\"/>\n", splt.toXMLString());
+		assertEquals("""
+				<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+				<SPLIT account="A000004" action="" bankid="" id="S0001" memo="" number="" payee="P000004" price="1/1" reconciledate="" reconcileflag="0" shares="10000/1" value="10000/1"/>""" + "\n", 
+				splt.toXMLString());
 	}
 
 }

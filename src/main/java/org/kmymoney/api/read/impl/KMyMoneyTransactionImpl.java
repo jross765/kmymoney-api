@@ -503,25 +503,24 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		}
 	}
 
-    /**
-     * sorts primarily on the date the transaction happened and secondarily on the
-     * date it was entered.
-     *
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(final KMyMoneyTransaction otherTrx) {
-    	try {
-    		int compare = otherTrx.getDatePosted().compareTo(getDatePosted());
-    		if ( compare != 0 ) {
-    			return compare;
-    		}
-
-    		return otherTrx.getDateEntered().compareTo(getDateEntered());
-    	} catch ( Exception e ) {
+	/**
+	 * sorts primarily on the date the transaction happened and secondarily on the
+	 * date it was entered.
+	 *
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public int compareTo(final KMyMoneyTransaction otherTrx) {
+		try {
+				int compare = otherTrx.getDatePosted().compareTo(getDatePosted());
+				if ( compare != 0 ) {
+					return compare;
+				}
+				return otherTrx.getDateEntered().compareTo(getDateEntered());
+		} catch ( Exception e ) {
 			// ::TODO
-    		e.printStackTrace();
-    		return 0;
-    	}
-    }
+			e.printStackTrace();
+			return 0;
+	   }
+	}
 
 }
