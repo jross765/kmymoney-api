@@ -250,6 +250,54 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	public void remove() {
 		getTransaction().remove(this);
 	}
+	
+	// ---------------------------------------------------------------
+	
+	/**
+	 * <b>CAUTION</b>: The following method is a very ugly exception from the
+	 * rule: For obvious reasons, this API normally does not support
+	 * changing an object's ID, once generated.
+	 * However, there is a special case when merging two transactions
+	 * where we actually have to do this (which is arguably a combination
+	 * of a design and an an implementation issue, both in KMyMoney).
+	 * Cf. module "API Extensions", package "trxmgr", class TransactionMergerVar3.
+	 * Anyway: it's needed, and here it is (but at least, we do not
+	 * make it part of the interface).
+	 * 
+	 * It should go without saying after this explanation, but for
+	 * the record: 
+	 * <b>Do not use this method unless you really know what you are doing! Seriously!</b>
+	 */
+	public void replaceID(KMMSpltID newID) {
+		LOGGER.warn("replaceID: YOU CALLED THAT METHOD? SERIOUSLY?!");
+		LOGGER.warn("replaceID: THINK AGAIN OR LIVE WITH THE CONSEQUENCES, IRRESPONSIBLE JERK!");
+
+		if ( newID == null ) {
+			throw new IllegalArgumentException("argument <newID> is null");
+		}
+
+		if ( ! newID.isSet() ) {
+			throw new IllegalArgumentException("argument <newID> is not set");
+		}
+		
+		// --
+		
+		// Check if ID is already used in this split's transaction.
+		for ( KMyMoneyTransactionSplit splt : getTransaction().getSplits() ) {
+			if ( splt.getID().equals(newID) ) {
+				LOGGER.error("replaceID: There already is split with ID " + newID + " in transaction " + getTransactionID());
+				throw new IllegalStateException("There already is split with ID " + newID + " in transaction " + getTransactionID());
+			}
+		}
+		
+		// --
+		
+		KMMSpltID oldID = getID();
+		jwsdpPeer.setId(newID.toString());
+		LOGGER.info("replaceID: Changed split's ID from " + oldID + " to " + newID);
+	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * @see KMyMoneyWritableTransactionSplit#setAccount(KMyMoneyAccount)
