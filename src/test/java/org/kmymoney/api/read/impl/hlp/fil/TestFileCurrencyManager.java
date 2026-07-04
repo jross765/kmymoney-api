@@ -1,4 +1,4 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.fil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -9,19 +9,19 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
-import org.kmymoney.api.read.KMyMoneySecurity;
-import org.kmymoney.api.read.impl.hlp.fil.FileSecurityManager;
-import org.kmymoney.base.basetypes.simple.KMMSecID;
+import org.kmymoney.api.read.KMyMoneyCurrency;
+import org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager;
+import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 
 import junit.framework.JUnit4TestAdapter;
 
-public class TestFileSecurityManager {
+public class TestFileCurrencyManager {
 
 	// ---------------------------------------------------------------
 
 	private KMyMoneyFileImplTestHelper kmmFile = null;
 
-	private FileSecurityManager mgr = null;
+	private FileCurrencyManager mgr = null;
 
 	// -----------------------------------------------------------------
 
@@ -30,7 +30,7 @@ public class TestFileSecurityManager {
 	}
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestFileSecurityManager.class);
+		return new JUnit4TestAdapter(TestFileCurrencyManager.class);
 	}
 
 	@Before
@@ -58,20 +58,20 @@ public class TestFileSecurityManager {
 	
 	@Test
 	public void test01() throws Exception {
-		mgr = kmmFile.getSecurityManager();
+		mgr = kmmFile.getCurrencyManager();
 		
-		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getNofEntriesSecurityMap());
-		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getSecurities().size());
+		assertEquals(ConstTest.Stats.NOF_CURR, mgr.getNofEntriesCurrencyMap());
+		assertEquals(ConstTest.Stats.NOF_CURR, mgr.getCurrencies().size());
 	}
 
 	@Test
 	public void test02() throws Exception {
-		mgr = kmmFile.getSecurityManager();
+		mgr = kmmFile.getCurrencyManager();
 		
-		Collection<KMyMoneySecurity> secColl = mgr.getSecurities();
-		KMMSecID secID = new KMMSecID("E000001");
-		KMyMoneySecurity sec = mgr.getSecurityByID(secID);
-		assertTrue(secColl.contains(sec));
+		Collection<KMyMoneyCurrency> currColl = mgr.getCurrencies();
+		KMMQualifCurrID currID = new KMMQualifCurrID("EUR");
+		KMyMoneyCurrency curr = mgr.getCurrencyByQualifID(currID);
+		assertTrue(currColl.contains(curr));
 	}
 
 }

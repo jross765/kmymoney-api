@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +21,12 @@ public class KMyMoneyWritableFileImplTestHelper extends KMyMoneyWritableFileImpl
 	// ---------------------------------------------------------------
 	// For test purposes only
 
-	public org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager getPayeeManager() {
-		return (org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager) pyeMgr;
+	public org.kmymoney.api.write.impl.hlp.fil.FileAccountManager getAccountManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FileAccountManager) acctMgr;
+	}
+
+	public org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager getTransactionManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) trxMgr;
 	}
 
 	public org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager getSecurityManager() {
@@ -35,6 +39,14 @@ public class KMyMoneyWritableFileImplTestHelper extends KMyMoneyWritableFileImpl
 
 	public org.kmymoney.api.write.impl.hlp.fil.FilePriceManager getPriceManager() {
 		return (org.kmymoney.api.write.impl.hlp.fil.FilePriceManager) prcMgr;
+	}
+
+	public org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager getPayeeManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FilePayeeManager) pyeMgr;
+	}
+
+	public org.kmymoney.api.write.impl.hlp.fil.FileTagManager getTagManager() {
+		return (org.kmymoney.api.write.impl.hlp.fil.FileTagManager) tagMgr;
 	}
 
 }

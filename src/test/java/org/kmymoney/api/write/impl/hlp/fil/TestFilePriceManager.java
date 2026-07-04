@@ -1,4 +1,4 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -9,19 +9,18 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
-import org.kmymoney.api.read.KMyMoneyCurrency;
-import org.kmymoney.api.read.impl.hlp.fil.FileCurrencyManager;
-import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
+import org.kmymoney.api.read.KMyMoneyPrice;
+import org.kmymoney.base.basetypes.complex.KMMPrcID;
 
 import junit.framework.JUnit4TestAdapter;
 
-public class TestFileCurrencyManager {
+public class TestFilePriceManager {
 
 	// ---------------------------------------------------------------
 
-	private KMyMoneyFileImplTestHelper kmmFile = null;
+	private KMyMoneyWritableFileImplTestHelper kmmInFile = null;
 
-	private FileCurrencyManager mgr = null;
+	private org.kmymoney.api.write.impl.hlp.fil.FilePriceManager mgr = null;
 
 	// -----------------------------------------------------------------
 
@@ -30,7 +29,7 @@ public class TestFileCurrencyManager {
 	}
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestFileCurrencyManager.class);
+		return new JUnit4TestAdapter(TestFilePriceManager.class);
 	}
 
 	@Before
@@ -47,7 +46,7 @@ public class TestFileCurrencyManager {
 		}
 
 		try {
-			kmmFile = new KMyMoneyFileImplTestHelper(kmmInFileStream);
+			kmmInFile = new KMyMoneyWritableFileImplTestHelper(kmmInFileStream);
 		} catch (Exception exc) {
 			System.err.println("Cannot parse KMyMoney in-file");
 			exc.printStackTrace();
@@ -58,20 +57,20 @@ public class TestFileCurrencyManager {
 	
 	@Test
 	public void test01() throws Exception {
-		mgr = kmmFile.getCurrencyManager();
+		mgr = kmmInFile.getPriceManager();
 		
-		assertEquals(ConstTest.Stats.NOF_CURR, mgr.getNofEntriesCurrencyMap());
-		assertEquals(ConstTest.Stats.NOF_CURR, mgr.getCurrencies().size());
+		assertEquals(ConstTest.Stats.NOF_PRC, mgr.getNofEntriesPriceMap());
+		assertEquals(ConstTest.Stats.NOF_PRC, mgr.getPrices().size());
 	}
 
 	@Test
 	public void test02() throws Exception {
-		mgr = kmmFile.getCurrencyManager();
+		mgr = kmmInFile.getPriceManager();
 		
-		Collection<KMyMoneyCurrency> currColl = mgr.getCurrencies();
-		KMMQualifCurrID currID = new KMMQualifCurrID("EUR");
-		KMyMoneyCurrency curr = mgr.getCurrencyByQualifID(currID);
-		assertTrue(currColl.contains(curr));
+		Collection<KMyMoneyPrice> prcColl = mgr.getPrices();
+		KMMPrcID prcID = new KMMPrcID("E000001", "EUR", "2023-11-03");
+		KMyMoneyPrice prc = mgr.getPriceByID(prcID);
+		assertTrue(prcColl.contains(prc));
 	}
 
 }

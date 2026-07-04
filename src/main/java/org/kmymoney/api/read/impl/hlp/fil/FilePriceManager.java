@@ -161,7 +161,7 @@ public class FilePriceManager {
 
 	// ----------------------------
 
-	public KMyMoneyPrice getPriceByID(KMMPrcID prcID) {
+	public KMyMoneyPrice getPriceByID(final KMMPrcID prcID) {
 		if ( prcID == null ) {
 			throw new IllegalArgumentException("argument <prcID> is null");
 		}
@@ -176,7 +176,8 @@ public class FilePriceManager {
 
 		KMyMoneyPrice retval = prcMap.get(prcID);
 		if ( retval == null ) {
-			LOGGER.warn("getPriceByID: No Price with ID '" + prcID + "'. We know " + prcMap.size() + " prices.");
+			LOGGER.error("getPriceByID: No Price with ID '" + prcID + "'. " + 
+				"We know " + prcMap.size() + " prices.");
 		}
 
 		return retval;
@@ -383,11 +384,13 @@ public class FilePriceManager {
 
 	// ---------------------------------------------------------------
 
+	@Deprecated
 	public FixedPointNumber getLatestPrice(final KMMQualifSecCurrID secCurrID) {
 		return PriceHelper_FP.getLatestPrice(secCurrID, 
 				 kmmFile, prcMap);
 	}
 
+	@Deprecated
 	public FixedPointNumber getLatestPrice(final Currency curr) {
 		return PriceHelper_FP.getLatestPrice(curr, 
 				kmmFile, prcMap);

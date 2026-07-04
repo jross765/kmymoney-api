@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.fil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneySecurity;
+import org.kmymoney.api.read.impl.hlp.fil.FileSecurityManager;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 
 import junit.framework.JUnit4TestAdapter;
@@ -18,9 +19,9 @@ public class TestFileSecurityManager {
 
 	// ---------------------------------------------------------------
 
-	private KMyMoneyWritableFileImplTestHelper kmmInFile = null;
+	private KMyMoneyFileImplTestHelper kmmFile = null;
 
-	private org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager mgr = null;
+	private FileSecurityManager mgr = null;
 
 	// -----------------------------------------------------------------
 
@@ -46,7 +47,7 @@ public class TestFileSecurityManager {
 		}
 
 		try {
-			kmmInFile = new KMyMoneyWritableFileImplTestHelper(kmmInFileStream);
+			kmmFile = new KMyMoneyFileImplTestHelper(kmmInFileStream);
 		} catch (Exception exc) {
 			System.err.println("Cannot parse KMyMoney in-file");
 			exc.printStackTrace();
@@ -57,7 +58,7 @@ public class TestFileSecurityManager {
 	
 	@Test
 	public void test01() throws Exception {
-		mgr = kmmInFile.getSecurityManager();
+		mgr = kmmFile.getSecurityManager();
 		
 		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getNofEntriesSecurityMap());
 		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getSecurities().size());
@@ -65,7 +66,7 @@ public class TestFileSecurityManager {
 
 	@Test
 	public void test02() throws Exception {
-		mgr = kmmInFile.getSecurityManager();
+		mgr = kmmFile.getSecurityManager();
 		
 		Collection<KMyMoneySecurity> secColl = mgr.getSecurities();
 		KMMSecID secID = new KMMSecID("E000001");

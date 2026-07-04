@@ -83,7 +83,7 @@ public class FileBudgetManager {
 		return retval;
 	}
 
-	public List<KMyMoneyBudget> getBudgetsByName(String expr) {
+	public List<KMyMoneyBudget> getBudgetsByName(final String expr) {
 		if ( expr == null ) {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
@@ -95,7 +95,7 @@ public class FileBudgetManager {
 		return getBudgetsByName(expr, true);
 	}
 
-	public List<KMyMoneyBudget> getBudgetsByName(String expr, boolean relaxed) {
+	public List<KMyMoneyBudget> getBudgetsByName(final String expr, boolean relaxed) {
 		if ( expr == null ) {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
@@ -127,7 +127,8 @@ public class FileBudgetManager {
 		return result;
 	}
 
-	public KMyMoneyBudget getBudgetsByNameUniq(String expr) throws NoEntryFoundException, TooManyEntriesFoundException {
+	public KMyMoneyBudget getBudgetsByNameUniq(final String expr)
+			throws NoEntryFoundException, TooManyEntriesFoundException {
 		if ( expr == null ) {
 			throw new IllegalArgumentException("argument <expr> is null");
 		}
@@ -136,13 +137,13 @@ public class FileBudgetManager {
 			throw new IllegalArgumentException("argument <expr> is blank");
 		}
 
-		List<KMyMoneyBudget> cmdtyList = getBudgetsByName(expr, false);
-		if ( cmdtyList.size() == 0 )
+		List<KMyMoneyBudget> bdgtList = getBudgetsByName(expr, false);
+		if ( bdgtList.size() == 0 )
 			throw new NoEntryFoundException();
-		else if ( cmdtyList.size() > 1 )
+		else if ( bdgtList.size() > 1 )
 			throw new TooManyEntriesFoundException();
 		else
-			return cmdtyList.get(0);
+			return bdgtList.get(0);
 	}
 
 	public Collection<KMyMoneyBudget> getBudgets() {

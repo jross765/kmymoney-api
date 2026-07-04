@@ -1,4 +1,4 @@
-package org.kmymoney.api.write.impl.hlp;
+package org.kmymoney.api.write.impl.hlp.fil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -9,18 +9,19 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import org.kmymoney.api.ConstTest;
-import org.kmymoney.api.read.KMyMoneyPrice;
-import org.kmymoney.base.basetypes.complex.KMMPrcID;
+import org.kmymoney.api.read.KMyMoneySecurity;
+import org.kmymoney.api.write.KMyMoneyWritableSecurity;
+import org.kmymoney.base.basetypes.simple.KMMSecID;
 
 import junit.framework.JUnit4TestAdapter;
 
-public class TestFilePriceManager {
+public class TestFileSecurityManager {
 
 	// ---------------------------------------------------------------
 
 	private KMyMoneyWritableFileImplTestHelper kmmInFile = null;
 
-	private org.kmymoney.api.write.impl.hlp.fil.FilePriceManager mgr = null;
+	private org.kmymoney.api.write.impl.hlp.fil.FileSecurityManager mgr = null;
 
 	// -----------------------------------------------------------------
 
@@ -29,7 +30,7 @@ public class TestFilePriceManager {
 	}
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestFilePriceManager.class);
+		return new JUnit4TestAdapter(TestFileSecurityManager.class);
 	}
 
 	@Before
@@ -57,20 +58,43 @@ public class TestFilePriceManager {
 	
 	@Test
 	public void test01() throws Exception {
-		mgr = kmmInFile.getPriceManager();
+		mgr = kmmInFile.getSecurityManager();
 		
-		assertEquals(ConstTest.Stats.NOF_PRC, mgr.getNofEntriesPriceMap());
-		assertEquals(ConstTest.Stats.NOF_PRC, mgr.getPrices().size());
+		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getNofEntriesSecurityMap());
+		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getSecurities().size());
 	}
 
 	@Test
 	public void test02() throws Exception {
-		mgr = kmmInFile.getPriceManager();
+		mgr = kmmInFile.getSecurityManager();
 		
-		Collection<KMyMoneyPrice> prcColl = mgr.getPrices();
-		KMMPrcID prcID = new KMMPrcID("E000001", "EUR", "2023-11-03");
-		KMyMoneyPrice prc = mgr.getPriceByID(prcID);
-		assertTrue(prcColl.contains(prc));
+		Collection<KMyMoneySecurity> secColl = mgr.getSecurities();
+		KMMSecID secID = new KMMSecID("E000001");
+		KMyMoneySecurity sec = mgr.getSecurityByID(secID);
+		assertTrue(secColl.contains(sec));
+	}
+
+	@Test
+	public void test03() throws Exception {
+		mgr = kmmInFile.getSecurityManager();
+		
+		// has no splits:
+		KMMSecID secID = new KMMSecID("E000004");
+		assertEquals(ConstTest.Stats.NOF_SEC, mgr.getSecurities().size());
+		KMyMoneyWritableSecurity sec = kmmInFile.getWritableSecurityByID(secID);
+		kmmInFile.removeSecurity(sec);
+		assertEquals(ConstTest.Stats.NOF_SEC - 1, mgr.getSecurities().size());
+
+		// has splits:
+		secID = new KMMSecID("E000001");
+		sec = kmmInFile.getWritableSecurityByID(secID);
+		try {
+			kmmInFile.removeSecurity(sec);
+			assertEquals(1, 0);
+		} catch ( Exception exc ) {
+			assertEquals(0, 0);
+		}
+		assertEquals(ConstTest.Stats.NOF_SEC - 1, mgr.getSecurities().size());
 	}
 
 }

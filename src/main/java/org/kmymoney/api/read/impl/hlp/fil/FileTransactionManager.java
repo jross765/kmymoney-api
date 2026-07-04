@@ -277,6 +277,9 @@ public class FileTransactionManager {
 		List<KMyMoneyTransactionSplit> result = new ArrayList<KMyMoneyTransactionSplit>();
 
 		for ( KMyMoneyTransactionSplit splt : trxSpltMap.values() ) {
+			if ( splt.getAccount() == null ) // yes, that can happen (after write operations)!
+				continue;
+			
 			if ( splt.getAccount().getQualifSecCurrID().toString().equals(qualifID.toString()) ) {
 				KMyMoneyTransactionSplit newSplt = kmmFile.getTransactionSplitByID(splt.getQualifID());
 				result.add(newSplt);

@@ -1,4 +1,4 @@
-package org.kmymoney.api.read.impl.hlp;
+package org.kmymoney.api.read.impl.hlp.fil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
