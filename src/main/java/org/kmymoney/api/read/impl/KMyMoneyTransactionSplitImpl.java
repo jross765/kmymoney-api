@@ -75,11 +75,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			KMyMoneyAccount acct = getAccount();
 			if (acct == null) {
 				// Account is mandatory --> error
-				LOGGER.error("No such Account id='" + getAccountID() + "' for Transactions-Split with id '" + getQualifID()
+				LOGGER.error("No such Account id='" + getAccountID() + "' for Transaction-Split with id '" + getQualifID()
 			    	+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
 			    	+ "' description '" + getTransaction().getMemo() + "'");
 			} else {
-				acct.addTransactionSplit(this);
+				((KMyMoneyAccountImpl) acct).addTransactionSplit(this);
 			}
 		}
 		
@@ -87,11 +87,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			KMyMoneyPayee pye = getPayee();
 			if (pye == null) {
 				// Payee is optional --> just debug
-				LOGGER.debug("No such Payee id='" + getPayeeID() + "' for Transactions-Split with id '" + getQualifID() 
+				LOGGER.debug("No such Payee id='" + getPayeeID() + "' for Transaction-Split with id '" + getQualifID() 
 			    	+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
 			    	+ "' description '" + getTransaction().getMemo() + "'");
 			} else {
-				pye.addTransactionSplit(this);
+				((KMyMoneyPayeeImpl) pye).addTransactionSplit(this);
 			}
 		}
 
@@ -99,12 +99,12 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			Collection<KMyMoneyTag> tagList = getTags();
 			if (tagList == null) {
 				// Tags are optional --> just debug
-				LOGGER.debug("No such Tag for Transactions-Split with id '" + getQualifID() 
+				LOGGER.debug("No such Tag for Transaction-Split with id '" + getQualifID() 
 			    	+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
 			    	+ "' description '" + getTransaction().getMemo() + "'");
 			} else {
 				for ( KMyMoneyTag tag : tagList ) {
-					tag.addTransactionSplit(this);
+					((KMyMoneyTagImpl) tag).addTransactionSplit(this);
 				}
 			}
 		}
@@ -563,7 +563,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 			marshaller.marshal(jwsdpPeer, writer);
 			return writer.toString();
 		} catch (JAXBException e) {
-			throw new RuntimeException("Failed to convert KMyMoneyTranscationSplitImpl to XML", e);
+			throw new RuntimeException("Failed to convert JWSDP peer to XML", e);
 		}
 	}
 

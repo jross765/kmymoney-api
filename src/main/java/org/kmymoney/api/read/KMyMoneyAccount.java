@@ -15,7 +15,6 @@ import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
 import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
-import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
@@ -286,20 +285,6 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
     // -----------------------------------------------------------------
 
     /**
-     * The returned list is sorted by the natural order of the Transaction-Splits.
-     *
-     * @return all splits
-     * {@link KMyMoneyTransactionSplit}
-     */
-    List<KMyMoneyTransactionSplit> getTransactionSplits();
-
-    /**
-     * @param spltID the split-id to look for
-     * @return the identified split or null
-     */
-    KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID);
-
-    /**
      * Gets the last transaction-split before the given date.
      *
      * @param date if null, the last split of all time is returned
@@ -307,33 +292,13 @@ public interface KMyMoneyAccount extends Comparable<KMyMoneyAccount>,
      */
     KMyMoneyTransactionSplit getLastSplitBeforeRecursive(LocalDate date);
 
-    /**
-     * @param split split to add to this transaction
-     */
-    void addTransactionSplit(KMyMoneyTransactionSplit split);
-
     // ----------------------------
-
-    /**
-     * @return true if ${@link #getTransactionSplits()}.size()>0
-     */
-    boolean hasTransactions();
 
     /**
      * @return true if ${@link #hasTransactions()} is true for this or any
      *         sub-accounts
      */
     boolean hasTransactionsRecursive();
-
-    /**
-     * The returned list ist sorted by the natural order of the Transaction-Splits.
-     *
-     * @return all splits
-     * {@link KMyMoneyTransaction}
-     */
-    List<KMyMoneyTransaction> getTransactions();
-
-    List<KMyMoneyTransaction> getTransactions(LocalDate fromDate, LocalDate toDate);
 
     // -----------------------------------------------------------------
 

@@ -84,9 +84,14 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 	/**
 	 * Removes the given split from this transaction.
 	 * 
-	 * @param impl the split to remove from this transaction
+	 * @param splt the split to remove from this transaction
 	 */
-	void remove(KMyMoneyWritableTransactionSplit impl);
+	void removeSplit(KMyMoneyWritableTransactionSplit splt);
+
+	@Deprecated
+	void remove(KMyMoneyWritableTransactionSplit splt);
+
+	void removeSplit(KMMSpltID spltID);
 
 	/**
 	 * remove this transaction.

@@ -12,6 +12,7 @@ import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
+import org.kmymoney.api.read.impl.hlp.HasTransactionsImplSpec;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
@@ -19,7 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
-                             implements KMyMoneyTag
+                             implements KMyMoneyTag,
+                                        HasTransactionsImplSpec
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyTagImpl.class);
 
@@ -104,6 +106,7 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
     /**
      * @see KMyMoneyPayee#addTransactionSplit(KMyMoneyTransactionSplit)
      */
+	@Override
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("argument <splt> is null");
@@ -128,6 +131,57 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
 			mySplits.add(splt);
 			mySplitsNeedSorting = true;
 		}
+    }
+
+	@Override
+    public void removeTransactionSplit(final KMyMoneyTransactionSplit splt) {
+    	removeTransactionSplit(splt, true);
+    }
+    
+	@Override
+    public void removeTransactionSplit(final KMyMoneyTransactionSplit splt, boolean strict) {
+		if ( splt == null ) {
+			throw new IllegalArgumentException("argument <splt> is null");
+		}
+		
+		if ( ! splt.getTagIDs().contains( getID() ) ) {
+			throw new IllegalArgumentException("argument <splt> is not assigned to tag " + getID() + ", thus cannot be removed from it");
+		}
+
+		if ( strict )
+		{
+			// Does not work:
+			// if ( ! mySplits.contains(splt) ) {
+			// ...
+			// Instead:
+			boolean intListContainsSplt = false;
+			for ( KMyMoneyTransactionSplit elt : mySplits ) {
+				if ( elt.getQualifID().equals( splt.getQualifID() ) ) {
+					intListContainsSplt = true;
+					break;
+				}
+			}
+			if ( ! intListContainsSplt ) {
+				throw new IllegalStateException("internal list of splits does not contain split " + splt.getQualifID() + ", thus this split cannot be removed from the list");
+			}
+		}
+		
+//		int listSize = mySplits.size();
+		// Does not work:
+		// mySplits.remove(splt);
+		// Instead:
+		for ( int i = mySplits.size() - 1; i >= 0; i-- ) {
+			if ( mySplits.get(i).getQualifID().equals( splt.getQualifID() ) ) {
+				mySplits.remove(i);
+				break;
+			}
+		}
+//		assert( mySplits.size() == listSize - 1 );
+		
+		// Additionally, this tag's ID will have to be removed
+		// from the given split. But this will happen in the 
+		// calling function (if at all; not if the split is
+		// deleted entirely, of course).
     }
 
     /**
@@ -174,7 +228,7 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
 		List<KMyMoneyTransaction> retval = new ArrayList<KMyMoneyTransaction>();
 
 		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
-			// Important: Payees are often (always?) assigned to all
+			// Important: Tags are often (always?) assigned to all
 			// splits of a transaction, thus a transaction must only be
 			// counted once.
 			if ( ! retval.contains(splt.getTransaction()) ) {
@@ -209,8 +263,16 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
      * @return the identified split or null
      */
     public KMyMoneyTransactionSplit getTransactionSplitByID(KMMQualifSpltID spltID) {
+		if ( spltID == null ) {
+			throw new IllegalArgumentException("argument <spltID> is null");
+		}
+
+		if ( ! spltID.isSet() ) {
+			throw new IllegalArgumentException("argument <spltID> is not set");
+		}
+
     	for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
-    		if ( splt.getID().equals(spltID) ) {
+    		if ( splt.getQualifID().equals(spltID) ) {
     			return splt;
     		}
     	}

@@ -60,6 +60,18 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 
 	@Override
 	public List<KMyMoneyTransaction> getTransactions(final LocalDate fromDate, final LocalDate toDate) {
+		if ( fromDate == null ) {
+			throw new IllegalArgumentException("argument <fromDate> is null");
+		}
+		
+		if ( toDate == null ) {
+			throw new IllegalArgumentException("argument <toDate> is null");
+		}
+		
+		if ( fromDate.isAfter(toDate) ) {
+			throw new IllegalArgumentException("argument <fromDate> is after <toDate>");
+		}
+		
 		List<KMyMoneyTransaction> retval = new ArrayList<KMyMoneyTransaction>();
 
 		for ( KMyMoneyTransaction trx : getTransactions() ) {
@@ -451,9 +463,9 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 			throw new IllegalArgumentException("argument <spltID> is not set");
 		}
 
-		for ( KMyMoneyTransactionSplit split : getTransactionSplits() ) {
-			if ( spltID.equals(split.getQualifID()) ) {
-				return split;
+		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
+    		if ( splt.getQualifID().equals(spltID) ) {
+				return splt;
 			}
 
 		}

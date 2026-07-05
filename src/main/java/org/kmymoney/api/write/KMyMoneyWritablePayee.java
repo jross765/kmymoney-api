@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.write.hlp.HasWritableAddress;
+import org.kmymoney.api.write.hlp.HasWritableTransactions;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 
@@ -14,6 +15,7 @@ import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
  */
 public interface KMyMoneyWritablePayee extends KMyMoneyPayee,
                                                KMyMoneyWritableObject,
+                                               HasWritableTransactions,
                                                HasWritableAddress
 {
 

@@ -14,6 +14,7 @@ import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
 import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
+import org.kmymoney.api.write.KMyMoneyWritablePayee;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
@@ -65,7 +66,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplit splt) {
 		super(splt.getJwsdpPeer(), splt.getTransaction(), 
-			  true, true, true);
+			  false, false, false);
 	}
 
 	/**
@@ -244,11 +245,11 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	}
 
 	/**
-	 * remove this split from it's transaction.
+	 * remove this split from its transaction.
 	 */
 	@Override
 	public void remove() {
-		getTransaction().remove(this);
+		getTransaction().removeSplit(this);
 	}
 	
 	// ---------------------------------------------------------------
@@ -566,7 +567,10 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		String old = (getJwsdpPeer().getPayee() == null ? null : getJwsdpPeer().getPayee());
 		jwsdpPeer.setPayee(pyeID.toString());
 		getWritableKMyMoneyFile().setModified(true);
-
+		
+                KMyMoneyWritablePayee pye = getWritableKMyMoneyFile().getWritablePayeeByID(pyeID);
+		((KMyMoneyWritablePayeeImpl) pye).removeTransactionSplit(this);
+		
 		if ( old == null || 
 			 ! old.equals(pyeID.toString()) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {

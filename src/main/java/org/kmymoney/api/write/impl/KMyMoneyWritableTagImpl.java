@@ -1,15 +1,22 @@
 package org.kmymoney.api.write.impl;
 
 import java.beans.PropertyChangeSupport;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.TAG;
+import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.KMyMoneyTagImpl;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritableTag;
+import org.kmymoney.api.write.KMyMoneyWritableTransaction;
+import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
+import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,6 +130,10 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
      */
     @Override
     public void remove() {
+		if ( hasTransactions() ) {
+			throw new IllegalStateException("Cannot remove tag while it contains transaction-splits!");
+		}
+
     	TAG peer = jwsdpPeer;
     	getKMyMoneyFile().getRootElement().getTAGS().getTAG().remove(peer);
     	getWritableKMyMoneyFile().removeTag(this);
@@ -149,6 +160,71 @@ public class KMyMoneyWritableTagImpl extends KMyMoneyTagImpl
 //    public KMyMoneyWritableFileImpl getKMyMoneyFile() {
 //    	return (KMyMoneyWritableFileImpl) super.getKMyMoneyFile();
 //    }
+
+    // ---------------------------------------------------------------
+
+	@Override
+	public List<KMyMoneyWritableTransactionSplit> getWritableTransactionSplits() {
+		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
+
+		for ( KMyMoneyTransactionSplit splt : super.getTransactionSplits() ) {
+			KMyMoneyWritableTransactionSplitImpl newSplt = new KMyMoneyWritableTransactionSplitImpl(splt);
+			result.add(newSplt);
+		}
+
+		return result;
+	}
+
+	@Override
+	public KMyMoneyWritableTransactionSplit getWritableTransactionSplitByID(final KMMQualifSpltID spltID) {
+		if ( spltID == null ) {
+			throw new IllegalArgumentException("argument <spltID> is null");
+		}
+
+		if ( ! spltID.isSet() ) {
+			throw new IllegalArgumentException("argument <spltID> is not set");
+		}
+
+		return (KMyMoneyWritableTransactionSplit) super.getTransactionSplitByID(spltID);
+	}
+
+	// ----------------------------
+
+	@Override
+	public List<KMyMoneyWritableTransaction> getWritableTransactions() {
+		List<KMyMoneyWritableTransaction> result = new ArrayList<KMyMoneyWritableTransaction>();
+
+		for ( KMyMoneyTransaction trx : super.getTransactions() ) {
+			KMyMoneyWritableTransactionImpl newTrx = new KMyMoneyWritableTransactionImpl(trx);
+			result.add(newTrx);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritableTransaction> getWritableTransactions(final LocalDate fromDate, final LocalDate toDate) {
+		if ( fromDate == null ) {
+			throw new IllegalArgumentException("argument <fromDate> is null");
+		}
+		
+		if ( toDate == null ) {
+			throw new IllegalArgumentException("argument <toDate> is null");
+		}
+		
+		if ( fromDate.isAfter(toDate) ) {
+			throw new IllegalArgumentException("argument <fromDate> is after <toDate>");
+		}
+		
+		List<KMyMoneyWritableTransaction> result = new ArrayList<KMyMoneyWritableTransaction>();
+
+		for ( KMyMoneyTransaction trx : super.getTransactions(fromDate, toDate) ) {
+			KMyMoneyWritableTransactionImpl newTrx = new KMyMoneyWritableTransactionImpl(trx);
+			result.add(newTrx);
+		}
+
+		return result;
+	}
 
     // ---------------------------------------------------------------
 

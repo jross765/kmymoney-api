@@ -33,6 +33,7 @@ import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
+import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSpltID;
@@ -265,7 +266,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	/**
 	 * @param splt the split to remove from this transaction
 	 */
-	public void remove(final KMyMoneyWritableTransactionSplit splt) {
+	@Override
+	public void removeSplit(final KMyMoneyWritableTransactionSplit splt) {
 		jwsdpPeer.getSPLITS().getSPLIT()
 			.remove(((KMyMoneyWritableTransactionSplitImpl) splt).getJwsdpPeer());
 		getWritableKMyMoneyFile().setModified(true);
@@ -281,22 +283,36 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			for ( int i = 0; i < mySplits.size(); i++ ) {
 				if ( mySplits.get(i).getID().equals(splt.getID())) {
 					mySplits.remove(i);
-					i--;
+					break;
 				}
 			}
 		}
 
-		KMyMoneyWritableAccountImpl account = (KMyMoneyWritableAccountImpl) splt.getAccount();
-		if ( account != null ) {
-			account.removeTransactionSplit(splt);
-		}
+		// NO, this is now done inside the following function call:
+//		KMyMoneyWritableAccountImpl acct = (KMyMoneyWritableAccountImpl) splt.getAccount();
+//		if ( acct != null ) {
+//			acct.removeTransactionSplit(splt);
+//		}
 
-		getWritableKMyMoneyFile().removeTransactionSplit(splt);
+		getWritableKMyMoneyFile().removeTransactionSplit(splt, false); // <-- variant important
 		// there is no count for splits up to now
 		// getWritableFile().decrementCountDataFor()
 		if ( helper.getPropertyChangeSupport() != null ) {
 			helper.getPropertyChangeSupport().firePropertyChange("splits", null, getWritableSplits());
 		}
+	}
+
+	@Override
+	@Deprecated
+	public void remove(final KMyMoneyWritableTransactionSplit impl) {
+		removeSplit(impl);
+	}
+
+	@Override
+	public void removeSplit(final KMMSpltID spltID) {
+		KMMQualifSpltID qualifID = new KMMQualifSpltID(getID(), spltID);
+		KMyMoneyWritableTransactionSplit splt = getWritableKMyMoneyFile().getWritableTransactionSplitByID(qualifID);
+		removeSplit(splt);
 	}
 
 	/**

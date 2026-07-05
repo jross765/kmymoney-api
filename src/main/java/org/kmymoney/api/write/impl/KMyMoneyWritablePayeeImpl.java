@@ -2,21 +2,27 @@ package org.kmymoney.api.write.impl;
 
 import java.beans.PropertyChangeSupport;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kmymoney.api.generated.ADDRESS;
 import org.kmymoney.api.generated.ObjectFactory;
 import org.kmymoney.api.generated.PAYEE;
+import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.aux.KMMAddress;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.KMyMoneyPayeeImpl;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
 import org.kmymoney.api.write.KMyMoneyWritablePayee;
+import org.kmymoney.api.write.KMyMoneyWritableTransaction;
+import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.aux.KMMWritableAddress;
 import org.kmymoney.api.write.impl.aux.KMMWritableAddressImpl;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.slf4j.Logger;
@@ -40,7 +46,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     // ---------------------------------------------------------------
 
     /**
-     * Please use ${@link KMyMoneyWritableFile#createWritablePayee()}.
+     * Please use ${@link KMyMoneyWritableFile#createWritablePayee(String)}.
      *
      * @param file      the file we belong to
      * @param jwsdpPeer the JWSDP-object we are facading.
@@ -53,7 +59,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     }
 
     /**
-     * Please use ${@link KMyMoneyWritableFile#createWritablePayee()}.
+     * Please use ${@link KMyMoneyWritableFile#createWritablePayee(String)}.
      *
      * @param file the file we belong to
      * @param id   the ID we shall have
@@ -62,6 +68,12 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     	super(createPayee_int(file, file.getNewPayeeID()), file);
     }
 
+    /**
+     * Please use ${@link KMyMoneyWritableFile#createWritablePayee(String)}.
+     * 
+     * @param pye 
+     * @param addSplits 
+     */
 	public KMyMoneyWritablePayeeImpl(final KMyMoneyPayeeImpl pye, final boolean addSplits) {
 		super(pye.getJwsdpPeer(), pye.getKMyMoneyFile());
 
@@ -69,7 +81,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 		    for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) pye.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
 		    	if ( splt.getPayeeID() != null ) { // Caution: Payee is optional for split, as opposed to account
 		    									   // Cf. KMyMoneyWritableAccountImpl
-		    		if ( splt.getPayeeID().equals(pye.getID()) ) {
+		    		if ( splt.getPayeeID().equals( pye.getID() ) ) {
 			    		super.addTransactionSplit(splt);
 				    // NO:
 //					    addTransactionSplit(new KMyMoneyTransactionSplitImpl(splt.getJwsdpPeer(), splt.getTransaction(), 
@@ -142,6 +154,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
      */
     @Override
     public void remove() {
+		if ( hasTransactions() ) {
+			throw new IllegalStateException("Cannot remove payee while it contains transaction-splits!");
+		}
+
     	PAYEE peer = jwsdpPeer;
     	getKMyMoneyFile().getRootElement().getPAYEES().getPAYEE().remove(peer);
     	getWritableKMyMoneyFile().removePayee(this);
@@ -177,6 +193,71 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     public KMMWritableAddress getWritableAddress() {
     	return new KMMWritableAddressImpl(jwsdpPeer.getADDRESS(), getWritableKMyMoneyFile());
     }
+
+    // ---------------------------------------------------------------
+
+	@Override
+	public List<KMyMoneyWritableTransactionSplit> getWritableTransactionSplits() {
+		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
+
+		for ( KMyMoneyTransactionSplit splt : super.getTransactionSplits() ) {
+			KMyMoneyWritableTransactionSplitImpl newSplt = new KMyMoneyWritableTransactionSplitImpl(splt);
+			result.add(newSplt);
+		}
+
+		return result;
+	}
+
+	@Override
+	public KMyMoneyWritableTransactionSplit getWritableTransactionSplitByID(final KMMQualifSpltID spltID) {
+		if ( spltID == null ) {
+			throw new IllegalArgumentException("argument <spltID> is null");
+		}
+
+		if ( ! spltID.isSet() ) {
+			throw new IllegalArgumentException("argument <spltID> is not set");
+		}
+
+		return (KMyMoneyWritableTransactionSplit) super.getTransactionSplitByID(spltID);
+	}
+
+	// ----------------------------
+
+	@Override
+	public List<KMyMoneyWritableTransaction> getWritableTransactions() {
+		List<KMyMoneyWritableTransaction> result = new ArrayList<KMyMoneyWritableTransaction>();
+
+		for ( KMyMoneyTransaction trx : super.getTransactions() ) {
+			KMyMoneyWritableTransactionImpl newTrx = new KMyMoneyWritableTransactionImpl(trx);
+			result.add(newTrx);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritableTransaction> getWritableTransactions(final LocalDate fromDate, final LocalDate toDate) {
+		if ( fromDate == null ) {
+			throw new IllegalArgumentException("argument <fromDate> is null");
+		}
+		
+		if ( toDate == null ) {
+			throw new IllegalArgumentException("argument <toDate> is null");
+		}
+		
+		if ( fromDate.isAfter(toDate) ) {
+			throw new IllegalArgumentException("argument <fromDate> is after <toDate>");
+		}
+		
+		List<KMyMoneyWritableTransaction> result = new ArrayList<KMyMoneyWritableTransaction>();
+
+		for ( KMyMoneyTransaction trx : super.getTransactions(fromDate, toDate) ) {
+			KMyMoneyWritableTransactionImpl newTrx = new KMyMoneyWritableTransactionImpl(trx);
+			result.add(newTrx);
+		}
+
+		return result;
+	}
 
     // ---------------------------------------------------------------
 

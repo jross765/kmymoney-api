@@ -2,15 +2,14 @@ package org.kmymoney.api.write;
 
 import java.time.LocalDate;
 import java.util.Currency;
-import java.util.List;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyAccount;
+import org.kmymoney.api.write.hlp.HasWritableTransactions;
 import org.kmymoney.api.write.hlp.HasWritableUserDefinedAttributes;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
-import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMInstID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
@@ -24,6 +23,7 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  */
 public interface KMyMoneyWritableAccount extends KMyMoneyAccount, 
                                                  KMyMoneyWritableObject,
+                                                 HasWritableTransactions,
                                                  HasWritableUserDefinedAttributes
 {
 
@@ -151,32 +151,6 @@ public interface KMyMoneyWritableAccount extends KMyMoneyAccount,
 	 * @see #getParentAccountID()
 	 */
 	void setParentAccountID(KMMComplAcctID prntAcctID);
-
-    // ---------------------------------------------------------------
-
-    /**
-     * @param spltID 
-     * @return 
-     *  
-     * @see #getTransactionSplitByID(KMMQualifSpltID)
-     */
-    KMyMoneyWritableTransactionSplit getWritableTransactionSplitByID(KMMQualifSpltID spltID);
-
-    /**
-     * @return 
-     * 
-     * @see #getTransactionSplits()
-     */
-    List<KMyMoneyWritableTransactionSplit> getWritableTransactionSplits();
-
-    /**
-     * Create a new split, already attached to this transaction.
-     * 
-     * @param account the account for the new split
-     * @return a new split, already attached to this transaction
-     *  
-     */
-//    KMyMoneyWritableAccountLot createWritableTransactionSplit();
 
     // ---------------------------------------------------------------
     

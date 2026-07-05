@@ -1,6 +1,7 @@
 package org.kmymoney.api.write;
 
 import org.kmymoney.api.read.KMyMoneyTag;
+import org.kmymoney.api.write.hlp.HasWritableTransactions;
 import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
 
 /**
@@ -9,7 +10,8 @@ import org.kmymoney.api.write.hlp.KMyMoneyWritableObject;
  * @see KMyMoneyTag
  */
 public interface KMyMoneyWritableTag extends KMyMoneyTag,
-                                             KMyMoneyWritableObject
+                                             KMyMoneyWritableObject,
+                                             HasWritableTransactions
 {
 
     void remove();

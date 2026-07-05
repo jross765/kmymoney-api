@@ -19,6 +19,7 @@ import org.kmymoney.api.read.KMyMoneyInstitution;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.aux.KMMAccountReconciliation;
 import org.kmymoney.api.read.impl.aux.KMMAccountReconciliationImpl;
+import org.kmymoney.api.read.impl.hlp.HasTransactionsImplSpec;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.acct.AccountBalanceHelper_BF;
 import org.kmymoney.api.read.impl.hlp.acct.AccountBalanceHelper_FP;
@@ -39,6 +40,7 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  * jwsdp-generated backend.
  */
 public class KMyMoneyAccountImpl extends SimpleAccount
+                                 implements HasTransactionsImplSpec
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyAccountImpl.class);
 
@@ -57,7 +59,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	 * The splits of this transaction. May not be fully initialized during loading
 	 * of the KMyMoney file.
 	 */
-	private final List<KMyMoneyTransactionSplit> mySplits = new ArrayList<KMyMoneyTransactionSplit>();
+	protected final List<KMyMoneyTransactionSplit> mySplits = new ArrayList<KMyMoneyTransactionSplit>();
 
 	/*
 	 * If {@link #mySplits} needs to be sorted because it was modified. Sorting is
@@ -93,7 +95,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	    final KMyMoneyFile kmmFile,
 	    final boolean addToInst) {
 		super(kmmFile);
-		
+
 		if ( peer == null ) {
 			throw new IllegalArgumentException("argument <peer> is null");
 		}
@@ -308,9 +310,6 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		return mySplits;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
 		if ( splt == null ) {
@@ -325,14 +324,14 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
 								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
 								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
-								"new=" + splt.toString() + "\n" +
-								"old=" + old.toString());
+								"new = " + splt.toString() + "\n" +
+								"old = " + old.toString());
 				LOGGER.error(
 						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
 								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
 								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
-								"new=" + splt.toString() + "\n" +
-								"old=" + old.toString());
+								"new = " + splt.toString() + "\n" +
+								"old = " + old.toString());
 				IllegalStateException exc = new IllegalStateException("DEBUG");
 				exc.printStackTrace();
 				replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
@@ -343,6 +342,57 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			mySplitsNeedSorting = true;
 		}
 	}
+
+	@Override
+    public void removeTransactionSplit(final KMyMoneyTransactionSplit splt) {
+    	removeTransactionSplit(splt, true);
+    }
+    
+	@Override
+    public void removeTransactionSplit(final KMyMoneyTransactionSplit splt, boolean strict) {
+		if ( splt == null ) {
+			throw new IllegalArgumentException("argument <splt> is null");
+		}
+		
+		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
+			throw new IllegalArgumentException("argument <splt> is not assigned to account " + getID() + ", thus cannot be removed from it");
+		}
+
+		if ( strict )
+		{
+			// Does not work:
+			// if ( ! mySplits.contains(splt) ) {
+			// ...
+			// Instead:
+			boolean intListContainsSplt = false;
+			for ( KMyMoneyTransactionSplit elt : mySplits ) {
+				if ( elt.getQualifID().equals( splt.getQualifID() ) ) {
+					intListContainsSplt = true;
+					break;
+				}
+			}
+			if ( ! intListContainsSplt ) {
+				throw new IllegalStateException("internal list of splits does not contain split " + splt.getQualifID() + ", thus this split cannot be removed from the list");
+			}
+		}
+		
+//		int listSize = mySplits.size();
+		// Does not work:
+		// mySplits.remove(splt);
+		// Instead:
+		for ( int i = mySplits.size() - 1; i >= 0; i-- ) {
+			if ( mySplits.get(i).getQualifID().equals( splt.getQualifID() ) ) {
+				mySplits.remove(i);
+				break;
+			}
+		}
+//		assert( mySplits.size() == listSize - 1 );
+		
+		// Additionally, this account's ID will have to be removed
+		// from the given split. But this will happen in the 
+		// calling function (if at all; not if the split is
+		// deleted entirely, of course).
+    }
 
 	/**
 	 * For internal use only.
