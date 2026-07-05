@@ -20,12 +20,14 @@ import org.kmymoney.api.generated.SUBACCOUNT;
 import org.kmymoney.api.generated.SUBACCOUNTS;
 import org.kmymoney.api.read.KMyMoneyAccount;
 import org.kmymoney.api.read.KMyMoneyFile;
+import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
 import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
 import org.kmymoney.api.write.KMyMoneyWritableAccount;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
+import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
 import org.kmymoney.api.write.impl.hlp.KMyMoneyWritableObjectImpl;
@@ -90,7 +92,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	public KMyMoneyWritableAccountImpl(final KMyMoneyAccountImpl acct, final boolean addSplits) {
 		super(constr_getPeer(acct), constr_getKMMFile(acct));
 
-		if (addSplits) {
+		if ( addSplits ) {
 			if ( ! acct.isRootAccount() ) {
 				for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) acct.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
 					if ( splt.getAccountID().equals( acct.getID().getStdID() ) ) {
@@ -198,6 +200,8 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new IllegalStateException("Cannot remove account while it contains child-accounts!");
 		}
 
+    	ACCOUNT peer = jwsdpPeer;
+    	getKMyMoneyFile().getRootElement().getACCOUNTS().getACCOUNT().remove(peer);
 		getWritableKMyMoneyFile().removeAccount(this);
 	}
 
@@ -226,6 +230,14 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 */
 	@Override
 	public KMyMoneyWritableTransactionSplit getWritableTransactionSplitByID(final KMMQualifSpltID spltID) {
+		if ( spltID == null ) {
+			throw new IllegalArgumentException("argument <spltID> is null");
+		}
+
+		if ( ! spltID.isSet() ) {
+			throw new IllegalArgumentException("argument <spltID> is not set");
+		}
+
 		return (KMyMoneyWritableTransactionSplit) super.getTransactionSplitByID(spltID);
 	}
 
@@ -243,6 +255,46 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 
 		return result;
 	}
+
+	// ----------------------------
+
+	@Override
+	public List<KMyMoneyWritableTransaction> getWritableTransactions() {
+		List<KMyMoneyWritableTransaction> result = new ArrayList<KMyMoneyWritableTransaction>();
+
+		for ( KMyMoneyTransaction trx : super.getTransactions() ) {
+			KMyMoneyWritableTransactionImpl newTrx = new KMyMoneyWritableTransactionImpl(trx);
+			result.add(newTrx);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritableTransaction> getWritableTransactions(final LocalDate fromDate, final LocalDate toDate) {
+		if ( fromDate == null ) {
+			throw new IllegalArgumentException("argument <fromDate> is null");
+		}
+		
+		if ( toDate == null ) {
+			throw new IllegalArgumentException("argument <toDate> is null");
+		}
+		
+		if ( fromDate.isAfter(toDate) ) {
+			throw new IllegalArgumentException("argument <fromDate> is after <toDate>");
+		}
+		
+		List<KMyMoneyWritableTransaction> result = new ArrayList<KMyMoneyWritableTransaction>();
+
+		for ( KMyMoneyTransaction trx : super.getTransactions(fromDate, toDate) ) {
+			KMyMoneyWritableTransactionImpl newTrx = new KMyMoneyWritableTransactionImpl(trx);
+			result.add(newTrx);
+		}
+
+		return result;
+	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * @param impl the split to add to mySplits
@@ -303,14 +355,13 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			throw new UnsupportedOperationException("Removing transaction split is forbidden for top-level accounts");
 		}
 
-		List<KMyMoneyTransactionSplit> transactionSplits = getTransactionSplits();
 		// That does not work with writable splits:
 		// transactionSplits.remove(splt);
 		// Instead:
-		for ( int i = 0; i < transactionSplits.size(); i++ ) {
-			if ( transactionSplits.get(i).getID().equals(splt.getID()) ) {
-				transactionSplits.remove(i);
-				i--;
+		for ( int i = 0; i < mySplits.size(); i++ ) {
+			if ( mySplits.get(i).getID().equals(splt.getID())) {
+				mySplits.remove(i);
+				break;
 			}
 		}
 
@@ -318,7 +369,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
-			propertyChangeFirer.firePropertyChange("transactionSplits", null, transactionSplits);
+			propertyChangeFirer.firePropertyChange("transactionSplits", null, mySplits);
 		}
 	}
 

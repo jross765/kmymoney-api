@@ -32,7 +32,7 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 	/**
 	 * @param dateEntered the day (time is ignored) that this transaction has been
 	 *                    entered into the system
-	 *                    
+	 * 
 	 * @see #getDateEntered()
 	 * @see #setDatePosted(LocalDate)
 	 */
@@ -57,6 +57,7 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 	/**
 	 * @param spltID 
 	 * @return 
+	 * 
 	 * @see KMyMoneyTransaction#getSplitByID(KMMSpltID)
 	 */
 	KMyMoneyWritableTransactionSplit getWritableSplitByID(KMMSpltID spltID);
@@ -65,6 +66,7 @@ public interface KMyMoneyWritableTransaction extends KMyMoneyTransaction,
 
 	/**
 	 * @return 
+	 * 
 	 * @see KMyMoneyTransaction#getSplits()
 	 */
 	Collection<? extends KMyMoneyWritableTransactionSplit> getWritableSplits();

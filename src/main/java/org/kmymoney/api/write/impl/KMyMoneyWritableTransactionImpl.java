@@ -271,8 +271,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		jwsdpPeer.getSPLITS().getSPLIT()
 			.remove(((KMyMoneyWritableTransactionSplitImpl) splt).getJwsdpPeer());
 		getWritableKMyMoneyFile().setModified(true);
-		
-		if ( mySplits == null ) { 
+
+		if ( mySplits == null ) {
 			// important!
 			@SuppressWarnings("unused")
 			List<KMyMoneyTransactionSplit> dummy = getSplits();
@@ -281,7 +281,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			// mySplits.remove(impl);
 			// Instead:
 			for ( int i = 0; i < mySplits.size(); i++ ) {
-				if ( mySplits.get(i).getID().equals(splt.getID())) {
+				if ( mySplits.get(i).getID().equals(splt.getID()) ) {
 					mySplits.remove(i);
 					break;
 				}
@@ -336,7 +336,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		return new KMyMoneyWritableTransactionSplitImpl((KMyMoneyTransactionSplitImpl) splt, 
 														false, false, false);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -363,11 +363,10 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	@Override
 	public Collection<? extends KMyMoneyWritableTransactionSplit> getWritableSplits() {
 		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
-		
+	
 		for ( KMyMoneyTransactionSplit split : super.getSplits() ) {
-			KMyMoneyWritableTransactionSplit newSplit = new KMyMoneyWritableTransactionSplitImpl((KMyMoneyTransactionSplitImpl) split, 
-																								 false, false, false);
-		    result.add(newSplit);
+			KMyMoneyWritableTransactionSplit newSplit = new KMyMoneyWritableTransactionSplitImpl((KMyMoneyTransactionSplitImpl) split, false, false, false);
+			result.add(newSplit);
 		}
 
 		return result;
@@ -386,7 +385,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	@Override
 	public void remove() {
 		getWritableKMyMoneyFile().removeTransaction(this);
-//		Collection<KMyMoneyWritableTransactionSplit> c = new LinkedList<KMyMoneyWritableTransactionSplit>();
+//		Collection<KMyMoneyWritableTransactionSplit> c = new ArrayList<KMyMoneyWritableTransactionSplit>();
 //		c.addAll(getWritableSplits());
 //		for ( KMyMoneyWritableTransactionSplit element : c ) {
 //			element.remove();
@@ -400,6 +399,8 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	public void setCurrencyID(final String id) {
 		this.jwsdpPeer.setCommodity(id);
 	}
+
+	// ---------------------------------------------------------------
 
 	/**
 	 * @see KMyMoneyWritableTransaction#setDateEntered(LocalDateTime)

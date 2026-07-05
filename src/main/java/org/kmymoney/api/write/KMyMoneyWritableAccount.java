@@ -57,7 +57,7 @@ public interface KMyMoneyWritableAccount extends KMyMoneyAccount,
 	 * time-frame.
 	 *
 	 * @param from when to start, inclusive
-	 * @param to   when to stop, exlusive.
+	 * @param to   when to stop, exclusive.
 	 * @return the sum of all transaction-splits affecting this account in the given
 	 *         time-frame.
 	 * 
@@ -163,5 +163,5 @@ public interface KMyMoneyWritableAccount extends KMyMoneyAccount,
 	 * Throws IllegalStateException if this account has splits or children.
 	 */
 	void remove();
-	
+
 }

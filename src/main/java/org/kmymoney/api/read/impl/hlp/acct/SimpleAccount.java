@@ -29,7 +29,7 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  * interface with its extensive number of convenience-methods.
  */
 public abstract class SimpleAccount extends KMyMoneyObjectImpl 
-									implements KMyMoneyAccount 
+                                    implements KMyMoneyAccount 
 {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleAccount.class);
@@ -241,7 +241,6 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 	}
 
 	@Override
-	@Deprecated
 	public BigFraction getBalanceRat(final LocalDate date, final KMMCurrID currID) {
 		return AccountBalanceHelper_BF.getBalance(date, currID, this);
 	}
@@ -464,10 +463,9 @@ public abstract class SimpleAccount extends KMyMoneyObjectImpl
 		}
 
 		for ( KMyMoneyTransactionSplit splt : getTransactionSplits() ) {
-    		if ( splt.getQualifID().equals(spltID) ) {
+			if ( splt.getQualifID().equals(spltID) ) {
 				return splt;
 			}
-
 		}
 
 		return null;

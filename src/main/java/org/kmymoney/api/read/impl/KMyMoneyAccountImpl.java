@@ -69,7 +69,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	
 	// ----------------------------
 	
-	protected List<RECONCILIATION> jwsdpRecons = null;
+	protected List<RECONCILIATION> jwsdpRecons = null; // sic, null, i.Ggs. zu oben
 
 	private final List<KMMAccountReconciliation> myRecons = new ArrayList<KMMAccountReconciliation>();
 
@@ -204,13 +204,16 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	}
 
 	/**
-	 * @see KMyMoneyAccount#getChildren()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<KMyMoneyAccount> getChildren() {
 		return getKMyMoneyFile().getAccountsByParentID(getID());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<KMyMoneyAccount> getChildrenRecursive() {
 		return getChildrenRecursiveCore(getChildren());

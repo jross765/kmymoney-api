@@ -73,11 +73,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 		if ( addSpltToAcct ) {
 			KMyMoneyAccount acct = getAccount();
-			if (acct == null) {
+			if ( acct == null ) {
 				// Account is mandatory --> error
 				LOGGER.error("No such Account id='" + getAccountID() + "' for Transaction-Split with id '" + getQualifID()
-			    	+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
-			    	+ "' description '" + getTransaction().getMemo() + "'");
+					+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
+					+ "' description '" + getTransaction().getMemo() + "'");
 			} else {
 				((KMyMoneyAccountImpl) acct).addTransactionSplit(this);
 			}
@@ -97,7 +97,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 		if ( addSpltToTags ) {
 			Collection<KMyMoneyTag> tagList = getTags();
-			if (tagList == null) {
+			if ( tagList == null ) {
 				// Tags are optional --> just debug
 				LOGGER.debug("No such Tag for Transaction-Split with id '" + getQualifID() 
 			    	+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
@@ -332,7 +332,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	}
 
 	/**
-	 * @see KMyMoneyTransactionSplit#getValueFormatted()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getValueFormatted() {
@@ -340,7 +340,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	}
 
 	/**
-	 * @see KMyMoneyTransactionSplit#getValueFormatted(java.util.Locale)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getValueFormatted(final Locale lcl) {
@@ -351,22 +351,23 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	// ---------------------------------------------------------------
 
 	/**
-	 * @see KMyMoneyTransactionSplit#getShares()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public FixedPointNumber getShares() {
 		return new FixedPointNumber(jwsdpPeer.getShares());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public BigFraction getSharesRat() {
 		return BigFraction.parse(jwsdpPeer.getShares());
 	}
 
 	/**
-	 * The value is in the currency of the account!
-	 * @throws InvalidQualifSecCurrIDException 
-	 * @throws InvalidQualifSecCurrTypeException 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getSharesFormatted() {
@@ -378,8 +379,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	 *
 	 * @param lcl the locale to format to
 	 * @return the formatted number
-	 * @throws InvalidQualifSecCurrIDException 
-	 * @throws InvalidQualifSecCurrTypeException 
 	 */
 	@Override
 	public String getSharesFormatted(final Locale lcl) {
@@ -389,6 +388,9 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 	// ---------------------------------------------------------------
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public FixedPointNumber getPrice() {
 		if ( jwsdpPeer.getPrice() == null )
@@ -400,6 +402,9 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		return new FixedPointNumber( jwsdpPeer.getPrice() );
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public BigFraction getPriceRat() {
 		if ( jwsdpPeer.getPrice() == null )
@@ -411,6 +416,9 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		return BigFraction.parse(jwsdpPeer.getPrice());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getPriceFormatted() {
 		return getPriceFormatted(Locale.getDefault());
@@ -424,6 +432,9 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getMemo() {
 		if (jwsdpPeer.getMemo() == null) {
@@ -432,36 +443,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		return jwsdpPeer.getMemo();
 	}
 	
-	// ---------------------------------------------------------------
-
-	public int compareTo(final KMyMoneyTransactionSplit otherSplt) {
-		try {
-			KMyMoneyTransaction otherTrans = otherSplt.getTransaction();
-			int c = otherTrans.compareTo(getTransaction());
-			if ( c != 0 ) {
-				return c;
-			}
-
-			if ( ! otherSplt.getQualifID().equals(getQualifID()) ) {
-				return otherSplt.getID().compareTo(getID());
-			}
-
-			if ( otherSplt != this ) {
-				LOGGER.error("compareTo: Duplicate transaction-split-id! " + otherSplt.getQualifID() + "["
-						+ otherSplt.getClass().getName() + "] and " + getQualifID() + "[" + getClass().getName() + "]\n"
-						+ "split0=" + otherSplt.toString() + "\n" + "split1=" + toString() + "\n");
-				IllegalStateException exc = new IllegalStateException("DEBUG");
-				exc.printStackTrace();
-			}
-
-			return 0;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
-		}
-	}
-
     // ---------------------------------------------------------------
 
     /**
@@ -494,6 +475,36 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		
 		List<PAIR> kvpList = jwsdpPeer.getKEYVALUEPAIRS().getPAIR();
 		return HasUserDefinedAttributesImpl.getUserDefinedAttributeKeysCore(kvpList);
+	}
+
+	// ---------------------------------------------------------------
+
+	public int compareTo(final KMyMoneyTransactionSplit otherSplt) {
+		try {
+			KMyMoneyTransaction otherTrans = otherSplt.getTransaction();
+			int c = otherTrans.compareTo( getTransaction() );
+			if ( c != 0 ) {
+				return c;
+			}
+
+			if ( ! otherSplt.getQualifID().equals( getQualifID() ) ) {
+				return otherSplt.getID().compareTo(getID());
+			}
+
+			if ( otherSplt != this ) {
+				LOGGER.error("compareTo: Duplicate transaction-split-id! " + otherSplt.getQualifID() + "["
+						+ otherSplt.getClass().getName() + "] and " + getQualifID() + "[" + getClass().getName() + "]\n"
+						+ "split0=" + otherSplt.toString() + "\n" + "split1=" + toString() + "\n");
+				IllegalStateException exc = new IllegalStateException("DEBUG");
+				exc.printStackTrace();
+			}
+
+			return 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	// ---------------------------------------------------------------

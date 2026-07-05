@@ -35,7 +35,7 @@ import xyz.schnorxoborx.base.numbers.FixedPointNumber;
  * Transaction-Split that can be newly created or removed from its transaction.
  */
 public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSplitImpl 
-	                                             implements KMyMoneyWritableTransactionSplit 
+                                                  implements KMyMoneyWritableTransactionSplit
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KMyMoneyWritableTransactionSplitImpl.class);
 
@@ -400,11 +400,12 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		KMMQualifSecCurrID acctSecCurrID = acct.getQualifSecCurrID();
 		if ( acctSecCurrID == null ) {
 			throw new IllegalStateException("account's security/currency is null");
-		}		
+		}
+
 		if ( ! acctSecCurrID.isSet() ) {
 			throw new IllegalStateException("account's security/currency is not set");
 		}
-		
+
 		KMMQualifSecCurrID trxSecCurrID = trx.getQualifSecCurrID();
 		if ( trxSecCurrID == null ) {
 			throw new IllegalStateException("transaction's security/currency is null");
@@ -412,7 +413,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( ! trxSecCurrID.isSet() ) {
 			throw new IllegalStateException("transaction's security/currency is not set");
 		}
-		
+
 		// Important: toString()
 		return acctSecCurrID.toString().equals( trxSecCurrID.toString() );
 	}
@@ -492,6 +493,8 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			}
 		}
 	}
+
+	// ---------------------------------------------------------------
 
 	@Override
 	@Deprecated
@@ -634,26 +637,26 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	/**
 	 * Set the description-text.
 	 *
-	 * @param desc the new description
+	 * @param descr the new description
 	 */
 	@Override
-	public void setMemo(final String desc) {
-		if ( desc == null ) {
-			throw new IllegalArgumentException("argument <desc> is null. Please use the empty string instead of null for an empty description");
+	public void setMemo(final String descr) {
+		if ( descr == null ) {
+			throw new IllegalArgumentException("argument <descr> is null. Please use the empty string instead of null for an empty description");
 		}
 
-		// Yes, empty desc is valid
-//		if ( desc.isBlank() ) {
-//			throw new IllegalArgumentException("argument <desc> is blank");
+		// Yes, empty descr is valid
+//		if ( descr.isBlank() ) {
+//			throw new IllegalArgumentException("argument <descr> is blank");
 //		}
 
 		String old = getJwsdpPeer().getMemo();
-		jwsdpPeer.setMemo(desc);
+		jwsdpPeer.setMemo(descr);
 		getWritableKMyMoneyFile().setModified(true);
 
-		if ( old == null || ! old.equals(desc) ) {
+		if ( old == null || ! old.equals(descr) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("description", old, desc);
+				helper.getPropertyChangeSupport().firePropertyChange("description", old, descr);
 			}
 		}
 	}
@@ -665,7 +668,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	public void setAction(final Action act) throws IllegalTransactionSplitActionException {
 		setActionStr(act.getCode());
 	}
-	
+
 	/**
 	 * <b>Using this method is discouraged.</b>
 	 * Use {@link #setAction(org.kmymoney.api.read.KMyMoneyTransactionSplit.Action)} whenever possible/applicable instead.
@@ -683,14 +686,13 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <actStr> is blank");
 		}
 
-		String old = getJwsdpPeer().getAction();
+		String oldActStr = getActionStr();
 		jwsdpPeer.setAction(actStr);
 		getWritableKMyMoneyFile().setModified(true);
 
-		if ( old == null || 
-			 ! old.equals(actStr) ) {
+		if ( oldActStr == null || ! oldActStr.equals(actStr) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("splitAction", old, actStr);
+				helper.getPropertyChangeSupport().firePropertyChange("splitAction", oldActStr, actStr);
 			}
 		}
 	}
@@ -758,6 +760,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
@@ -787,6 +792,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			                             name, value);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void removeUserDefinedAttribute(final String name) {
 		if ( name == null ) {
@@ -806,6 +814,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 											name);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
