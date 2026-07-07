@@ -1,5 +1,6 @@
 package org.kmymoney.api.read.impl;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.Const;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import xyz.schnorxoborx.base.numbers.FixedPointNumber;
 
 /**
@@ -499,8 +502,24 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 			marshaller.marshal(jwsdpPeer, writer);
 			return writer.toString();
 		} catch (JAXBException e) {
-			throw new RuntimeException("Failed to convert KMyMoneyTranscationImpl to XML", e);
+			throw new RuntimeException("Failed to convert JWSDP peer to XML", e);
 		}
+	}
+
+	// For test purposes only
+	public static KMyMoneyTransactionImpl fromXMLString(final String xmlStr, final KMyMoneyFile kmmFile) {
+		TRANSACTION jwdspTrx = null;
+		try {
+			JAXBContext context = JAXBContext.newInstance(TRANSACTION.class);
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			// unmarshaller.setProperty("jaxb.formatted.output", Boolean.TRUE);
+			StringReader reader = new StringReader(xmlStr);
+			jwdspTrx = (TRANSACTION) unmarshaller.unmarshal(new StreamSource(reader));
+		} catch (JAXBException e) {
+			throw new RuntimeException("Failed to convert XML to " + TRANSACTION.class.getName(), e);
+		}
+
+		return new KMyMoneyTransactionImpl(jwdspTrx, kmmFile);
 	}
 
 	/**

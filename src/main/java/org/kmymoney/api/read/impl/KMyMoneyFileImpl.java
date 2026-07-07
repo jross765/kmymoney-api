@@ -989,14 +989,6 @@ public class KMyMoneyFileImpl implements KMyMoneyFile
     
 	@Override
 	public KMyMoneyBudget getBudgetByID(KMMBdgtID bdgtID) {
-		if ( bdgtID == null ) {
-			throw new IllegalArgumentException("argument <bdgtID> is null");
-		}
-
-		if ( ! bdgtID.isSet() ) {
-			throw new IllegalArgumentException("argument <bdgtID> is not set");
-		}
-
 		return bdgtMgr.getBudgetByID(bdgtID);
 	}
 
