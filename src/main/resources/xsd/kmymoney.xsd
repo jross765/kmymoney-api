@@ -10,22 +10,22 @@
   <xs:element name="KMYMONEY-FILE">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="1" ref="FILEINFO"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="USER"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="INSTITUTIONS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="PAYEES"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="COSTCENTERS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="TAGS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="ACCOUNTS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="TRANSACTIONS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="KEYVALUEPAIRS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="SCHEDULES"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="SECURITIES"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="CURRENCIES"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="PRICES"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="REPORTS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="BUDGETS"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="ONLINEJOBS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="FILEINFO"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="USER"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="INSTITUTIONS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="PAYEES"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="COSTCENTERS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="TAGS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="ACCOUNTS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="TRANSACTIONS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="KEYVALUEPAIRS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="SCHEDULES"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="SECURITIES"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="CURRENCIES"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="PRICES"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="REPORTS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="BUDGETS"/>
+        <xs:element minOccurs="1" maxOccurs="1" ref="ONLINEJOBS"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
