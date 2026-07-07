@@ -1,7 +1,13 @@
 package org.kmymoney.api.write.hlp.fil;
 
+import java.util.Collection;
+
+import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.write.KMyMoneyWritableTag;
 import org.kmymoney.base.basetypes.simple.KMMTagID;
+
+import xyz.schnorxoborx.base.beanbase.NoEntryFoundException;
+import xyz.schnorxoborx.base.beanbase.TooManyEntriesFoundException;
 
 public interface KMyMoneyWritableFile_Tag {
 	
@@ -12,6 +18,39 @@ public interface KMyMoneyWritableFile_Tag {
 	 * @see #getTagByID(KMMTagID)
 	 */
 	KMyMoneyWritableTag getWritableTagByID(KMMTagID tagID);
+
+	// ----------------------------
+
+	/**
+	 * @param expr search expression
+	 * @return
+	 * 
+	 * @see #getWritableTagsByName(String, boolean)
+	 */
+	Collection<KMyMoneyWritableTag> getWritableTagsByName(String expr);
+
+	/**
+	 * @param expr search expression
+	 * @param relaxed
+	 * @return
+	 * 
+	 * @see #getWritableTagsByName(String)
+	 */
+	Collection<KMyMoneyWritableTag> getWritableTagsByName(String expr, boolean relaxed);
+
+	/**
+	 * @param expr search expression
+	 * @return
+	 * @throws NoEntryFoundException
+	 * @throws TooManyEntriesFoundException
+	 */
+	KMyMoneyTag getTagByNameUniq(String expr) throws NoEntryFoundException, TooManyEntriesFoundException;
+
+	/**
+	 * @return a (read-only) collection of all tags Do not modify the
+	 *         returned collection!
+	 */
+	Collection<KMyMoneyWritableTag> getWritableTags();
 
 	// ----------------------------
 

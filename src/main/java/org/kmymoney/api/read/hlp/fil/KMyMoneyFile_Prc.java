@@ -84,6 +84,8 @@ public interface KMyMoneyFile_Prc {
 	
 	List<KMyMoneyPrice> getPricesByQualifSecCurrID(KMMQualifSecCurrID secCurrID);
 	
+    // ---------------------------------------------------------------
+    
 	/**
 	 * @param secCurrID
 	 * @param pCmdtySpace the name space for pCmdtyId

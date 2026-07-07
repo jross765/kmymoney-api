@@ -3,6 +3,7 @@ package org.kmymoney.api.write.hlp.fil;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Currency;
+import java.util.List;
 
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.impl.KMyMoneyPricePairImpl;
@@ -13,6 +14,7 @@ import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 
 public interface KMyMoneyWritableFile_Prc {
@@ -122,8 +124,25 @@ public interface KMyMoneyWritableFile_Prc {
 	 * 
 	 * @see #getPrices()
 	 */
-	Collection<KMyMoneyWritablePrice> getWritablePrices();
+	List<KMyMoneyWritablePrice> getWritablePrices();
 
+    // sic: List, not Collection
+	List<KMyMoneyWritablePrice> getWritablePricesBySecID(KMMSecID secID);
+	
+	List<KMyMoneyWritablePrice> getWritablePricesByQualifSecID(KMMQualifSecID secID);
+	
+	// ---
+	
+	List<KMyMoneyWritablePrice> getWritablePricesByCurrID(KMMCurrID currID);
+
+	List<KMyMoneyWritablePrice> getWritablePricesByQualifCurrID(KMMQualifCurrID currID);
+
+	List<KMyMoneyWritablePrice> getWritablePricesByCurr(Currency curr);
+	
+	// ---
+	
+	List<KMyMoneyWritablePrice> getWritablePricesByQualifSecCurrID(KMMQualifSecCurrID secCurrID);
+	
 	// ----------------------------
 
 	/**
