@@ -95,6 +95,8 @@ public interface KMyMoneyWritablePayee extends KMyMoneyPayee,
      */
     void setMatchKeys(List<String> key);
 
+    void clearMatchKeys();
+
     void addMatchKey(String key);
 
     /**
