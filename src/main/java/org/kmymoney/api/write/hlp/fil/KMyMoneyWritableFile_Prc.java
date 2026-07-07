@@ -117,8 +117,8 @@ public interface KMyMoneyWritableFile_Prc {
 	 */
 	KMyMoneyWritablePrice getWritablePriceByQualifSecCurrIDDate(KMMQualifSecCurrID secCurrID, LocalDate date);
 	
-    // ---------------------------------------------------------------
-	
+	// ----------------------------
+
 	/**
 	 * @return writable versions of all prices in the book.
 	 * 
@@ -126,9 +126,8 @@ public interface KMyMoneyWritableFile_Prc {
 	 */
 	List<KMyMoneyWritablePrice> getWritablePrices();
 
-    // sic: List, not Collection
 	List<KMyMoneyWritablePrice> getWritablePricesBySecID(KMMSecID secID);
-	
+
 	List<KMyMoneyWritablePrice> getWritablePricesByQualifSecID(KMMQualifSecID secID);
 	
 	// ---

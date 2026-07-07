@@ -8,8 +8,6 @@ import java.util.List;
 import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyPrice;
 import org.kmymoney.api.read.KMyMoneyPricePair;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMPrcID;
 import org.kmymoney.base.basetypes.complex.KMMPrcPrID;
 import org.kmymoney.base.basetypes.complex.KMMQualifCurrID;
@@ -43,56 +41,55 @@ public interface KMyMoneyFile_Prc {
 	KMyMoneyPrice getPriceByID(KMMPrcID prcID);
 
 	// ---
-	
+
 	KMyMoneyPrice getPriceBySecIDDate(KMMSecID secID, LocalDate date);
-	
+
 	KMyMoneyPrice getPriceByQualifSecIDDate(KMMQualifSecID secID, LocalDate date);
-	
+
 	// ---
-	
+
 	KMyMoneyPrice getPriceByCurrIDDate(KMMCurrID currID, LocalDate date);
-	
+
 	KMyMoneyPrice getPriceByQualifCurrIDDate(KMMQualifCurrID currID, LocalDate date);
-	
+
 	KMyMoneyPrice getPriceByCurrDate(Currency curr, LocalDate date);
-	
+
 	// ---
-	
+
 	KMyMoneyPrice getPriceByQualifSecCurrIDDate(KMMQualifSecCurrID secCurrID, LocalDate date);
 
-    // ---------------------------------------------------------------
-    
-    /**
+	// ---------------------------------------------------------------
+
+	/**
 	 * @return all prices defined in the book
 	 */
 	List<KMyMoneyPrice> getPrices();
 
-    // sic: List, not Collection
+	// sic: List, not Collection
 	List<KMyMoneyPrice> getPricesBySecID(KMMSecID secID);
-	
+
 	List<KMyMoneyPrice> getPricesByQualifSecID(KMMQualifSecID secID);
-	
+
 	// ---
-	
+
 	List<KMyMoneyPrice> getPricesByCurrID(KMMCurrID currID);
 
 	List<KMyMoneyPrice> getPricesByQualifCurrID(KMMQualifCurrID currID);
 
 	List<KMyMoneyPrice> getPricesByCurr(Currency curr);
-	
+
 	// ---
-	
+
 	List<KMyMoneyPrice> getPricesByQualifSecCurrID(KMMQualifSecCurrID secCurrID);
-	
-    // ---------------------------------------------------------------
-    
+
+	// ---------------------------------------------------------------
+
 	/**
 	 * @param secCurrID
 	 * @param pCmdtySpace the name space for pCmdtyId
 	 * @param pCmdtyId    the currency-name
+	 * 
 	 * @return the latest price-quote in the KMyMoney-file in EURO
-	 * @throws InvalidQualifSecCurrIDException 
-	 * @throws InvalidQualifSecCurrTypeException 
 	 */
 	@Deprecated
 	FixedPointNumber getLatestPrice(KMMQualifSecCurrID secCurrID);
