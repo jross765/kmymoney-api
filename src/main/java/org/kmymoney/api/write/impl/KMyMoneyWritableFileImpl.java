@@ -856,7 +856,11 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// By purpose, this method has not been defined in the interface
 	// ::TODO: Symetry w/ sister project
 	// @Override
-	public void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt) {
+    public void removeTransactionSplit(final KMyMoneyTransactionSplit splt) {
+    	removeTransactionSplit(splt, true);
+    }
+    
+    public void removeTransactionSplit(final KMyMoneyTransactionSplit splt, boolean strict) {
 		// 1) remove avatar in transaction manager
 		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) super.trxMgr)
 			.removeTransactionSplit(splt);
@@ -880,6 +884,29 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		
 		((org.kmymoney.api.write.impl.hlp.fil.FileTransactionManager) trxMgr)
 			.removeTransactionSplit_raw(splt.getTransactionID(), splt.getID());
+
+		// Update internal split-lists of entities associated to the split:
+		// - account (one)
+		// - payee (one)
+		// - tags (list)
+		if ( splt.getAccountID() != null ) {
+			KMyMoneyAccount dummyAcct = getKMyMoneyFile().getAccountByID( splt.getAccountID() );
+			((KMyMoneyAccountImpl) dummyAcct).removeTransactionSplit(splt);
+		}
+		
+		if ( splt.getPayeeID() != null ) {
+			KMyMoneyPayee dummyPye = getKMyMoneyFile().getPayeeByID( splt.getPayeeID() );
+			((KMyMoneyPayeeImpl) dummyPye).removeTransactionSplit(splt);
+		}
+		
+		if ( splt.getTagIDs() != null ) {
+			KMyMoneyTag dummyTag = null;
+			Collection<KMMTagID> tagList = splt.getTagIDs();
+			for ( KMMTagID tagID : tagList ) {
+				dummyTag = getKMyMoneyFile().getTagByID(tagID);
+				((KMyMoneyTagImpl) dummyTag).removeTransactionSplit(splt);
+			}
+		}
 		
 		// 3) remove transaction, if no splits left
 		// ::TODO / ::CHECK
@@ -923,11 +950,51 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 		}
 	}
 
+	@Override
+	public Collection<KMyMoneyWritablePayee> getWritablePayeesByName(String expr) {
+		Collection<KMyMoneyWritablePayee> retval = new ArrayList<KMyMoneyWritablePayee>();
+		
+		for ( KMyMoneyPayee tag : super.getPayeesByName(expr) ) {
+			retval.add((KMyMoneyWritablePayee) tag);
+		}
+		
+		return retval;
+	}
+
+	@Override
+	public Collection<KMyMoneyWritablePayee> getWritablePayeesByName(String expr, boolean relaxed) {
+		Collection<KMyMoneyWritablePayee> retval = new ArrayList<KMyMoneyWritablePayee>();
+		
+		for ( KMyMoneyPayee tag : super.getPayeesByName(expr, relaxed) ) {
+			retval.add((KMyMoneyWritablePayee) tag);
+		}
+		
+		return retval;
+	}
+
+	@Override
+	public KMyMoneyWritablePayee getWritablePayeeByNameUniq(String expr)
+			throws NoEntryFoundException, TooManyEntriesFoundException {
+		KMyMoneyPayee pye = super.getPayeeByNameUniq(expr);
+		return new KMyMoneyWritablePayeeImpl((KMyMoneyPayeeImpl) pye, false);
+	}
+
+	@Override
+	public Collection<KMyMoneyWritablePayee> getWritablePayees() {
+		Collection<KMyMoneyWritablePayee> retval = new ArrayList<KMyMoneyWritablePayee>();
+		
+		for ( KMyMoneyPayee tag : super.getPayees() ) {
+			retval.add((KMyMoneyWritablePayee) tag);
+		}
+		
+		return retval;
+	}
+
 	/**
 	 * This overridden method creates the writable version of the returned object.
 	 *
 	 * @return the new payee
-	 * @see KMyMoneyFileImpl#createPayee()
+	 * @see KMyMoneyFileImpl#createPayee(String)
 	 */
 	@Override
 	public KMyMoneyWritablePayee createWritablePayee(final String name) {
@@ -961,6 +1028,39 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 			throw new RuntimeException(
 					"Could not instantiate writable tag object from read-only account object (ID: " + tagID + ")");
 		}
+	}
+
+	@Override
+	public Collection<KMyMoneyWritableTag> getWritableTagsByName(String expr) {
+		Collection<KMyMoneyWritableTag> retval = new ArrayList<KMyMoneyWritableTag>();
+		
+		for ( KMyMoneyTag tag : super.getTagsByName(expr) ) {
+			retval.add((KMyMoneyWritableTag) tag);
+		}
+		
+		return retval;
+	}
+
+	@Override
+	public Collection<KMyMoneyWritableTag> getWritableTagsByName(String expr, boolean relaxed) {
+		Collection<KMyMoneyWritableTag> retval = new ArrayList<KMyMoneyWritableTag>();
+		
+		for ( KMyMoneyTag tag : super.getTagsByName(expr, relaxed) ) {
+			retval.add((KMyMoneyWritableTag) tag);
+		}
+		
+		return retval;
+	}
+
+	@Override
+	public Collection<KMyMoneyWritableTag> getWritableTags() {
+		Collection<KMyMoneyWritableTag> retval = new ArrayList<KMyMoneyWritableTag>();
+		
+		for ( KMyMoneyTag tag : super.getTags() ) {
+			retval.add((KMyMoneyWritableTag) tag);
+		}
+		
+		return retval;
 	}
 
 	/**
@@ -1500,17 +1600,133 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 	// ---------------------------------------------------------------
 	
 	@Override
-	public Collection<KMyMoneyWritablePrice> getWritablePrices() {
-		Collection<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+	public List<KMyMoneyWritablePrice> getWritablePrices() {
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
 
-		for ( KMyMoneyPrice sec : super.getPrices() ) {
-			KMyMoneyWritablePrice newSec = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) sec);
-			result.add(newSec);
+		for ( KMyMoneyPrice prc : super.getPrices() ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
 		}
 
 		return result;
 	}
 	
+	@Override
+	public List<KMyMoneyWritablePrice> getWritablePricesBySecID(KMMSecID secID) {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
+		}
+
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+
+		for ( KMyMoneyPrice prc : super.getPricesBySecID(secID) ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritablePrice> getWritablePricesByQualifSecID(KMMQualifSecID secID) {
+		if ( secID == null ) {
+			throw new IllegalArgumentException("argument <secID> is null");
+		}
+
+		if ( ! secID.isSet() ) {
+			throw new IllegalArgumentException("argument <secID> is not set");
+		}
+
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+
+		for ( KMyMoneyPrice prc : super.getPricesByQualifSecID(secID) ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritablePrice> getWritablePricesByCurrID(KMMCurrID currID) {
+		if ( currID == null ) {
+			throw new IllegalArgumentException("argument <currID> is null");
+		}
+
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
+		}
+
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+
+		for ( KMyMoneyPrice prc : super.getPricesByCurrID(currID) ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritablePrice> getWritablePricesByQualifCurrID(KMMQualifCurrID currID) {
+		if ( currID == null ) {
+			throw new IllegalArgumentException("argument <currID> is null");
+		}
+
+		if ( ! currID.isSet() ) {
+			throw new IllegalArgumentException("argument <currID> is not set");
+		}
+
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+
+		for ( KMyMoneyPrice prc : super.getPricesByQualifCurrID(currID) ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritablePrice> getWritablePricesByCurr(Currency curr) {
+		if ( curr == null ) {
+			throw new IllegalArgumentException("argument <curr> is null");
+		}
+
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+
+		for ( KMyMoneyPrice prc : super.getPricesByCurr(curr) ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<KMyMoneyWritablePrice> getWritablePricesByQualifSecCurrID(KMMQualifSecCurrID secCurrID) {
+		if ( secCurrID == null ) {
+			throw new IllegalArgumentException("argument <secCurrID> is null");
+		}
+
+		if ( ! secCurrID.isSet() ) {
+			throw new IllegalArgumentException("argument <secCurrID> is not set");
+		}
+
+		ArrayList<KMyMoneyWritablePrice> result = new ArrayList<KMyMoneyWritablePrice>();
+
+		for ( KMyMoneyPrice prc : super.getPricesByQualifSecCurrID(secCurrID) ) {
+			KMyMoneyWritablePrice newPrc = new KMyMoneyWritablePriceImpl((KMyMoneyPriceImpl) prc);
+			result.add(newPrc);
+		}
+
+		return result;
+	}
+
 	// ----------------------------
 
 	@Override
@@ -1553,6 +1769,73 @@ public class KMyMoneyWritableFileImpl extends KMyMoneyFileImpl
 
 		KMyMoneyBudget bdgt = super.getBudgetByID(bdgtID);
 		return new KMyMoneyWritableBudgetImpl((KMyMoneyBudgetImpl) bdgt);
+	}
+
+	@Override
+	public Collection<KMyMoneyWritableBudget> getWritableBudgetsByName(String expr) {
+		if ( expr == null ) {
+			throw new IllegalArgumentException("argument <expr> is null");
+		}
+
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
+		}
+
+		ArrayList<KMyMoneyWritableBudget> result = new ArrayList<KMyMoneyWritableBudget>();
+
+		for ( KMyMoneyBudget bdgt : super.getBudgetsByName(expr) ) {
+			KMyMoneyWritableBudget newBdgt = new KMyMoneyWritableBudgetImpl((KMyMoneyBudgetImpl) bdgt);
+			result.add(newBdgt);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Collection<KMyMoneyWritableBudget> getWritableBudgetsByName(String expr, boolean relaxed) {
+		if ( expr == null ) {
+			throw new IllegalArgumentException("argument <expr> is null");
+		}
+
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
+		}
+
+		ArrayList<KMyMoneyWritableBudget> result = new ArrayList<KMyMoneyWritableBudget>();
+
+		for ( KMyMoneyBudget bdgt : super.getBudgetsByName(expr, relaxed) ) {
+			KMyMoneyWritableBudget newBdgt = new KMyMoneyWritableBudgetImpl((KMyMoneyBudgetImpl) bdgt);
+			result.add(newBdgt);
+		}
+
+		return result;
+	}
+
+	@Override
+	public KMyMoneyWritableBudget getWritableBudgetByNameUniq(String expr)
+			throws NoEntryFoundException, TooManyEntriesFoundException {
+		if ( expr == null ) {
+			throw new IllegalArgumentException("argument <expr> is null");
+		}
+
+		if ( expr.isBlank() ) {
+			throw new IllegalArgumentException("argument <expr> is blank");
+		}
+
+		KMyMoneyBudget bdgt = super.getBudgetByNameUniq(expr);
+		return new KMyMoneyWritableBudgetImpl((KMyMoneyBudgetImpl) bdgt);
+	}
+
+	@Override
+	public List<KMyMoneyWritableBudget> getWritableBudgets() {
+		ArrayList<KMyMoneyWritableBudget> result = new ArrayList<KMyMoneyWritableBudget>();
+
+		for ( KMyMoneyBudget bdgt : super.getBudgets() ) {
+			KMyMoneyWritableBudget newBdgt = new KMyMoneyWritableBudgetImpl((KMyMoneyBudgetImpl) bdgt);
+			result.add(newBdgt);
+		}
+
+		return result;
 	}
 
 	/**

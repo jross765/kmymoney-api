@@ -45,11 +45,19 @@ public class FileAccountManager extends org.kmymoney.api.read.impl.hlp.fil.FileA
 	// ---------------------------------------------------------------
 
 	public void addAccount(KMyMoneyAccount acct) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+
 		acctMap.put(acct.getID(), acct);
 		LOGGER.debug("addAccount: Added account to cache: " + acct.getID());
 	}
 
 	public void removeAccount(KMyMoneyAccount acct) {
+		if ( acct == null ) {
+			throw new IllegalArgumentException("argument <acct> is null");
+		}
+
 		acctMap.remove(acct.getID());
 		LOGGER.debug("removeAccount: Removed account from cache: " + acct.getID());
 	}

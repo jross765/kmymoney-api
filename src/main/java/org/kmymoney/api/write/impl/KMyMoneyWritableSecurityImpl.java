@@ -76,6 +76,16 @@ public class KMyMoneyWritableSecurityImpl extends KMyMoneySecurityImpl
 	 * @see KMyMoneyWritableSecurity#remove()
 	 */
 	public void remove() throws ObjectCascadeException {
+		if ( getStockAccounts() != null ) {
+			if ( getStockAccounts().size() > 0 )
+				throw new IllegalStateException("Cannot remove security while stock accounts refer to it!");
+		}
+		
+		if ( getQuotes() != null ) {
+			if ( getQuotes().size() > 0 )
+				throw new IllegalStateException("Cannot remove security while there are quotes (prices) that refer to it!");
+		}
+		
 		SECURITY peer = jwsdpPeer;
 		getKMyMoneyFile().getRootElement().getSECURITIES().getSECURITY().remove(peer);
 		getWritableKMyMoneyFile().removeSecurity(this);

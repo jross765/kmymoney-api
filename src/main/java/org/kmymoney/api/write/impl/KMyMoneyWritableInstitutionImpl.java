@@ -125,6 +125,10 @@ public class KMyMoneyWritableInstitutionImpl extends KMyMoneyInstitutionImpl
      */
     @Override
     public void remove() {
+		if ( hasAccounts() ) {
+			throw new IllegalStateException("Cannot remove institution while it contains accounts!");
+		}
+		
     	INSTITUTION peer = jwsdpPeer;
     	getKMyMoneyFile().getRootElement().getINSTITUTIONS().getINSTITUTION().remove(peer);
     	getWritableKMyMoneyFile().removeInstitution(this);

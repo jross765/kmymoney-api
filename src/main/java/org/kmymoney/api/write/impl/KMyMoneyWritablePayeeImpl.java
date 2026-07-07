@@ -380,9 +380,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <eml> is null");
     	}
 
-    	if ( eml.isBlank() ) {
-    		throw new IllegalArgumentException("argument <eml> is blank");
-    	}
+    	// Sic, blank is allowed
+//    	if ( eml.isBlank() ) {
+//    		throw new IllegalArgumentException("argument <eml> is blank");
+//    	}
 
     	String oldEml = getEmail();
     	jwsdpPeer.setEmail(eml);
@@ -403,9 +404,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <ref> is null");
     	}
 
-    	if ( ref.isBlank() ) {
-    		throw new IllegalArgumentException("argument <ref> is blank");
-    	}
+    	// Sic, blank is allowed
+//    	if ( ref.isBlank() ) {
+//    		throw new IllegalArgumentException("argument <ref> is blank");
+//    	}
 
     	String oldRef = getReference();
     	jwsdpPeer.setReference(ref);
@@ -428,9 +430,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <patt> is null");
     	}
 
-    	if ( patt.isBlank() ) {
-    		throw new IllegalArgumentException("argument <patt> is blank");
-    	}
+    	// Sic, blank is allowed
+//    	if ( patt.isBlank() ) {
+//    		throw new IllegalArgumentException("argument <patt> is blank");
+//    	}
 
     	String oldPatt = getIDPattern();
     	jwsdpPeer.setIdpattern(patt);
@@ -451,9 +454,10 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <tpl> is null");
     	}
 
-    	if ( tpl.isBlank() ) {
-    		throw new IllegalArgumentException("argument <tpl> is blank");
-    	}
+    	// Sic, blank is allowed
+//    	if ( tpl.isBlank() ) {
+//    		throw new IllegalArgumentException("argument <tpl> is blank");
+//    	}
 
     	String oldTpl = getURLTemplate();
     	jwsdpPeer.setUrltemplate(tpl);
@@ -492,9 +496,18 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
     		throw new IllegalArgumentException("argument <keyList> is null");
     	}
 
+    	clearMatchKeys();
     	for ( String key : keyList ) {
     		addMatchKey(key);
     	}
+	}
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public void clearMatchKeys() {
+		setMatchKeysRaw("");
 	}
 
     /**
@@ -538,7 +551,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 //    	}
 
     	String oldKeysRaw = getMatchKeysRaw();
-    	jwsdpPeer.setReference(keysRaw);
+    	jwsdpPeer.setMatchkey(keysRaw);
     	getWritableKMyMoneyFile().setModified(true);
 
     	PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
@@ -568,7 +581,7 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
      */
 	@Override
 	public void setMatchIgnoreCase(final boolean val) {
-    	boolean oldVal = getUsingMatchKey();
+    	boolean oldVal = getMatchIgnoreCase();
     	BigInteger valRaw = ( val == true ? BigInteger.ONE : BigInteger.ZERO );
     	jwsdpPeer.setMatchignorecase(valRaw);
     	getWritableKMyMoneyFile().setModified(true);
