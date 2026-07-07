@@ -403,7 +403,7 @@ public class SimpleSecurityQuoteTable implements SimplePriceTable,
 
     @Override
     public String toString() {
-    	String result = "SimpleSecurityQuoteTable: [\n";
+    	String result = "SimpleSecurityQuoteTable [\n";
 	
     	result += "No. of entries (FP): " + secID2Factor.size() + "\n";
     	result += "No. of entries (BF): " + secID2FactorRat.size() + "\n";

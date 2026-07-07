@@ -255,7 +255,7 @@ public class ComplexPriceTable implements Serializable {
 	 * @return the factor to convert the price specified by the name-space-code-pair
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID.Type type, final String code) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
@@ -276,7 +276,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber getConversionFactor(final KMMQualifSecCurrID secCurrID) {
 		if ( secCurrID == null ) {
 			throw new IllegalArgumentException("argument <secCurrID> is null");
@@ -303,7 +303,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber getConversionFactor(final Currency curr) {
 		if ( curr == null ) {
 			throw new IllegalArgumentException("argument <curr> is null");
@@ -379,7 +379,7 @@ public class ComplexPriceTable implements Serializable {
 	 *
 	 * @see SimplePriceTable#setConversionFactor(java.lang.String, FixedPointNumber)
 	 */
-    @Deprecated
+	@Deprecated
 	public void setConversionFactor(final KMMQualifSecCurrID.Type type, final String code, final FixedPointNumber factor) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
@@ -407,7 +407,7 @@ public class ComplexPriceTable implements Serializable {
 		setConversionFactor(secCurrID, factor);
 	}
 
-    @Deprecated
+	@Deprecated
 	public void setConversionFactor(final KMMQualifSecCurrID secCurrID, final FixedPointNumber factor) {
 		if ( secCurrID == null ) {
 		    throw new IllegalArgumentException("argument <secCurrID> is null");
@@ -428,7 +428,7 @@ public class ComplexPriceTable implements Serializable {
 		firePriceTableChanged(secCurrID.toString(), factor);
 	}
 	
-    @Deprecated
+	@Deprecated
 	public void setConversionFactor(final KMMSecID secID, final FixedPointNumber factor) {
 		if ( secID == null ) {
 		    throw new IllegalArgumentException("argument <secID> is null");
@@ -465,6 +465,7 @@ public class ComplexPriceTable implements Serializable {
 		firePriceTableChanged(secID.toString(), factor);
 	}
 	
+	@Deprecated
 	public void setConversionFactor(final KMMCurrID currID, final FixedPointNumber factor) {
 		if ( currID == null ) {
 		    throw new IllegalArgumentException("argument <currID> is null");
@@ -501,7 +502,7 @@ public class ComplexPriceTable implements Serializable {
 		firePriceTableChanged(currID.toString(), factor);
 	}
 	
-    @Deprecated
+	@Deprecated
 	public void setConversionFactor(final Currency curr, final FixedPointNumber factor) {
 		if ( curr == null ) {
 		    throw new IllegalArgumentException("argument <curr> is null");
@@ -517,8 +518,8 @@ public class ComplexPriceTable implements Serializable {
 	
 	// ----------------------------
 
-	public void setConversionFactorRat(final KMMQualifSecCurrID.Type type, final String code,
-			final BigFraction factor) {
+	@Deprecated
+	public void setConversionFactorRat(final KMMQualifSecCurrID.Type type, final String code, final BigFraction factor) {
 		if ( code == null ) {
 			throw new IllegalArgumentException("argument <code> is null");
 		}
@@ -651,7 +652,7 @@ public class ComplexPriceTable implements Serializable {
 	 * @see SimplePriceTable#convertFromBaseCurrency(FixedPointNumber,
 	 *      java.lang.String)
 	 */
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber pValue, final KMMQualifSecCurrID secCurrID) {
 		if ( pValue == null )
 			throw new IllegalArgumentException("argument <pValue> is null");
@@ -681,7 +682,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber convertFromBaseCurrency(final FixedPointNumber pValue, final Currency curr) {
 		if ( pValue == null )
 			throw new IllegalArgumentException("argument <pValue> is null");
@@ -739,7 +740,7 @@ public class ComplexPriceTable implements Serializable {
 
 	// ----------------------------
 
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber convertToBaseCurrency(final FixedPointNumber pValue, final KMMQualifSecCurrID secCurrID) {
 		if ( pValue == null ) {
 			throw new IllegalArgumentException("argument <pValue> is null"); 
@@ -770,7 +771,7 @@ public class ComplexPriceTable implements Serializable {
 		return null; // Compiler happy
 	}
 
-    @Deprecated
+	@Deprecated
 	public FixedPointNumber convertToBaseCurrency(final FixedPointNumber pValue, final Currency curr) {
 		if ( pValue == null )
 			throw new IllegalArgumentException("argument <pValue> is null");
@@ -832,7 +833,7 @@ public class ComplexPriceTable implements Serializable {
 
 	/**
 	 * @param tyoe
-	 * @return 
+	 * @return list of codes in the given name space
 	 */
 	public List<String> getCodes(final KMMQualifSecCurrID.Type tyoe) {
 		SimplePriceTable table = getTabByType(tyoe);
@@ -869,7 +870,7 @@ public class ComplexPriceTable implements Serializable {
 		for ( KMMQualifSecCurrID.Type type : getTabTypes() ) {
 			if ( type != KMMQualifSecCurrID.Type.UNSET ) {
 				result += "=======================================\n";
-				result += "Name space: " + type + "\n";
+				result += "Type: " + type + "\n";
 				result += "=======================================\n";
 				result += getTabByType(type).toString() + "\n";
 			}
