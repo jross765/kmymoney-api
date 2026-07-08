@@ -60,14 +60,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 
     // ---------------------------------------------------------------
 
-    /**
-     * @see KMyMoneyTransaction#getDateEntered()
-     */
     protected LocalDate entryDate;
-
-    /**
-     * @see KMyMoneyTransaction#getDatePosted()
-     */
     protected LocalDate postDate;
 
     // ---------------------------------------------------------------

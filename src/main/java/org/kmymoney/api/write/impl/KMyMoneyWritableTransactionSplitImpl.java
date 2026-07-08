@@ -814,6 +814,20 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 */
 	@Override
 	public void setUserDefinedAttribute(final String name, final String value) {
+		setUserDefinedAttribute(name, value, false);
+	}
+
+	/**
+	 * Special variant needed for exceptional cases.
+	 * Intentionally not published in interface.
+	 * 
+	 * @param name attribute name 
+	 * @param value attribute value
+	 * @param allowBlank Indicates whether blank value shall be allowed or not
+	 * 
+	 * @see #setUserDefinedAttribute(String, String)
+	 */
+	public void setUserDefinedAttribute(final String name, final String value, boolean allowBlank) {
 		if ( name == null ) {
 			throw new IllegalArgumentException("argument <name> is null");
 		}
@@ -821,13 +835,17 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( name.isBlank() ) {
 			throw new IllegalArgumentException("argument <name> is blank");
 		}
-
+		
 		if ( value == null ) {
 			throw new IllegalArgumentException("argument <value> is null");
 		}
 		
 		if ( value.isBlank() ) {
-			throw new IllegalArgumentException("argument <value> is blank");
+			if ( allowBlank ) {
+				LOGGER.warn("setUserDefinedAttribute: Argument <value> is blank");
+			} else {
+				throw new IllegalArgumentException("argument <value> is blank");
+			}
 		}
 
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null ) {
