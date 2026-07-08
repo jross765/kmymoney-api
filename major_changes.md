@@ -8,6 +8,19 @@
 
 * Partially (but not fully) changed implementations so that `BigFraction` is used internally instead of `FixedPointNumber`.
 
+* `KMyMoneyWritableFile(Impl)`: Added methods, now fully symmetrical to the read-only-variant.
+
+* `KMyMoney(Writable)Transaction(Impl)`: New method 'get(Writable)SplitByAccountID()`.
+
+* `KMyMoneyTransaction(Split)Impl`: Two new methods:
+  *  `toXMLString()` (published in interface)
+  *  `replaceID()` (*not* published in interface)
+     **You are advised not to use it! Seriously.**
+
+  They both are only needed for one special case: Merging two transactions the "KMyMoney-way", where the XML string of the dying transaction is saved as a property of the surviving one (where it will stay until the merge is finally explicitly accepted on the GUI).
+
+  For details, cf. module "API Extensions".
+
 * Usual maintenance: Fixed small bugs, small improvements, low-level code-cleaning.
 
 ## V. 0.8.1 &rarr; 0.9

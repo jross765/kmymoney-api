@@ -21,11 +21,51 @@ file.
 Cf. document "[Major Changes](https://github.com/jross765/JKMyMoneyLibNTools/kmymoney-api/major_changes.md)".
 
 ## Planned
-It should go without saying, but the following points are of course subject to change and by no means a promise that they will actually be implemented soon:
+It should go without saying, but the following items are of course subject to change and 
+by no means a promise that they will actually be implemented soon:
 
-* Add support for other entities (budget, etc.)
+* Add support for other entities (reports, online jobs -- 
+the latter one not before it is not actually used in the original
+software, of course).
 
 * Better test case coverage.
+
+* *Possibly* include generated code in the repo.
+
+  *Rationale*: I know, one generally should not do that, but it does have its advantages, 
+  and life's not black and white. 
+
+  * The current maintainer currently does not provide pre-compiled binaries (yet, for specific
+    reasons). Instead, people who want to use this lib have to compile it themselves.
+    Now, setting up the compile environment for this project is not particularly difficult
+    (for a developer), but it's not completely trivial (for a non-techie) either, esp.
+    for the generation of the JAXB classes. And this project's target "audience" includes
+    non-developer (albeit tech-inclined) people who are primarily focused on just getting
+    some things done with 
+    KMyMoney.
+    Thus, by including this generated code into the repo, this problem could be mitigated.
+
+  * The generated code is currently not (directly) covered by the test cases (cf. below),
+    but once it is... -- well, granted, it still does not necessarily mean that it should 
+    be included in the repo, but it's at least an indication that it should.
+
+* *Possibly* move generated code into separate module ("low-level API"). 
+
+  *Rationale*: This API is type-safe, has all kinds of safety checks and
+  high-level functionalities and what have you... but it is inefficient and slow. And sometimes, 
+  it's just overkill. There are cases where it's legitimate to use the generated "unsafe", 
+  low-level API for very simple (read-only) tasks in order to have a performance boost.
+
+  By providing a separate low-level API, we would have the benefit of having an 
+  "officially" supported way to write such tools. However, as a drawback, we would have -- 
+  well -- an API, i.e. everything is then exported and will need interface maintainance. 
+  Currently, this is not the case. And, honestly, neither do I really have the time to 
+  do this nor am I much inclinded to.
+
+  Will have to think about it for a while...
+
+* Improve test coverage, especially for the generated code, which currently is not 
+  (directly) covered.
 
 * Last not least: Provide user documentation.
 
