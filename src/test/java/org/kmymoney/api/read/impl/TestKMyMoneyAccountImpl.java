@@ -37,7 +37,7 @@ public class TestKMyMoneyAccountImpl {
 	public static final KMMComplAcctID ACCT_12_ID = KMMComplAcctID.get(KMMComplAcctID.Top.INCOME);
 	public static final KMMComplAcctID ACCT_13_ID = KMMComplAcctID.get(KMMComplAcctID.Top.EXPENSE);
 	public static final KMMComplAcctID ACCT_14_ID = KMMComplAcctID.get(KMMComplAcctID.Top.EQUITY);
-	
+
 	public static final KMMInstID INST_1_ID = TestKMyMoneyInstitutionImpl.INST_1_ID;
 	public static final KMMInstID INST_2_ID = TestKMyMoneyInstitutionImpl.INST_2_ID;
 	
@@ -60,7 +60,7 @@ public class TestKMyMoneyAccountImpl {
 	@Before
 	public void initialize() throws Exception {
 		ClassLoader classLoader = getClass().getClassLoader();
-		// URL kmmFileURL = classLoader.getResource(Const.GCSH_FILENAME);
+		// URL kmmFileURL = classLoader.getResource(Const.KMM_FILENAME);
 		// System.err.println("KMyMoney test file resource: '" + kmmFileURL + "'");
 		InputStream kmmFileStream = null;
 		try {
@@ -85,6 +85,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_1_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(17, acct.getTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_1_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.CHECKING, acct.getType());
 		assertEquals(INST_1_ID, acct.getInstitutionID());
@@ -188,6 +194,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_2_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_2_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.INVESTMENT, acct.getType());
 		assertEquals(INST_1_ID, acct.getInstitutionID());
@@ -224,6 +236,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_3_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_3_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.INCOME, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -250,7 +268,7 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(-6500,    acct.getBalanceRecursiveRat().getNumerator().intValue());
 		assertEquals(1,        acct.getBalanceRecursiveRat().getDenominator().intValue());
 		assertEquals("-6.500,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
-		
+
 		assertEquals(0, acct.getTransactions().size());
 	}
 
@@ -259,6 +277,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_4_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(2, acct.getTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_4_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.STOCK, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -282,7 +306,7 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(1,    acct.getBalanceRecursiveRat().getDenominator().longValue());
 		// ::TODO
 		// assertEquals("34,00 €", acct.getBalanceRecursiveFormatted()); // ::TODO: locale-specific!
-		
+
 		assertEquals(1980.50, acct.getBalance(LocalDate.now(), Currency.getInstance("EUR")).doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(3961,    acct.getBalanceRat(LocalDate.now(), Currency.getInstance("EUR")).getNumerator().intValue());
 		assertEquals(2,       acct.getBalanceRat(LocalDate.now(), Currency.getInstance("EUR")).getDenominator().intValue());
@@ -306,6 +330,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_10_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_10_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.ASSET, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -340,6 +370,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_11_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_11_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.LIABILITY, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -371,6 +407,12 @@ public class TestKMyMoneyAccountImpl {
 	public void test01_12() throws Exception {
 		acct = kmmFile.getAccountByID(ACCT_12_ID);
 		assertNotEquals(null, acct);
+
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
 
 		assertEquals(ACCT_12_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.INCOME, acct.getType());
@@ -409,6 +451,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_13_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+
 		assertEquals(ACCT_13_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -446,6 +494,12 @@ public class TestKMyMoneyAccountImpl {
 		acct = kmmFile.getAccountByID(ACCT_14_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+
 		assertEquals(ACCT_14_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.EQUITY, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -471,12 +525,18 @@ public class TestKMyMoneyAccountImpl {
 		assertEquals(0, acct.getTransactions().size());
 	}
 
-    @Test
-    public void test02() throws Exception {
-    	acct = kmmFile.getAccountByID(ACCT_15_ID);
-    	assertNotEquals(null, acct);
+	@Test
+	public void test02() throws Exception {
+		acct = kmmFile.getAccountByID(ACCT_15_ID);
+		assertNotEquals(null, acct);
 
-    	assertEquals(ACCT_15_ID, acct.getID());
-    	assertEquals(true, acct.isClosed());
-    }
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		
+		// ---
+
+		assertEquals(ACCT_15_ID, acct.getID());
+		assertEquals(true, acct.isClosed());
+	}
 }

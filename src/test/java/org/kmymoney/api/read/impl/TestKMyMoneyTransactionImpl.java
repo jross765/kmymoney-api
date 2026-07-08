@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneyTransaction;
+import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 import junit.framework.JUnit4TestAdapter;
@@ -118,6 +119,59 @@ public class TestKMyMoneyTransactionImpl {
 				    </SPLITS>
 				</TRANSACTION>""" + "\n", 
 				trx.toXMLString());
+	}
+
+	// This test case is not interesting in and of itself -- we don't want to 
+	// test the JAXB implementation, after all (and we have covered lots of 
+	// the generated code indirectly with all the other tests). 
+	// Rather, it must be seen in the context of elaborate tests in module 
+	// "API Extensions"; it's a sort of preparatory step for them.
+	// Cf. TestTransactionMergerVar3 there. 
+	// In short: In effect, We are merely testing our helper method 
+	// KMyMoneyTransactionImpl.fromXMLString() here, which is very short
+	// and straight-forward, anyway.
+	@Test
+	public void test05() throws Exception {
+		KMyMoneyTransaction refTrx = kmmFile.getTransactionByID(TRX_1_ID);
+		assertNotEquals(null, refTrx);
+		
+		// ---
+
+		// copied from test data file:
+		String xmlTrxStr = """
+				<TRANSACTION id="T000000000000000001" postdate="2023-01-01" memo="" entrydate="2023-11-03" commodity="EUR">
+					<SPLITS>
+						<SPLIT id="S0001" payee="P000004" reconciledate="" action="" reconcileflag="0" value="10000/1" shares="10000/1" price="1/1" memo="" account="A000004" number="" bankid=""/>
+						<SPLIT id="S0002" payee="P000004" reconciledate="" action="" reconcileflag="0" value="-10000/1" shares="-10000/1" price="1/1" memo="" account="A000053" number="" bankid=""/>
+					</SPLITS>
+				</TRANSACTION>
+				""";
+		
+		KMyMoneyTransactionImpl trx = KMyMoneyTransactionImpl.fromXMLString(xmlTrxStr, kmmFile);
+		
+		// ---
+
+		assertEquals(refTrx.toString(), trx.toString());
+		assertEquals(refTrx.getID(), trx.getID());
+		assertEquals(refTrx.getDatePosted(), trx.getDatePosted());
+		assertEquals(refTrx.getDateEntered(), trx.getDateEntered());
+		assertEquals(refTrx.getBalanceRat(), trx.getBalanceRat());
+		assertEquals(refTrx.getMemo(), trx.getMemo());
+		
+		assertEquals(refTrx.getSplitsCount(), trx.getSplitsCount());
+		
+		for ( KMyMoneyTransactionSplit splt : trx.getSplits() )
+		{
+			KMyMoneyTransactionSplit refSplt = refTrx.getSplitByID(splt.getID()); 
+			assertEquals(refSplt.toString(), splt.toString());
+			assertEquals(refSplt.getID(), splt.getID());
+			assertEquals(refSplt.getNumber(), splt.getNumber());
+			assertEquals(refSplt.getAccountID(), splt.getAccountID());
+			assertEquals(refSplt.getPayeeID(), splt.getPayeeID());
+			assertEquals(refSplt.getValueRat(), splt.getValueRat());
+			assertEquals(refSplt.getSharesRat(), splt.getSharesRat());
+			assertEquals(refSplt.getMemo(), splt.getMemo());
+		}
 	}
 
 }

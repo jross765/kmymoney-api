@@ -1,7 +1,9 @@
 package org.kmymoney.api.write.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.kmymoney.api.ConstTest;
 import org.kmymoney.api.read.KMyMoneyAccount;
+import org.kmymoney.api.read.KMyMoneyPayee;
 import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
@@ -23,18 +26,48 @@ import org.kmymoney.api.read.impl.aux.KMMFileStats;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.base.basetypes.complex.KMMComplAcctID;
+import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
+import org.kmymoney.base.basetypes.simple.KMMPyeID;
 import org.kmymoney.base.basetypes.simple.KMMTrxID;
 
 import junit.framework.JUnit4TestAdapter;
 
 public class TestKMyMoneyWritableTransactionImpl {
+
 	private static final KMMTrxID TRX_1_ID = TestKMyMoneyTransactionImpl.TRX_1_ID;
 	private static final KMMTrxID TRX_2_ID = TestKMyMoneyTransactionImpl.TRX_2_ID;
 
+	public static final KMMQualifSpltID TRX_1_SPLT_1_ID = new KMMQualifSpltID(TRX_1_ID.toString(), "S0001");
+	public static final KMMQualifSpltID TRX_1_SPLT_2_ID = new KMMQualifSpltID(TRX_1_ID.toString(), "S0002");
+	public static final KMMQualifSpltID TRX_2_SPLT_1_ID = new KMMQualifSpltID(TRX_2_ID.toString(), "S0001");
+	public static final KMMQualifSpltID TRX_2_SPLT_2_ID = new KMMQualifSpltID(TRX_2_ID.toString(), "S0002");
+
+	private static final KMMAcctID TRX_1_SPLT_1_ACCT_ID = new KMMAcctID("A000004");
+	private static final KMMAcctID TRX_1_SPLT_2_ACCT_ID = new KMMAcctID("A000053");
+	private static final KMMAcctID TRX_2_SPLT_1_ACCT_ID = new KMMAcctID("A000004");
+	private static final KMMAcctID TRX_2_SPLT_2_ACCT_ID = new KMMAcctID("A000050");
+
+	private static final KMMPyeID TRX_1_SPLT_1_PYE_ID = new KMMPyeID("P000004");
+	private static final KMMPyeID TRX_1_SPLT_2_PYE_ID = new KMMPyeID("P000004");
+	private static final KMMPyeID TRX_2_SPLT_1_PYE_ID = new KMMPyeID("P000006");
+	private static final KMMPyeID TRX_2_SPLT_2_PYE_ID = new KMMPyeID("P000006");
+
 	private static final KMMComplAcctID ACCT_1_ID = TestKMyMoneyAccountImpl.ACCT_1_ID;
 	private static final KMMAcctID ACCT_20_ID = new KMMAcctID("A000005"); // Asset::Barvermögen::Spar RaiBa
+	
+	// ----------------------------
+	
+	private static final int NOF_SPLT_ACCT11_PRE = 17;
+	private static final int NOF_SPLT_ACCT12_PRE = 1;
+	private static final int NOF_SPLT_PYE11_PRE  = 2;
+	private static final int NOF_SPLT_PYE12_PRE  = 2;
 
+	private static final int NOF_SPLT_ACCT21_PRE = 17;
+	private static final int NOF_SPLT_ACCT22_PRE = 6;
+	private static final int NOF_SPLT_PYE21_PRE  = 14;
+	private static final int NOF_SPLT_PYE22_PRE  = 14;
+	
 	// -----------------------------------------------------------------
 
 	private KMyMoneyWritableFileImpl kmmInFile = null;
@@ -200,6 +233,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
 
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
+		assertEquals(0,   trx.getBalanceRat().getNumerator().intValue());
+		assertEquals(1,   trx.getBalanceRat().getDenominator().intValue());
+
 		assertEquals("Super dividend", trx.getMemo()); // changed
 		assertEquals("1970-01-01", trx.getDatePosted().toString()); // changed
 		assertEquals("1970-01-01", trx.getDatePostedFormatted());
@@ -222,7 +258,11 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertNotEquals(null, trx);
 
 		assertEquals(TRX_1_ID, trx.getID());
+
 		assertEquals(0.0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
+		assertEquals(0,   trx.getBalanceRat().getNumerator().intValue());
+		assertEquals(1,   trx.getBalanceRat().getDenominator().intValue());
+
 		assertEquals("Super dividend", trx.getMemo()); // changed
 		assertEquals("1970-01-01", trx.getDatePosted().toString()); // changed
 		assertEquals("1970-01-01", trx.getDatePostedFormatted());
@@ -323,7 +363,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 
 		// ---
 
-		assertEquals(0, trx.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0, trx.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0,   trx.getBalanceRat().getNumerator().intValue());
+		assertEquals(1,   trx.getBalanceRat().getDenominator().intValue());
 
 		// ---
 
@@ -343,7 +385,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(-100, splt1.getValue().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(-100, splt1.getValueRat().getNumerator().intValue());
 		assertEquals(1,    splt1.getValueRat().getDenominator().intValue());
-		
+
 		assertEquals("Generated by TestKMyMoneyWritableTransactionImpl.test03_1 (1)", splt1.getMemo());
 
 		assertEquals(ACCT_20_ID.toString(), splt2.getAccountID().toString());
@@ -381,7 +423,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 
 		// ---
 
-		assertEquals(0, trx.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0.0, trx.getBalance().doubleValue(), ConstTest.DIFF_TOLERANCE);
+		assertEquals(0,   trx.getBalanceRat().getNumerator().intValue());
+		assertEquals(1,   trx.getBalanceRat().getDenominator().intValue());
 
 		// ---
 
@@ -439,7 +483,42 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.RAW));
 		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
 
+		// ----------------------------
 
+		KMyMoneyAccount acct11 = kmmInFile.getWritableAccountByID(TRX_1_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct11);
+		assertEquals(NOF_SPLT_ACCT11_PRE, acct11.getTransactionSplits().size());
+
+		KMyMoneyAccount acct12 = kmmInFile.getAccountByID(TRX_1_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct12);
+		assertEquals(NOF_SPLT_ACCT12_PRE, acct12.getTransactionSplits().size());
+
+		KMyMoneyPayee pye11 = kmmInFile.getPayeeByID(TRX_1_SPLT_1_PYE_ID);
+		assertNotEquals(null, pye11);
+		assertEquals(NOF_SPLT_PYE11_PRE, pye11.getTransactionSplits().size());
+		
+		KMyMoneyPayee pye12 = kmmInFile.getPayeeByID(TRX_1_SPLT_2_PYE_ID);
+		assertNotEquals(null, pye12);
+		assertEquals(NOF_SPLT_PYE12_PRE, pye12.getTransactionSplits().size());
+		
+		// ---
+
+		KMyMoneyAccount acct21 = kmmInFile.getAccountByID(TRX_2_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct21);
+		assertEquals(NOF_SPLT_ACCT21_PRE, acct21.getTransactionSplits().size());
+
+		KMyMoneyAccount acct22 = kmmInFile.getAccountByID(TRX_2_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct22);
+		assertEquals(NOF_SPLT_ACCT22_PRE, acct22.getTransactionSplits().size());
+		
+		KMyMoneyPayee pye21 = kmmInFile.getPayeeByID(TRX_2_SPLT_1_PYE_ID);
+		assertNotEquals(null, pye21);
+		assertEquals(NOF_SPLT_PYE21_PRE, pye21.getTransactionSplits().size());
+		
+		KMyMoneyPayee pye22 = kmmInFile.getPayeeByID(TRX_2_SPLT_2_PYE_ID);
+		assertNotEquals(null, pye22);
+		assertEquals(NOF_SPLT_PYE22_PRE, pye22.getTransactionSplits().size());
+		
 		// ----------------------------
 		// Delete the object
 
@@ -448,15 +527,20 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertNotEquals(null, trx1);
 		kmmInFile.removeTransaction(trx1);
 
+		// ---
+		
 		// Variant 2
 		KMyMoneyWritableTransaction trx2 = kmmInFile.getWritableTransactionByID(TRX_2_ID);
+		assertNotEquals(null, trx2);
 		trx2.remove();
 
 		// ----------------------------
 		// Check whether the objects have actually been deleted
 		// (in memory, not in the file yet).
 
-		test04_1_check_memory(trx1, trx2);
+		test04_1_check_memory(trx1, trx2,
+				              acct11, acct12, acct21, acct22,
+				              pye11, pye12, pye21, pye22);
 
 		// ----------------------------
 		// Now, check whether the deletions have been written to the
@@ -473,10 +557,114 @@ public class TestKMyMoneyWritableTransactionImpl {
 		test04_1_check_persisted(outFile);
 	}
 
+	@Test
+	public void test04_2() throws Exception {
+		kmmInFileStats = new KMMFileStats(kmmInFile);
+
+		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.RAW));
+		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
+
+		assertEquals(ConstTest.Stats.NOF_TRX_SPLT, kmmInFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.RAW));
+		assertEquals(ConstTest.Stats.NOF_TRX_SPLT, kmmInFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.CACHE));
+
+		// ----------------------------
+
+		KMyMoneyAccount acct11 = kmmInFile.getWritableAccountByID(TRX_1_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct11);
+		assertEquals(NOF_SPLT_ACCT11_PRE, acct11.getTransactionSplits().size());
+
+		KMyMoneyAccount acct12 = kmmInFile.getAccountByID(TRX_1_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct12);
+		assertEquals(NOF_SPLT_ACCT12_PRE, acct12.getTransactionSplits().size());
+
+		KMyMoneyPayee pye11 = kmmInFile.getPayeeByID(TRX_1_SPLT_1_PYE_ID);
+		assertNotEquals(null, pye11);
+		assertEquals(NOF_SPLT_PYE11_PRE, pye11.getTransactionSplits().size());
+		
+		KMyMoneyPayee pye12 = kmmInFile.getPayeeByID(TRX_1_SPLT_2_PYE_ID);
+		assertNotEquals(null, pye12);
+		assertEquals(NOF_SPLT_PYE12_PRE, pye12.getTransactionSplits().size());
+		
+		// ---
+
+		KMyMoneyAccount acct21 = kmmInFile.getAccountByID(TRX_2_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct21);
+		assertEquals(NOF_SPLT_ACCT21_PRE, acct21.getTransactionSplits().size());
+
+		KMyMoneyAccount acct22 = kmmInFile.getAccountByID(TRX_2_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct22);
+		assertEquals(NOF_SPLT_ACCT22_PRE, acct22.getTransactionSplits().size());
+		
+		KMyMoneyPayee pye21 = kmmInFile.getPayeeByID(TRX_2_SPLT_1_PYE_ID);
+		assertNotEquals(null, pye21);
+		assertEquals(NOF_SPLT_PYE21_PRE, pye21.getTransactionSplits().size());
+		
+		KMyMoneyPayee pye22 = kmmInFile.getPayeeByID(TRX_2_SPLT_2_PYE_ID);
+		assertNotEquals(null, pye22);
+		assertEquals(NOF_SPLT_PYE22_PRE, pye22.getTransactionSplits().size());
+		
+		// ----------------------------
+		// Delete the object
+
+		// Variant 1
+		KMyMoneyWritableTransaction trx1 = kmmInFile.getWritableTransactionByID(TRX_1_ID);
+		assertNotEquals(null, trx1);
+		assertEquals(2, trx1.getSplitsCount());
+		assertTrue(trx1.isBalanced());
+		
+		KMyMoneyWritableTransactionSplit splt11 = kmmInFile.getWritableTransactionSplitByID(TRX_1_SPLT_1_ID);
+		assertNotEquals(null, splt11);
+		kmmInFile.removeTransactionSplit(splt11);
+		
+		// ---
+
+		// Variant 2
+		KMyMoneyWritableTransaction trx2 = kmmInFile.getWritableTransactionByID(TRX_2_ID);
+		assertNotEquals(null, trx2);
+		assertEquals(2, trx2.getSplitsCount());
+		assertTrue(trx2.isBalanced());
+		
+		KMyMoneyWritableTransactionSplit splt21 = kmmInFile.getWritableTransactionSplitByID(TRX_2_SPLT_1_ID);
+		assertNotEquals(null, splt21);
+		trx2.removeSplit(splt21);
+
+		// ----------------------------
+		// Check whether the objects have actually been deleted
+		// (in memory, not in the file yet).
+
+		test04_2_check_memory(trx1, trx2,
+							  splt11, splt21,
+							  acct11, acct12, acct21, acct22,
+							  pye11, pye12, pye21, pye22);
+
+		// ----------------------------
+		// Now, check whether the deletions have been written to the
+		// output file, then re-read from it, and whether is is what
+		// we expect it is.
+
+		File outFile = folder.newFile(ConstTest.KMM_FILENAME_OUT);
+		// System.err.println("Outfile for TestKMyMoneyWritableCustomerImpl.test01_1: '"
+		// + outFile.getPath() + "'");
+		outFile.delete(); // sic, the temp. file is already generated (empty),
+		// and the KMyMoney file writer does not like that.
+		kmmInFile.writeFile(outFile);
+
+		test04_2_check_persisted(outFile);
+	}
+
 	// ---------------------------------------------------------------
 
-	private void test04_1_check_memory(KMyMoneyWritableTransaction trx1,
-									   KMyMoneyWritableTransaction trx2) throws Exception {
+	private void test04_1_check_memory(
+			KMyMoneyWritableTransaction trx1,
+			KMyMoneyWritableTransaction trx2,
+			KMyMoneyAccount acct11,
+			KMyMoneyAccount acct12,
+			KMyMoneyAccount acct21,
+			KMyMoneyAccount acct22,
+			KMyMoneyPayee pye11,
+			KMyMoneyPayee pye12,
+			KMyMoneyPayee pye21,
+			KMyMoneyPayee pye22) throws Exception {
 		assertEquals(ConstTest.Stats.NOF_TRX - 2, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.RAW));
 		assertEquals(ConstTest.Stats.NOF_TRX - 2, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
 
@@ -489,6 +677,9 @@ public class TestKMyMoneyWritableTransactionImpl {
 		// Don't know what to do about this oddity right now,
 		// but it needs to be addressed at some point.
 		assertEquals(0.0, trx1.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
+		assertEquals(0,   trx1.getBalanceRat().getNumerator().intValue());
+		assertEquals(1,   trx1.getBalanceRat().getDenominator().intValue());
+
 		assertEquals("", trx1.getMemo()); // unchanged
 		assertEquals("2023-01-01", trx1.getDatePosted().toString()); // unchanged
 		assertEquals("2023-01-01", trx1.getDatePostedFormatted());
@@ -505,13 +696,22 @@ public class TestKMyMoneyWritableTransactionImpl {
 			assertEquals(0, 0);
 		}
 		
+		// ::TODO
+		// assertEquals(16, acct11.getTransactionSplits().size()); // changed
+		// ::TODO
+		// assertEquals(1, pye1.getTransactionSplits().size()); // changed
+		
 		// ---
 		// Second transaction, same as above:
 		
 		// CAUTION / ::TODO
 		// Cf. above.
 		assertEquals(TRX_2_ID, trx2.getID()); // unchanged
+
 		assertEquals(0.0, trx2.getBalance().getBigDecimal().doubleValue(), ConstTest.DIFF_TOLERANCE); // unchanged
+		assertEquals(0,   trx2.getBalanceRat().getNumerator().intValue());
+		assertEquals(1,   trx2.getBalanceRat().getDenominator().intValue());
+		
 		assertEquals("", trx2.getMemo()); // unchanged
 		assertEquals("2023-01-03", trx2.getDatePosted().toString()); // unchanged
 		assertEquals("2023-01-03", trx2.getDatePostedFormatted());
@@ -535,7 +735,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(ConstTest.Stats.NOF_TRX - 2, kmmOutFileStats.getNofEntriesTransactions(KMMFileStats.Type.RAW));
 		assertEquals(ConstTest.Stats.NOF_TRX - 2, kmmOutFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
 
-		// ---
+		// ------------------------
 		// First transaction:
 		
 		// The transaction does not exist any more, just as you would expect.
@@ -544,11 +744,217 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(null, trx1); // sic
 
 		// ---
+
+		KMyMoneyAccount acct11 = kmmInFile.getWritableAccountByID(TRX_1_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct11);
+		assertEquals(NOF_SPLT_ACCT11_PRE - 2, acct11.getTransactionSplits().size()); // changed
+
+		KMyMoneyAccount acct12 = kmmInFile.getAccountByID(TRX_1_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct12);
+		assertEquals(NOF_SPLT_ACCT12_PRE - 1, acct12.getTransactionSplits().size()); // changed
+
+		// ::TODO
+//		KMyMoneyPayee pye11 = kmmInFile.getPayeeByID(TRX_1_SPLT_1_PYE_ID);
+//		assertNotEquals(null, pye11);
+//		assertEquals(NOF_SPLT_PYE11_PRE - 2, pye11.getTransactionSplits().size()); // changed
+		
+		// ::TODO
+//		KMyMoneyPayee pye12 = kmmInFile.getPayeeByID(TRX_1_SPLT_2_PYE_ID);
+//		assertNotEquals(null, pye12);
+//		assertEquals(NOF_SPLT_PYE12_PRE - 2, pye12.getTransactionSplits().size()); // changed
+		
+		// ------------------------
 		// Second transaction, same as above:
 		
 		// Cf. above
 		KMyMoneyTransaction trx2 = kmmOutFile.getTransactionByID(TRX_2_ID);
 		assertEquals(null, trx2); // sic
+		
+		// ---
+		
+		KMyMoneyAccount acct21 = kmmInFile.getAccountByID(TRX_2_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct21);
+		assertEquals(NOF_SPLT_ACCT21_PRE - 2, acct21.getTransactionSplits().size()); // changed
+
+		KMyMoneyAccount acct22 = kmmInFile.getAccountByID(TRX_2_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct22);
+		assertEquals(NOF_SPLT_ACCT22_PRE - 1, acct22.getTransactionSplits().size()); // changed
+
+		// ::TODO
+//		KMyMoneyPayee pye21 = kmmInFile.getPayeeByID(TRX_2_SPLT_1_PYE_ID);
+//		assertNotEquals(null, pye21);
+//		assertEquals(NOF_SPLT_PYE21_PRE - 2, pye21.getTransactionSplits().size());// changed
+		
+//		KMyMoneyPayee pye22 = kmmInFile.getPayeeByID(TRX_2_SPLT_2_PYE_ID);
+//		assertNotEquals(null, pye22);
+//		assertEquals(NOF_SPLT_PYE21_PRE - 2, pye22.getTransactionSplits().size());// changed
+	}
+
+	// ---------------------------------------------------------------
+
+	private void test04_2_check_memory(
+			KMyMoneyWritableTransaction trx1,
+			KMyMoneyWritableTransaction trx2, 
+			KMyMoneyWritableTransactionSplit splt1,
+			KMyMoneyWritableTransactionSplit splt2,
+			KMyMoneyAccount acct11,
+			KMyMoneyAccount acct12,
+			KMyMoneyAccount acct21,
+			KMyMoneyAccount acct22,
+			KMyMoneyPayee pye11,
+			KMyMoneyPayee pye12,
+			KMyMoneyPayee pye21,
+			KMyMoneyPayee pye22) throws Exception {
+		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.RAW));
+		assertEquals(ConstTest.Stats.NOF_TRX, kmmInFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
+
+		assertEquals(ConstTest.Stats.NOF_TRX_SPLT - 2, kmmInFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.RAW));
+		// ::TODO
+		// assertEquals(ConstTest.Stats.NOF_TRX_SPLT - 2, kmmInFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.CACHE));
+
+		// ---
+		// First transaction:
+		
+		// CAUTION / ::TODO
+		// Old Object still exists and is unchanged
+		// Don't know what to do about this oddity right now,
+		// but it needs to be addressed at some point.
+		assertEquals(TRX_1_ID, splt1.getTransactionID()); // unchanged
+		assertEquals(2, trx1.getSplitsCount()); // unchanged
+		assertTrue(trx1.isBalanced()); // unchanged
+		
+		assertEquals(TRX_1_SPLT_1_ID.getSplitID(), splt1.getID()); // unchanged
+		assertEquals(TRX_1_SPLT_1_ACCT_ID, splt1.getAccountID()); // unchanged
+		assertEquals(TRX_1_SPLT_1_PYE_ID, splt1.getPayeeID()); // unchanged
+		assertEquals(BigFraction.of(10000), splt1.getValueRat()); // changed
+		assertEquals(BigFraction.of(10000), splt1.getSharesRat()); // changed
+		assertEquals("", splt1.getMemo()); // unchanged
+		
+		// However, the transaction split cannot newly be instantiated any more,
+		// just as you would expect.
+		try {
+			KMyMoneyWritableTransactionSplit splt1Now = kmmInFile.getWritableTransactionSplitByID(TRX_1_SPLT_1_ID);
+			assertEquals(1, 0);
+		} catch ( Exception exc ) {
+			assertEquals(0, 0);
+		}
+		
+		// ::TODO
+//		KMyMoneyTransactionSplit trx1SpltLeft = trx1.getSplits().get(0);
+//		assertEquals(TRX_1_SPLT_2_ID.getSplitID(), trx1SpltLeft.getID()); // unchanged
+		
+		// ::TODO
+		assertEquals(NOF_SPLT_ACCT11_PRE, acct11.getTransactionSplits().size()); // unchanged
+		assertEquals(NOF_SPLT_ACCT12_PRE, acct12.getTransactionSplits().size()); // unchanged
+		assertEquals(NOF_SPLT_PYE11_PRE - 1, pye11.getTransactionSplits().size()); // changed
+		assertEquals(NOF_SPLT_PYE12_PRE - 1, pye12.getTransactionSplits().size()); // changed
+		
+		// ---
+		// Second transaction split, same as above:
+		
+		// CAUTION / ::TODO
+		// Cf. above.
+		assertEquals(TRX_2_ID, splt2.getTransactionID()); // unchanged
+		assertEquals(1, trx2.getSplitsCount()); // changed
+		// ::TODO
+		// assertTrue(trx2.isBalanced()); // changed
+		
+		assertEquals(TRX_2_SPLT_1_ID.getSplitID(), splt2.getID()); // unchanged
+		assertEquals(TRX_2_SPLT_1_ACCT_ID, splt2.getAccountID()); // unchanged
+		assertEquals(TRX_2_SPLT_1_PYE_ID, splt2.getPayeeID()); // unchanged
+		assertEquals(BigFraction.of(1000), splt2.getValueRat()); // changed
+		assertEquals(BigFraction.of(1000), splt2.getSharesRat()); // changed
+		assertEquals("Unfug und Quatsch GmbH Gehalt", splt2.getMemo()); // unchanged
+		
+		// Cf. above.
+		try {
+			KMyMoneyWritableTransactionSplit splt2Now = kmmInFile.getWritableTransactionSplitByID(TRX_2_SPLT_1_ID);
+			assertEquals(1, 0);
+		} catch ( Exception exc ) {
+			assertEquals(0, 0);
+		}
+		
+		KMyMoneyTransactionSplit trx2SpltLeft = trx2.getSplits().get(0);
+		assertEquals(TRX_2_SPLT_2_ID.getSplitID(), trx2SpltLeft.getID()); // unchanged
+		
+		// ::TODO
+		// assertEquals(NOF_SPLT_ACCT21_PRE, acct21.getTransactionSplits().size()); // unchanged  ::TODO
+		assertEquals(NOF_SPLT_ACCT22_PRE, acct22.getTransactionSplits().size()); // unchanged
+		assertEquals(NOF_SPLT_PYE21_PRE - 1, pye21.getTransactionSplits().size()); // changed
+		assertEquals(NOF_SPLT_PYE22_PRE - 1, pye22.getTransactionSplits().size()); // changed
+	}
+
+	private void test04_2_check_persisted(File outFile) throws Exception {
+		kmmOutFile = new KMyMoneyFileImpl(outFile);
+		kmmOutFileStats = new KMMFileStats(kmmOutFile);
+
+		assertEquals(ConstTest.Stats.NOF_TRX, kmmOutFileStats.getNofEntriesTransactions(KMMFileStats.Type.RAW));
+		assertEquals(ConstTest.Stats.NOF_TRX, kmmOutFileStats.getNofEntriesTransactions(KMMFileStats.Type.CACHE));
+
+		assertEquals(ConstTest.Stats.NOF_TRX_SPLT - 2, kmmOutFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.RAW));
+		assertEquals(ConstTest.Stats.NOF_TRX_SPLT - 2, kmmOutFileStats.getNofEntriesTransactionSplits(KMMFileStats.Type.CACHE));
+		
+		// ------------------------
+		// First transaction:
+		
+		// The transaction split does not exist any more, just as you would expect.
+		// However, no exception is thrown, as opposed to test04_2_check_memory()
+		KMyMoneyTransaction trx1 = kmmOutFile.getTransactionByID(TRX_1_ID);
+		assertNotEquals(null, trx1);
+		assertEquals(1, trx1.getSplitsCount()); // changed
+		assertFalse(trx1.isBalanced()); // changed
+		
+		KMyMoneyTransactionSplit splt1 = kmmOutFile.getTransactionSplitByID(TRX_1_SPLT_1_ID);
+		assertEquals(null, splt1); // sic
+		KMyMoneyTransactionSplit trx1SpltLeft = trx1.getSplits().get(0);
+		assertEquals(TRX_1_SPLT_2_ID, trx1SpltLeft.getQualifID()); // unchanged
+
+		KMyMoneyAccount acct11 = kmmInFile.getAccountByID(TRX_1_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct11);
+		assertEquals(NOF_SPLT_ACCT11_PRE - 2, acct11.getTransactionSplits().size()); // changed
+
+		KMyMoneyAccount acct12 = kmmInFile.getAccountByID(TRX_1_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct12);
+		assertEquals(NOF_SPLT_ACCT12_PRE, acct12.getTransactionSplits().size()); // unchanged
+
+//		KMyMoneyPayee pye11 = kmmInFile.getPayeeByID(TRX_1_SPLT_1_PYE_ID);
+//		assertNotEquals(null, pye11);
+//		assertEquals(NOF_SPLT_PYE11_PRE - 1, pye11.getTransactionSplits().size()); // changed
+		
+		KMyMoneyPayee pye12 = kmmInFile.getPayeeByID(TRX_1_SPLT_2_PYE_ID);
+		assertNotEquals(null, pye12);
+		assertEquals(NOF_SPLT_PYE12_PRE - 1, pye12.getTransactionSplits().size()); // changed
+		
+		// ------------------------
+		// Second transaction split, same as above:
+		
+		// Cf. above
+		KMyMoneyTransaction trx2 = kmmOutFile.getTransactionByID(TRX_2_ID);
+		assertNotEquals(null, trx2);
+		assertEquals(1, trx2.getSplitsCount()); // changed
+		assertFalse(trx2.isBalanced()); // changed
+		
+		KMyMoneyTransactionSplit splt2 = kmmOutFile.getTransactionSplitByID(TRX_2_SPLT_1_ID);
+		assertEquals(null, splt2); // sic
+		KMyMoneyTransactionSplit trx2SpltLeft = trx2.getSplits().get(0);
+		assertEquals(TRX_2_SPLT_2_ID, trx2SpltLeft.getQualifID()); // unchanged
+		
+		KMyMoneyAccount acct21 = kmmInFile.getAccountByID(TRX_2_SPLT_1_ACCT_ID);
+		assertNotEquals(null, acct21);
+		assertEquals(NOF_SPLT_ACCT21_PRE - 2, acct21.getTransactionSplits().size()); // changed
+
+		KMyMoneyAccount acct22 = kmmInFile.getAccountByID(TRX_2_SPLT_2_ACCT_ID);
+		assertNotEquals(null, acct22);
+		assertEquals(NOF_SPLT_ACCT22_PRE, acct22.getTransactionSplits().size()); // unchanged
+
+		KMyMoneyPayee pye21 = kmmInFile.getPayeeByID(TRX_2_SPLT_1_PYE_ID);
+		assertNotEquals(null, pye21);
+		assertEquals(NOF_SPLT_PYE21_PRE - 1, pye21.getTransactionSplits().size()); // changed
+		
+		// ::TODO
+//		KMyMoneyPayee pye22 = kmmInFile.getPayeeByID(TRX_2_SPLT_2_PYE_ID);
+//		assertNotEquals(null, pye22);
+//		assertEquals(NOF_SPLT_PYE22_PRE, pye22.getTransactionSplits().size()); // unchanged
 	}
 
 	// ------------------------------

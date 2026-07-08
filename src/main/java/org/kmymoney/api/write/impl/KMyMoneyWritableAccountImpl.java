@@ -24,6 +24,7 @@ import org.kmymoney.api.read.KMyMoneyTransaction;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyAccountImpl;
 import org.kmymoney.api.read.impl.KMyMoneyFileImpl;
+import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
 import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
 import org.kmymoney.api.write.KMyMoneyWritableAccount;
 import org.kmymoney.api.write.KMyMoneyWritableFile;
@@ -249,7 +250,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		List<KMyMoneyWritableTransactionSplit> result = new ArrayList<KMyMoneyWritableTransactionSplit>();
 
 		for ( KMyMoneyTransactionSplit splt : super.getTransactionSplits() ) {
-			KMyMoneyWritableTransactionSplitImpl newSplt = new KMyMoneyWritableTransactionSplitImpl(splt);
+			KMyMoneyWritableTransactionSplitImpl newSplt = new KMyMoneyWritableTransactionSplitImpl((KMyMoneyTransactionSplitImpl) splt);
 			result.add(newSplt);
 		}
 

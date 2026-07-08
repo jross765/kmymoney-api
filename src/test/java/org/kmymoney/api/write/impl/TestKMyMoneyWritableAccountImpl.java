@@ -58,7 +58,7 @@ public class TestKMyMoneyWritableAccountImpl {
 	private KMMFileStats kmmInFileStats = null;
 	private KMMFileStats kmmOutFileStats = null;
 
-	private KMMComplAcctID newID = null;
+	private KMMComplAcctID newAcctID = null;
 
 	// https://stackoverflow.com/questions/11884141/deleting-file-and-directory-in-junit
 	@SuppressWarnings("exports")
@@ -113,6 +113,13 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_1_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(17, acct.getTransactionSplits().size());
+		assertEquals(17, acct.getWritableTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_1_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.CHECKING, acct.getType());
 		assertEquals(INST_1_ID, acct.getInstitutionID());
@@ -145,6 +152,13 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_2_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		assertEquals(0, acct.getWritableTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_2_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.INVESTMENT, acct.getType());
 		assertEquals(INST_1_ID, acct.getInstitutionID());
@@ -165,7 +179,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals(0, acct.getBalanceRat().getNumerator().longValue());
 		assertEquals(1, acct.getBalanceRat().getDenominator().longValue());
 		assertEquals("0,00 €", acct.getBalanceFormatted()); // ::TODO: locale-specific!
-		
+
 		assertEquals(3773.0, acct.getBalanceRecursive().doubleValue(), ConstTest.DIFF_TOLERANCE);
 		assertEquals(3773, acct.getBalanceRecursiveRat().getNumerator().longValue());
 		assertEquals(1, acct.getBalanceRecursiveRat().getDenominator().longValue());
@@ -182,6 +196,13 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_3_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(0, acct.getTransactionSplits().size());
+		assertEquals(0, acct.getWritableTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_3_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.INCOME, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -217,6 +238,13 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_4_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
+		assertEquals(2, acct.getTransactionSplits().size());
+		assertEquals(2, acct.getWritableTransactionSplits().size());
+		
+		// ---
+		
 		assertEquals(ACCT_4_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.STOCK, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -260,6 +288,8 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_10_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
 		assertEquals(ACCT_10_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.ASSET, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -294,6 +324,8 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_11_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
 		assertEquals(ACCT_11_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.LIABILITY, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -328,6 +360,8 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_12_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
 		assertEquals(ACCT_12_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.INCOME, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -365,6 +399,8 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_13_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
 		assertEquals(ACCT_13_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -402,6 +438,8 @@ public class TestKMyMoneyWritableAccountImpl {
 		KMyMoneyWritableAccount acct = kmmInFile.getWritableAccountByID(ACCT_14_ID);
 		assertNotEquals(null, acct);
 
+		// ---
+		
 		assertEquals(ACCT_14_ID, acct.getID());
 		assertEquals(KMyMoneyAccount.Type.EQUITY, acct.getType());
 		assertEquals(null, acct.getInstitutionID());
@@ -576,14 +614,24 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals(ConstTest.Stats.NOF_ACCT, kmmInFileStats.getNofEntriesAccounts(KMMFileStats.Type.RAW));
 		assertEquals(ConstTest.Stats.NOF_ACCT, kmmInFileStats.getNofEntriesAccounts(KMMFileStats.Type.CACHE));
 
+		// ----------------------------
+		// Bare naked object
+
 		KMyMoneyWritableAccount acct = 
 				kmmInFile
 					.createWritableAccount(KMyMoneyAccount.Type.EXPENSE,
 										   Currency.getInstance(kmmInFile.getDefaultCurrencyIDStr()),
 										   ACCT_13_ID,
 										   "Various expenses");
+		assertNotEquals(null, acct);
+		newAcctID = acct.getID();
+		assertEquals(true, newAcctID.isSet());
+
+		// ----------------------------
+		// Modify the object
+
 		acct.setInstitutionID(INST_2_ID);
-		acct.setMemo("All the stuff that does not fit into the other expenses accounts");
+		acct.setMemo("Cha-cha-cha");
 
 		// ----------------------------
 		// Check whether the object can has actually be created
@@ -610,7 +658,6 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals(ConstTest.Stats.NOF_ACCT + 1, kmmInFileStats.getNofEntriesAccounts(KMMFileStats.Type.RAW));
 		assertEquals(ConstTest.Stats.NOF_ACCT + 1, kmmInFileStats.getNofEntriesAccounts(KMMFileStats.Type.CACHE));
 
-		newID = acct.getID();
 		assertEquals(INST_2_ID, acct.getInstitutionID());
 		assertEquals("Various expenses", acct.getName());
 		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
@@ -618,7 +665,7 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals("CURRENCY:EUR", acct.getQualifSecCurrID().toString());
 		assertEquals(KMMQualifSecCurrID.Type.CURRENCY + ":" + kmmInFile.getDefaultCurrencyID().toString(), acct.getQualifSecCurrID().toString());
 		assertEquals(kmmInFile.getDefaultCurrencyIDStr(), acct.getQualifSecCurrID().getCode());
-		assertEquals("All the stuff that does not fit into the other expenses accounts", acct.getMemo());
+		assertEquals("Cha-cha-cha", acct.getMemo());
 	}
 
 	private void test03_1_1_check_persisted(File outFile) throws Exception {
@@ -628,17 +675,17 @@ public class TestKMyMoneyWritableAccountImpl {
 		assertEquals(ConstTest.Stats.NOF_ACCT + 1, kmmOutFileStats.getNofEntriesAccounts(KMMFileStats.Type.RAW));
 		assertEquals(ConstTest.Stats.NOF_ACCT + 1, kmmOutFileStats.getNofEntriesAccounts(KMMFileStats.Type.CACHE));
 
-		KMyMoneyAccount acct = kmmOutFile.getAccountByID(newID);
+		KMyMoneyAccount acct = kmmOutFile.getAccountByID(newAcctID);
 		assertNotEquals(null, acct);
 
-		assertEquals(newID, acct.getID());
+		assertEquals(newAcctID, acct.getID());
 		assertEquals(INST_2_ID, acct.getInstitutionID());
 		assertEquals("Various expenses", acct.getName());
 		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
 		assertEquals(ACCT_13_ID, acct.getParentAccountID());
 		assertEquals(KMMQualifSecCurrID.Type.CURRENCY + ":" + kmmInFile.getDefaultCurrencyID().toString(), acct.getQualifSecCurrID().toString());
 		assertEquals(kmmInFile.getDefaultCurrencyIDStr(), acct.getQualifSecCurrID().getCode());
-		assertEquals("All the stuff that does not fit into the other expenses accounts", acct.getMemo());
+		assertEquals("Cha-cha-cha", acct.getMemo());
 	}
 
 	// ------------------------------
@@ -893,7 +940,6 @@ public class TestKMyMoneyWritableAccountImpl {
 		// Check if modifiable
 		assertEquals(false, acct.hasTransactions()); // there are transactions/trx splits
 
-
 		// Core (variant-specific):
 		kmmInFile.removeAccount(acct);
 
@@ -967,9 +1013,9 @@ public class TestKMyMoneyWritableAccountImpl {
 		// Don't know what to do about this oddity right now,
 		// but it needs to be addressed at some point.
 		assertEquals(ACCT_9_ID, acct.getID());
-    	assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
-    	assertEquals("Gas", acct.getName());
-    	// usw.
+		assertEquals(KMyMoneyAccount.Type.EXPENSE, acct.getType());
+		assertEquals("Gas", acct.getName());
+		// usw.
 		
 		// However, the account cannot newly be instantiated any more,
 		// just as you would expect.

@@ -64,16 +64,11 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			  addSpltToAcct, addSpltToPye, addSpltToTags);
 	}
 
-	public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplit splt) {
-		super(splt.getJwsdpPeer(), splt.getTransaction(), 
-			  false, false, false);
-	}
-
 	/**
 	 * create a new split and and add it to the given transaction.
+	 * 
 	 * @param trx transaction the transaction we will belong to
-	 * @param acct     the account we take money (or other things) from or give
-	 *                    it to
+	 * @param acct the account the split will be assigned to
 	 */
 	public KMyMoneyWritableTransactionSplitImpl(
 			final KMyMoneyWritableTransactionImpl trx,
@@ -142,7 +137,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	public KMyMoneyWritableTransactionSplitImpl(final KMyMoneyTransactionSplitImpl splt) {
 		super(splt.getJwsdpPeer(), splt.getTransaction(), 
-			  true, true, true);
+			  false, false, false);
 	}
 
 	public KMyMoneyWritableTransactionSplitImpl(
