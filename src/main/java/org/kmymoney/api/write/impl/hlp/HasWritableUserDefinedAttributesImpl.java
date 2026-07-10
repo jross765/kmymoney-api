@@ -74,8 +74,17 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 	}
 
 	public static void setUserDefinedAttributeCore(KEYVALUEPAIRS kvps,
+			   final KMyMoneyWritableFile kmmFile,
+			   final String name, final String value) {
+		setUserDefinedAttributeCore(kvps, kmmFile, 
+									name, value, false);
+	}
+	
+	// Variant for special cases. 
+	public static void setUserDefinedAttributeCore(KEYVALUEPAIRS kvps,
             									   final KMyMoneyWritableFile kmmFile,
-            									   final String name, final String value) {
+            									   final String name, final String value,
+            									   final boolean allowBlank) {
 		if ( kvps == null )
 			throw new IllegalArgumentException("argument <kvps> is null");
 		
@@ -91,14 +100,20 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( value == null )
 			throw new IllegalArgumentException("argument <value> is null");
 
-		if ( value.isBlank() )
-			throw new IllegalArgumentException("argument <value> is blank");
+		if ( value.isBlank() ) {
+			if ( allowBlank ) {
+				LOGGER.warn("setUserDefinedAttributeCore (1): Argument <value> is blank");
+			} else {
+				throw new IllegalArgumentException("argument <value> is blank");
+			}
+		}
 		
 		// This makes sure that the slots list is initialized
 		// in case it had has been null.
 		List<PAIR> dummy = kvps.getPAIR();
 		
-		setUserDefinedAttributeCore(kvps.getPAIR(), kmmFile, name, value);
+		setUserDefinedAttributeCore(kvps.getPAIR(), kmmFile,
+									name, value, allowBlank);
 	}
 	
 	// ---------------------------------------------------------------
@@ -171,8 +186,16 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 	}
 
 	private static void setUserDefinedAttributeCore(List<PAIR> kvpList,
+            final KMyMoneyWritableFile kmmFile,
+            final String name, final String value) {
+		setUserDefinedAttributeCore(kvpList, kmmFile,
+									name, value, false);
+	}
+	
+	private static void setUserDefinedAttributeCore(List<PAIR> kvpList,
 			                                       final KMyMoneyWritableFile kmmFile,
-			                                       final String name, final String value) {
+			                                       final String name, final String value,
+			                                       final boolean allowBlank) {
 		if ( kvpList == null )
 			throw new IllegalArgumentException("argument <kvpList> is null");
 
@@ -188,18 +211,21 @@ public class HasWritableUserDefinedAttributesImpl extends HasUserDefinedAttribut
 		if ( value == null )
 			throw new IllegalArgumentException("argument <value> is null");
 		
-		// CAUTION: Yes, that's valid
-//		if ( value.isBlank() )
-//			throw new IllegalArgumentException("argument <value> is blank");
-
+		if ( value.isBlank() ) {
+			if ( allowBlank ) {
+				LOGGER.warn("setUserDefinedAttributeCore (2): Argument <value> is blank");
+			} else {
+				throw new IllegalArgumentException("argument <value> is blank");
+			}
+		}
+		
 		if ( ! getUserDefinedAttributeKeysCore(kvpList).contains(name) ) {
 			throw new KVPListDoesNotContainKeyException();
 		}
 		
 		for ( PAIR kvp : kvpList ) {
 			if ( kvp.getKey().equals(name) ) {
-				LOGGER.debug("setUserDefinedAttributeCore: (name=" + name + ", value='" + value
-						+ "') - overwriting existing key-value-pair");
+				LOGGER.debug("setUserDefinedAttributeCore (2): (name=" + name + ", value='" + value + "') - overwriting existing key-value-pair");
 
 				kvp.setValue(value);
 				

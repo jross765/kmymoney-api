@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -394,7 +395,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
 	/**
 	 * @param id the new currency
-	 * @see {@link KMyMoneyTransaction#getCurrencyID()}
+	 * @see {@link KMyMoneyTransaction#getQualifSecCurrID()}
 	 */
 	public void setCurrencyID(final String id) {
 		this.jwsdpPeer.setCommodity(id);
@@ -403,7 +404,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	// ---------------------------------------------------------------
 
 	/**
-	 * @see KMyMoneyWritableTransaction#setDateEntered(LocalDateTime)
+	 * @see KMyMoneyWritableTransaction#setDateEntered(LocalDate)
 	 */
 	@Override
 	public void setDateEntered(final LocalDate dateEntered) {
@@ -416,12 +417,14 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		try {
 	        // https://stackoverflow.com/questions/835889/java-util-date-to-xmlgregoriancalendar
 			// https://simplesolution.dev/java-convert-localdate-to-calendar/
+	        // https://stackoverflow.com/questions/47564200/xmlgregoriancalendar-in-java-with-no-timezone
 	        GregorianCalendar cal = new GregorianCalendar();
 	        ZonedDateTime zonedDateTime = dateEntered.atStartOfDay(ZoneId.systemDefault());
 	        Instant instant = zonedDateTime.toInstant();
 	        Date date = Date.from(instant);
 	        cal.setTime(date);
 	        XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+	        xmlCal.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
 			jwsdpPeer.setEntrydate(xmlCal);
 		} catch ( DatatypeConfigurationException exc ) {
 			throw new DateMappingException();
@@ -431,7 +434,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#setDatePosted(LocalDateTime)
+	 * @see KMyMoneyWritableTransaction#setDatePosted(LocalDate)
 	 */
 	@Override
 	public void setDatePosted(final LocalDate datePosted) {
@@ -444,12 +447,14 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		try {
 	        // https://stackoverflow.com/questions/835889/java-util-date-to-xmlgregoriancalendar
 			// https://simplesolution.dev/java-convert-localdate-to-calendar/
+	        // https://stackoverflow.com/questions/47564200/xmlgregoriancalendar-in-java-with-no-timezone
 	        GregorianCalendar cal = new GregorianCalendar();
 	        ZonedDateTime zonedDateTime = datePosted.atStartOfDay(ZoneId.systemDefault());
 	        Instant instant = zonedDateTime.toInstant();
 	        Date date = Date.from(instant);
 	        cal.setTime(date);
 	        XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+	        xmlCal.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
 			jwsdpPeer.setPostdate(xmlCal);
 		} catch ( DatatypeConfigurationException exc ) {
 			throw new DateMappingException();
@@ -459,12 +464,17 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#setNotes(java.lang.String)
+	 * @see KMyMoneyWritableTransaction#setMemo(java.lang.String)
 	 */
 	public void setMemo(final String desc) {
 		if ( desc == null ) {
 			throw new IllegalArgumentException("argument <desc> is null. Please use the empty string instead of null for an empty description");
 		}
+
+		// Yes, empty descr is valid
+//		if ( descr.isBlank() ) {
+//			throw new IllegalArgumentException("argument <descr> is blank");
+//		}
 
 		String old = jwsdpPeer.getMemo();
 		jwsdpPeer.setMemo(desc);
