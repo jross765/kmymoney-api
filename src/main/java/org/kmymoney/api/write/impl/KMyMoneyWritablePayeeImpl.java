@@ -260,6 +260,48 @@ public class KMyMoneyWritablePayeeImpl extends KMyMoneyPayeeImpl
 		return result;
 	}
 
+	// ---------------------------------------------------------------
+
+	/**
+	 * @param impl the split to add to mySplits
+	 */
+	protected void addTransactionSplit(final KMyMoneyWritableTransactionSplitImpl impl) {
+		addTransactionSplit(impl, true);
+	}
+	
+	protected void addTransactionSplit(final KMyMoneyWritableTransactionSplitImpl impl, boolean withCheck) {
+		List<KMyMoneyTransactionSplit> oldSplts = getTransactionSplits();
+		
+		super.addTransactionSplit(impl, withCheck);
+		
+		getWritableKMyMoneyFile().setModified(true);
+		// <<insert code to react further to this change here
+		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
+		if ( propertyChangeFirer != null ) {
+			propertyChangeFirer.firePropertyChange("transactionSplits", oldSplts, getTransactionSplits());
+		}
+	}
+
+	/**
+	 * @param splt the split to remove
+	 */
+	protected void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt) {
+		removeTransactionSplit(splt, true);
+	}
+	
+	protected void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt, boolean strict) {
+		List<KMyMoneyTransactionSplit> oldSplts = getTransactionSplits();
+		
+		super.removeTransactionSplit(splt, strict);
+
+		getWritableKMyMoneyFile().setModified(true);
+		// <<insert code to react further to this change here
+		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
+		if ( propertyChangeFirer != null ) {
+			propertyChangeFirer.firePropertyChange("transactionSplits", oldSplts, getTransactionSplits());
+		}
+	}
+
     // ---------------------------------------------------------------
 
     /**

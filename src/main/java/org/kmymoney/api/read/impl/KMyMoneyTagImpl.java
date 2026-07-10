@@ -108,29 +108,41 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
      */
 	@Override
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
+		addTransactionSplit(splt, true);
+	}
+	
+    public void addTransactionSplit(final KMyMoneyTransactionSplit splt, boolean withCheck) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
-		KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
-		if ( old != null ) {
-			// There already is a split with that ID
-			if ( ! old.equals(splt) ) {
-				System.err.println("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
-						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
-						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
-				LOGGER.error("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
-						+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
-						+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
-				IllegalStateException exc = new IllegalStateException("DEBUG");
-				exc.printStackTrace();
-				replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
-			}
-		} else {
-			// There is no transaction with that ID yet
-			mySplits.add(splt);
-			mySplitsNeedSorting = true;
+		if ( ! splt.getTagIDs().contains( getID() ) ) {
+			LOGGER.error("addTransactionSplit: Split " + splt.getQualifID() + " does not belong to tag " + getID());
+			throw new IllegalArgumentException("Split " + splt.getQualifID() + " does not belong to tag " + getID());
 		}
+		
+		// ---
+
+		if ( withCheck ) {
+			KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
+			if ( old != null ) {
+				// There already is a split with that ID
+				if ( ! old.equals(splt) ) {
+					System.err.println("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
+							+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
+							+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
+					LOGGER.error("addTransactionSplit: New Transaction object with same ID, needs to be replaced: "
+							+ splt.getID() + "[" + splt.getClass().getName() + "] and " + old.getID() + "["
+							+ old.getClass().getName() + "]\n" + "new=" + splt.toString() + "\n" + "old=" + old.toString());
+					IllegalStateException exc = new IllegalStateException("DEBUG");
+					exc.printStackTrace();
+					replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
+				}
+			}
+		}
+		
+		mySplits.add(splt);
+		mySplitsNeedSorting = true;
     }
 
 	@Override
@@ -145,7 +157,8 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
 		}
 		
 		if ( ! splt.getTagIDs().contains( getID() ) ) {
-			throw new IllegalArgumentException("argument <splt> is not assigned to tag " + getID() + ", thus cannot be removed from it");
+			LOGGER.error("removeTransactionSplit: Split " + splt.getQualifID() + " does not belong to tag " + getID());
+			throw new IllegalArgumentException("Split " + splt.getQualifID() + " does not belong to tag " + getID());
 		}
 
 		if ( strict )
@@ -191,13 +204,29 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
      * @param impl 
      */
     public void replaceTransactionSplit(
-    		final KMyMoneyTransactionSplit splt,
-    		final KMyMoneyTransactionSplitImpl impl) {
-    	if ( ! mySplits.remove(splt) ) {
-    		throw new IllegalArgumentException("old object not found!");
-    	}
+    		final KMyMoneyTransactionSplit oldSplt,
+    		final KMyMoneyTransactionSplitImpl newSplt) {
+		if ( oldSplt == null ) {
+			throw new IllegalArgumentException("argument <oldSplt> is null");
+		}
+		
+		if ( newSplt == null ) {
+			throw new IllegalArgumentException("argument <newSplt> is null");
+		}
+		
+		if ( mySplits.contains(oldSplt) ) {
+			throw new IllegalStateException("internal list of splits does not contain old split " + oldSplt.getQualifID() + " from account " + getID());
+		}
+		
+		// ---
+		
+		if ( ! mySplits.remove(oldSplt) ) {
+			LOGGER.error("replaceTransactionSplit: Could not remove old split " + oldSplt.getQualifID() + " from local list (account " + getID() + ")");
+			throw new IllegalStateException("Could not remove old split " + oldSplt.getQualifID() + " from local list (account " + getID() + ")");
+		}
 
-    	mySplits.add(impl);
+		mySplits.add(newSplt);
+    	mySplitsNeedSorting = true;
     }
 
     // ----------------------------

@@ -301,45 +301,19 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 * @param impl the split to add to mySplits
 	 */
 	protected void addTransactionSplit(final KMyMoneyWritableTransactionSplitImpl impl) {
-		super.addTransactionSplit(impl);
-		// ((KMyMoneyFileImpl) getKMyMoneyFile()).getAccountManager().addTransactionSplit(impl, false);
+		addTransactionSplit(impl, true);
 	}
-
-	/**
-	 * @see KMyMoneyAccount#addTransactionSplit(KMyMoneyTransactionSplit)
-	 */
-	@Override
-	public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
-		if ( splt == null ) {
-			throw new IllegalArgumentException("argument <splt> is null");
-		}
-
-		// Note: In a way, this is checked below as well.
-		// However, whereas below we perform the check on the business
-		// logic level, we focus here on a technical aspect that happens
-		// to logically overlap with that: In the next statement, we call 
-		// getID().getStdID(), and this is (technically) only allowed when 
-		// getID().getType() returns "standard type".
-		if ( getID().getType() == KMMComplAcctID.Type.SPECIAL ) {
-			throw new UnsupportedOperationException("account has special ID -- this method is only supported for accounts with standard ID");
-		}
-
-		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
-			throw new IllegalArgumentException("split " + splt.getID() + " does not belong to account " + getID());
-		}
-
-		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("addTransactionSplit: Adding transaction split is forbidden for top-level accounts");
-			throw new UnsupportedOperationException("Adding transaction split is forbidden for top-level accounts");
-		}
-
-		super.addTransactionSplit(splt);
-
+	
+	protected void addTransactionSplit(final KMyMoneyWritableTransactionSplitImpl impl, boolean withCheck) {
+		List<KMyMoneyTransactionSplit> oldSplts = getTransactionSplits();
+		
+		super.addTransactionSplit(impl, withCheck);
+		
 		setIsModified();
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
-			propertyChangeFirer.firePropertyChange("transactionSplits", null, getTransactionSplits());
+			propertyChangeFirer.firePropertyChange("transactionSplits", oldSplts, getTransactionSplits());
 		}
 	}
 
@@ -347,30 +321,19 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 	 * @param splt the split to remove
 	 */
 	protected void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt) {
-		if ( splt == null ) {
-			throw new IllegalArgumentException("argument <splt> is null");
-		}
-
-		if ( getKMyMoneyFile().getTopAccountIDs().contains(getID()) ) {
-			LOGGER.error("removeTransactionSplit: Removing transaction split is forbidden for top-level accounts");
-			throw new UnsupportedOperationException("Removing transaction split is forbidden for top-level accounts");
-		}
-
-		// That does not work with writable splits:
-		// transactionSplits.remove(splt);
-		// Instead:
-		for ( int i = 0; i < mySplits.size(); i++ ) {
-			if ( mySplits.get(i).getID().equals(splt.getID())) {
-				mySplits.remove(i);
-				break;
-			}
-		}
+		removeTransactionSplit(splt, true);
+	}
+	
+	protected void removeTransactionSplit(final KMyMoneyWritableTransactionSplit splt, boolean strict) {
+		List<KMyMoneyTransactionSplit> oldSplts = getTransactionSplits();
+		
+		super.removeTransactionSplit(splt, strict);
 
 		setIsModified();
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
-			propertyChangeFirer.firePropertyChange("transactionSplits", null, mySplits);
+			propertyChangeFirer.firePropertyChange("transactionSplits", oldSplts, getTransactionSplits());
 		}
 	}
 

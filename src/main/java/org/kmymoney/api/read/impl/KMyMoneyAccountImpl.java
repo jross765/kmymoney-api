@@ -315,35 +315,64 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 
 	@Override
 	public void addTransactionSplit(final KMyMoneyTransactionSplit splt) {
+		addTransactionSplit(splt, true);
+	}
+	
+	public void addTransactionSplit(final KMyMoneyTransactionSplit splt, boolean withCheck) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("argument <splt> is null");
 		}
 
-		KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
-		if ( old != null ) {
-			// There already is a split with that ID
-			if ( ! old.equals(splt) ) {
-				System.err.println(
-						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
-								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
-								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
-								"new = " + splt.toString() + "\n" +
-								"old = " + old.toString());
-				LOGGER.error(
-						"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
-								splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
-								old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
-								"new = " + splt.toString() + "\n" +
-								"old = " + old.toString());
-				IllegalStateException exc = new IllegalStateException("DEBUG");
-				exc.printStackTrace();
-				replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
-			}
-		} else {
-			// There is no split with that ID yet
-			mySplits.add(splt);
-			mySplitsNeedSorting = true;
+		// Note: In a way, this is checked below as well.
+		// However, whereas below, we perform the check on the business
+		// logic level, we here focus on a technical aspect that happens
+		// to logically overlap with that: In the next statement, we call 
+		// getID().getStdID(), and this is (technically) only allowed when 
+		// getID().getType() returns "standard type".
+		if ( getID().getType() == KMMComplAcctID.Type.SPECIAL ) {
+			LOGGER.error("addTransactionSplit: Account has special ID -- this method is only supported for accounts with standard ID");
+			throw new UnsupportedOperationException("Account has special ID -- this method is only supported for accounts with standard ID");
 		}
+
+		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
+			LOGGER.error("addTransactionSplit: Split " + splt.getQualifID() + " does not belong to account " + getID());
+			throw new IllegalArgumentException("Split " + splt.getQualifID() + " does not belong to account " + getID());
+		}
+		
+		// Check on the business logic level (cf. above)
+		if ( getKMyMoneyFile().getTopAccountIDs().contains( getID() ) ) {
+			LOGGER.error("addTransactionSplit: Adding transaction split is forbidden for top-level accounts");
+			throw new UnsupportedOperationException("Adding transaction split is forbidden for top-level accounts");
+		}
+
+		// ---
+
+		if ( withCheck ) {
+			KMyMoneyTransactionSplit old = getTransactionSplitByID(splt.getQualifID());
+			if ( old != null ) {
+				// There already is a split with that ID
+				if ( ! old.equals(splt) ) {
+					System.err.println(
+							"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
+									splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
+									old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
+									"new = " + splt.toString() + "\n" +
+									"old = " + old.toString());
+					LOGGER.error(
+							"addTransactionSplit: New Transaction Split object with same ID, needs to be replaced: " +
+									splt.getQualifID() + " [" + splt.getClass().getName() + "] and " +
+									old.getQualifID() + " [" + old.getClass().getName() + "]\n" +
+									"new = " + splt.toString() + "\n" +
+									"old = " + old.toString());
+					IllegalStateException exc = new IllegalStateException("DEBUG");
+					exc.printStackTrace();
+					replaceTransactionSplit(old, (KMyMoneyTransactionSplitImpl) splt);
+				}
+			}
+		}
+		
+		mySplits.add(splt);
+		mySplitsNeedSorting = true;
 	}
 
 	@Override
@@ -357,9 +386,29 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			throw new IllegalArgumentException("argument <splt> is null");
 		}
 		
-		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
-			throw new IllegalArgumentException("argument <splt> is not assigned to account " + getID() + ", thus cannot be removed from it");
+		// Note: In a way, this is checked below as well.
+		// However, whereas below, we perform the check on the business
+		// logic level, we here focus on a technical aspect that happens
+		// to logically overlap with that: In the next statement, we call 
+		// getID().getStdID(), and this is (technically) only allowed when 
+		// getID().getType() returns "standard type".
+		if ( getID().getType() == KMMComplAcctID.Type.SPECIAL ) {
+			LOGGER.error("removeTransactionSplit: Account has special ID -- this method is only supported for accounts with standard ID");
+			throw new UnsupportedOperationException("Account has special ID -- this method is only supported for accounts with standard ID");
 		}
+
+		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
+			LOGGER.error("removeTransactionSplit: Split " + splt.getQualifID() + " does not belong to account " + getID());
+			throw new IllegalArgumentException("Split " + splt.getQualifID() + " does not belong to account " + getID());
+		}
+
+		// Check on the business logic level (cf. above)
+		if ( getKMyMoneyFile().getTopAccountIDs().contains( getID() ) ) {
+			LOGGER.error("removeTransactionSplit: Removing transaction split is forbidden for top-level accounts");
+			throw new UnsupportedOperationException("Removing transaction split is forbidden for top-level accounts");
+		}
+		
+		// ---
 
 		if ( strict )
 		{
@@ -400,17 +449,33 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 	/**
 	 * For internal use only.
 	 *
-	 * @param splt
-	 * @param impl 
+	 * @param oldSplt
+	 * @param newSplt 
 	 */
 	public void replaceTransactionSplit(
-			final KMyMoneyTransactionSplit splt,
-			final KMyMoneyTransactionSplitImpl impl) {
-		if ( ! mySplits.remove(splt) ) {
-			throw new IllegalArgumentException("Could not remove split from local list");
+			final KMyMoneyTransactionSplit oldSplt,
+			final KMyMoneyTransactionSplitImpl newSplt) {
+		if ( oldSplt == null ) {
+			throw new IllegalArgumentException("argument <oldSplt> is null");
+		}
+		
+		if ( newSplt == null ) {
+			throw new IllegalArgumentException("argument <newSplt> is null");
+		}
+		
+		if ( mySplits.contains(oldSplt) ) {
+			throw new IllegalStateException("internal list of splits does not contain old split " + oldSplt.getQualifID() + " from account " + getID());
+		}
+		
+		// ---
+		
+		if ( ! mySplits.remove(oldSplt) ) {
+			LOGGER.error("replaceTransactionSplit: Could not remove old split " + oldSplt.getQualifID() + " from local list (account " + getID() + ")");
+			throw new IllegalStateException("Could not remove old split " + oldSplt.getQualifID() + " from local list (account " + getID() + ")");
 		}
 
-		mySplits.add(impl);
+		mySplits.add(newSplt);
+    	mySplitsNeedSorting = true;
 	}
 
 	// ---------------------------------------------------------------
