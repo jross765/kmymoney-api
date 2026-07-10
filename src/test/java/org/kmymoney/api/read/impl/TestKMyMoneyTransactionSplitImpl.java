@@ -103,8 +103,8 @@ public class TestKMyMoneyTransactionSplitImpl {
 		assertEquals(1,    splt.getPriceRat().getDenominator().longValue());
 		assertEquals("1,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
 		
-		assertEquals("", splt.getMemo());
-//		assertEquals(null, splt.getUserDefinedAttributeKeys());
+		assertEquals(null, splt.getMemo());
+		assertEquals(null, splt.getUserDefinedAttributeKeys());
 	}
 
 	@Test
@@ -132,8 +132,8 @@ public class TestKMyMoneyTransactionSplitImpl {
 		assertEquals(1,      splt.getPriceRat().getDenominator().longValue());
 		assertEquals("120,00 €", splt.getPriceFormatted()); // ::TODO: locale-specific!
 		
-		assertEquals("", splt.getMemo());
-//		assertEquals(null, splt.getUserDefinedAttributeKeys());
+		assertEquals(null, splt.getMemo());
+		assertEquals(null, splt.getUserDefinedAttributeKeys());
 	}
 
 	@Test

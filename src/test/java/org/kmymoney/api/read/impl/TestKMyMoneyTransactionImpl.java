@@ -70,7 +70,7 @@ public class TestKMyMoneyTransactionImpl {
 		assertEquals(1, trx.getBalanceRat().getDenominator().longValue());
 		assertEquals("0,00 €", trx.getBalanceFormatted()); // ::TODO: locale-specific!
 		
-		assertEquals("", trx.getMemo());
+		assertEquals(null, trx.getMemo());
 		assertEquals("2023-01-01", trx.getDatePosted().toString());
 		assertEquals("2023-01-01", trx.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx.getDateEntered().toString());
@@ -93,7 +93,7 @@ public class TestKMyMoneyTransactionImpl {
 		assertEquals(1, trx.getBalanceRat().getDenominator().longValue());
 		assertEquals("0,00 €", trx.getBalanceFormatted()); // ::TODO: locale-specific!
 		
-		assertEquals("", trx.getMemo());
+		assertEquals(null, trx.getMemo());
 		assertEquals("2023-01-03", trx.getDatePosted().toString());
 		assertEquals("2023-01-03", trx.getDatePostedFormatted());
 		assertEquals("2023-10-14", trx.getDateEntered().toString());

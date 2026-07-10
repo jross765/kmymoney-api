@@ -138,7 +138,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(1, trx.getBalanceRat().getDenominator().longValue());
 		assertEquals("0,00 €", trx.getBalanceFormatted()); // ::TODO: locale-specific!
 		
-		assertEquals("", trx.getMemo());
+		assertEquals(null, trx.getMemo());
 		assertEquals("2023-01-01", trx.getDatePosted().toString());
 		assertEquals("2023-01-01", trx.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx.getDateEntered().toString());
@@ -161,7 +161,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(1, trx.getBalanceRat().getDenominator().longValue());
 		assertEquals("0,00 €", trx.getBalanceFormatted()); // ::TODO: locale-specific!
 		
-		assertEquals("", trx.getMemo());
+		assertEquals(null, trx.getMemo());
 		assertEquals("2023-01-03", trx.getDatePosted().toString());
 		assertEquals("2023-01-03", trx.getDatePostedFormatted());
 		assertEquals("2023-10-14", trx.getDateEntered().toString());
@@ -680,7 +680,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0,   trx1.getBalanceRat().getNumerator().intValue());
 		assertEquals(1,   trx1.getBalanceRat().getDenominator().intValue());
 
-		assertEquals("", trx1.getMemo()); // unchanged
+		assertEquals(null, trx1.getMemo()); // unchanged
 		assertEquals("2023-01-01", trx1.getDatePosted().toString()); // unchanged
 		assertEquals("2023-01-01", trx1.getDatePostedFormatted());
 		assertEquals("2023-11-03", trx1.getDateEntered().toString()); // unchanged
@@ -712,7 +712,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(0,   trx2.getBalanceRat().getNumerator().intValue());
 		assertEquals(1,   trx2.getBalanceRat().getDenominator().intValue());
 		
-		assertEquals("", trx2.getMemo()); // unchanged
+		assertEquals(null, trx2.getMemo()); // unchanged
 		assertEquals("2023-01-03", trx2.getDatePosted().toString()); // unchanged
 		assertEquals("2023-01-03", trx2.getDatePostedFormatted());
 		assertEquals("2023-10-14", trx2.getDateEntered().toString()); // unchanged
@@ -828,7 +828,7 @@ public class TestKMyMoneyWritableTransactionImpl {
 		assertEquals(TRX_1_SPLT_1_PYE_ID, splt1.getPayeeID()); // unchanged
 		assertEquals(BigFraction.of(10000), splt1.getValueRat()); // changed
 		assertEquals(BigFraction.of(10000), splt1.getSharesRat()); // changed
-		assertEquals("", splt1.getMemo()); // unchanged
+		assertEquals(null, splt1.getMemo()); // unchanged
 		
 		// However, the transaction split cannot newly be instantiated any more,
 		// just as you would expect.

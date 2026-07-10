@@ -243,6 +243,12 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
      * {@inheritDoc}
      */
     public String getMemo() {
+		if (jwsdpPeer.getMemo() == null)
+			return null;
+		
+		if ( jwsdpPeer.getMemo().isBlank() )
+			return null;
+		
     	return jwsdpPeer.getMemo();
     }
 
