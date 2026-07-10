@@ -1,6 +1,5 @@
 package org.kmymoney.api.write.impl;
 
-import java.beans.PropertyChangeSupport;
 import java.math.BigInteger;
 import java.util.Collection;
 
@@ -14,7 +13,9 @@ import org.kmymoney.api.read.KMyMoneyTag;
 import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.KMyMoneyTransactionSplitImpl;
 import org.kmymoney.api.read.impl.hlp.KVPListDoesNotContainKeyException;
+import org.kmymoney.api.write.KMyMoneyWritableAccount;
 import org.kmymoney.api.write.KMyMoneyWritablePayee;
+import org.kmymoney.api.write.KMyMoneyWritableTag;
 import org.kmymoney.api.write.KMyMoneyWritableTransaction;
 import org.kmymoney.api.write.KMyMoneyWritableTransactionSplit;
 import org.kmymoney.api.write.impl.hlp.HasWritableUserDefinedAttributesImpl;
@@ -321,26 +322,26 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( acctID == null ) {
 			throw new IllegalArgumentException("argument <acctID> is null");
 		}
-		
+
 		if ( ! acctID.isSet() ) {
 			throw new IllegalArgumentException("argument <acctID> is not set");
 		}
 		
-		String oldAcctID = (getJwsdpPeer().getAccount() == null ? null : getJwsdpPeer().getAccount());
+		KMMAcctID oldAcctID = getAccountID();
+		if ( oldAcctID == null ||
+			 ! oldAcctID.equals(acctID) ) {
+			KMyMoneyWritableAccount acct = getWritableKMyMoneyFile().getWritableAccountByID(oldAcctID);
+			((KMyMoneyWritableAccountImpl) acct).removeTransactionSplit(this, false);
+		}
+			
 		jwsdpPeer.setAccount(acctID.toString());
-
-		// No, the following is nonsense:
-//		if ( ! isCurrencyMatching() ) {
-//			LOGGER.error("setAccountID: Transaction Split: " + getQualifID() + ": New account's security/currency is not the same as transaction's security/currency");
-//			LOGGER.error("Reverting change");
-//			jwsdpPeer.setAccount(oldAcctID);
-//			throw new IllegalStateException("Transaction Split: " + getQualifID() + ": New account's security/currency is not the same as transaction's security/currency");
-//		}
-		
 		getWritableKMyMoneyFile().setModified(true);
 
 		if ( oldAcctID == null || 
-			 ! oldAcctID.equals(acctID.toString()) ) {
+			 ! oldAcctID.equals(acctID) ) {
+			KMyMoneyWritableAccount acct = getWritableKMyMoneyFile().getWritableAccountByID(acctID);
+			((KMyMoneyWritableAccountImpl) acct).addTransactionSplit(this, false);
+			
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("accountID", oldAcctID, acctID.toString());
 			}
@@ -534,23 +535,57 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	// ---------------------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setNumber(final String num) {
 		if ( num == null ) {
 			throw new IllegalArgumentException("argument <num> is null");
 		}
-		
-		if ( num.isBlank() ) {
-			throw new IllegalArgumentException("argument <num> is blank");
-		}
+
+		// Sic, blank is valid
+//		if ( num.isBlank() ) {
+//			throw new IllegalArgumentException("argument <num> is blank");
+//		}
 	
-		String oldNumber = getNumber();
-		jwsdpPeer.setNumber(num);
+		String oldNum = getNumber();
+		jwsdpPeer.setNumber(num.trim());
 		getWritableKMyMoneyFile().setModified(true);
 
-		PropertyChangeSupport propertyChangeSupport = helper.getPropertyChangeSupport();
-		if ( propertyChangeSupport != null) {
-			propertyChangeSupport.firePropertyChange("number", oldNumber, num);
+		if ( oldNum == null ||
+			 ! oldNum.equals(num.trim()) ) {
+			if ( helper.getPropertyChangeSupport() != null ) {
+				helper.getPropertyChangeSupport().firePropertyChange("number", oldNum, num.trim());
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setBankID(final String bankID) {
+		if ( bankID == null ) {
+			throw new IllegalArgumentException("argument <bankID> is null");
+		}
+
+		// Sic, blank is valid
+//		if ( bankID.isBlank() ) {
+//			throw new IllegalArgumentException("argument <bankID> is blank");
+//		}
+	
+		String oldBankID = getBankID();
+		jwsdpPeer.setBankid(bankID.trim());
+		getWritableKMyMoneyFile().setModified(true);
+
+		if ( oldBankID == null ||
+			 ! oldBankID.equals(bankID.trim()) ) {
+			if ( helper.getPropertyChangeSupport() != null ) {
+				helper.getPropertyChangeSupport().firePropertyChange("bankID", oldBankID, bankID.trim());
+			}
 		}
 	}
 	
@@ -562,17 +597,27 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <pyeID> is null");
 		}
 		
-		String old = (getJwsdpPeer().getPayee() == null ? null : getJwsdpPeer().getPayee());
+		if ( ! pyeID.isSet() ) {
+			throw new IllegalArgumentException("argument <pyeID> is not set");
+		}
+		
+		KMMPyeID oldPyeID = getPayeeID();
+		if ( oldPyeID == null ||
+			 ! oldPyeID.equals(pyeID) ) {
+			KMyMoneyWritablePayee pye = getWritableKMyMoneyFile().getWritablePayeeByID(oldPyeID);
+			((KMyMoneyWritablePayeeImpl) pye).removeTransactionSplit(this, false);
+		}
+
 		jwsdpPeer.setPayee(pyeID.toString());
 		getWritableKMyMoneyFile().setModified(true);
 		
-                KMyMoneyWritablePayee pye = getWritableKMyMoneyFile().getWritablePayeeByID(pyeID);
-		((KMyMoneyWritablePayeeImpl) pye).removeTransactionSplit(this);
-		
-		if ( old == null || 
-			 ! old.equals(pyeID.toString()) ) {
+		if ( oldPyeID == null || 
+			 ! oldPyeID.equals(pyeID) ) {
+			KMyMoneyWritablePayee pye = getWritableKMyMoneyFile().getWritablePayeeByID(pyeID);
+			((KMyMoneyWritablePayeeImpl) pye).addTransactionSplit(this, false);
+			
 			if ( helper.getPropertyChangeSupport() != null ) {
-				helper.getPropertyChangeSupport().firePropertyChange("payeeID", old, pyeID.toString());
+				helper.getPropertyChangeSupport().firePropertyChange("payeeID", oldPyeID, pyeID.toString());
 			}
 		}
 	}
@@ -586,6 +631,24 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		setPayeeID(pye.getID());
 	}
 
+	@Override
+	public void unsetPayeeID() {
+		if ( getPayeeID() == null ) {
+			throw new IllegalStateException("payee ID not set in this transaction split: " + getQualifID());
+		}
+
+		KMMPyeID oldPyeID = getPayeeID();
+		getJwsdpPeer().setPayee(null);
+		getWritableKMyMoneyFile().setModified(true);
+		
+		KMyMoneyWritablePayee pye = getWritableKMyMoneyFile().getWritablePayeeByID(oldPyeID);
+		((KMyMoneyWritablePayeeImpl) pye).removeTransactionSplit(this);
+		
+		if ( helper.getPropertyChangeSupport() != null ) {
+			helper.getPropertyChangeSupport().firePropertyChange("payeeID", oldPyeID, "");
+		}
+	}
+
 	// ---------------------------------------------------------------
 
 	@Override
@@ -597,6 +660,10 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			return;
 		
 		for ( int i = jwsdpPeer.getTAG().size(); i >= 0; i-- ) {
+			KMMTagID tagID = new KMMTagID( jwsdpPeer.getTAG().get(i).getId() );
+			KMyMoneyWritableTag tag = getWritableKMyMoneyFile().getWritableTagByID(tagID);
+			((KMyMoneyWritablePayeeImpl) tag).removeTransactionSplit(this);
+			
 			jwsdpPeer.getTAG().remove(i);
 		}
 	}
@@ -611,11 +678,27 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 			throw new IllegalArgumentException("argument <tagID> is not set");
 		}
 		
+		if ( getTagIDs().contains(tagID) ) {
+			throw new IllegalStateException("<tagID> is already in list of tags: " + tagID);
+		}
+		
+		// ---
+		
+		Collection<KMMTagID> oldTagIDs = getTagIDs();
+
 		ObjectFactory fact = getWritableKMyMoneyFile().getObjectFactory();
 		SPLIT.TAG jwsdpSpltTag = fact.createSPLITTAG();
 		jwsdpSpltTag.setId(tagID.toString());
 		
 		jwsdpPeer.getTAG().add(jwsdpSpltTag);
+		getWritableKMyMoneyFile().setModified(true);
+		
+		KMyMoneyWritableTag tag = getWritableKMyMoneyFile().getWritableTagByID(tagID);
+		((KMyMoneyWritablePayeeImpl) tag).addTransactionSplit(this);
+		
+		if ( helper.getPropertyChangeSupport() != null ) {
+			helper.getPropertyChangeSupport().firePropertyChange("tagID", oldTagIDs, getTagIDs());
+		}
 	}
 
 	@Override
@@ -854,7 +937,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		
 		HasWritableUserDefinedAttributesImpl
 			.setUserDefinedAttributeCore(jwsdpPeer.getKEYVALUEPAIRS(), getWritableKMyMoneyFile(), 
-			                             name, value);
+			                             name, value, allowBlank);
 	}
 
 	// ---------------------------------------------------------------
@@ -891,8 +974,14 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		buffer.append(", number='");
 		buffer.append(getNumber() + "'");
 
+		buffer.append(", bank-id='");
+		buffer.append(getBankID() + "'");
+
 		buffer.append(", payee-id=");
 		buffer.append(getPayeeID());
+
+		buffer.append(", tag-ids=");
+		buffer.append(getTagIDs());
 
 		buffer.append(", memo='");
 		buffer.append(getMemo() + "'");

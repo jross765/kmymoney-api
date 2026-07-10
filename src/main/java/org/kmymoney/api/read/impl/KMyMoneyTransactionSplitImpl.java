@@ -17,8 +17,6 @@ import org.kmymoney.api.read.KMyMoneyTransactionSplit;
 import org.kmymoney.api.read.impl.hlp.AmountFormatter_FP;
 import org.kmymoney.api.read.impl.hlp.HasUserDefinedAttributesImpl;
 import org.kmymoney.api.read.impl.hlp.KMyMoneyObjectImpl;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrIDException;
-import org.kmymoney.base.basetypes.complex.InvalidQualifSecCurrTypeException;
 import org.kmymoney.base.basetypes.complex.KMMQualifSpltID;
 import org.kmymoney.base.basetypes.simple.KMMAcctID;
 import org.kmymoney.base.basetypes.simple.KMMPyeID;
@@ -161,15 +159,32 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 	// ----------------------------
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getNumber() {
 		if ( jwsdpPeer.getNumber() == null )
 			return null;
 		
-//    	if ( jwsdpPeer.getNumber().isBlank() )
-//    		return null;
+    	if ( jwsdpPeer.getNumber().isBlank() )
+    		return null;
 		
 		return jwsdpPeer.getNumber();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getBankID() {
+		if ( jwsdpPeer.getBankid() == null )
+			return null;
+		
+    	if ( jwsdpPeer.getBankid().isBlank() )
+    		return null;
+		
+		return jwsdpPeer.getBankid();
 	}
 	
 	// ----------------------------
@@ -196,8 +211,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	// ----------------------------
 
 	@Override
-	public Collection<KMMTagID> getTagIDs()
-	{
+	public Collection<KMMTagID> getTagIDs() {
 		if ( jwsdpPeer.getTAG() == null )
 			return null;
 		
@@ -437,9 +451,12 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	 */
 	@Override
 	public String getMemo() {
-		if (jwsdpPeer.getMemo() == null) {
-			return "";
-		}
+		if (jwsdpPeer.getMemo() == null)
+			return null;
+		
+		if ( jwsdpPeer.getMemo().isBlank() )
+			return null;
+		
 		return jwsdpPeer.getMemo();
 	}
 	
@@ -545,8 +562,14 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		buffer.append(", number='");
 		buffer.append(getNumber() + "'");
 
+		buffer.append(", bank-id='");
+		buffer.append(getBankID() + "'");
+
 		buffer.append(", payee-id=");
 		buffer.append(getPayeeID());
+
+		buffer.append(", tag-ids=");
+		buffer.append(getTagIDs());
 
 		buffer.append(", memo='");
 		buffer.append(getMemo() + "'");

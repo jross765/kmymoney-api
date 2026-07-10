@@ -197,6 +197,8 @@ public interface KMyMoneyTransactionSplit extends Comparable<KMyMoneyTransaction
 
     String getNumber();
 
+    String getBankID();
+
     // ----------------------------
 
     /**

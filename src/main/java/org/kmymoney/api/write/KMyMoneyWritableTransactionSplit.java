@@ -75,8 +75,6 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	void setShares(FixedPointNumber n);
 
 	/**
-	 * If the currencies of transaction and account match, this also does
-	 * ${@link #setShares(String)}.
 	 * 
 	 * @param n the new quantity (in the currency of the account)
 	 * 
@@ -87,8 +85,6 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	void setShares(BigFraction n);
 
 	/**
-	 * If the currencies of transaction and account match, this also does
-	 * ${@link #setValue(FixedPointNumber)}.
 	 * 
 	 * @param n the new value (in the currency of the transaction)
 	 * 
@@ -112,11 +108,19 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	
 	/**
 	 * 
-	 * @param pyeID
+	 * @param num
 	 * 
 	 * @see #getNumber()
 	 */
 	void setNumber(String num);
+	
+	/**
+	 * 
+	 * @param bankID
+	 * 
+	 * @see #getBankID()
+	 */
+	void setBankID(String bankID);
 	
 	// ----------------------------
 
@@ -138,13 +142,15 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 	 */
 	void setPayee(KMyMoneyPayee pye);
 
+	void unsetPayeeID();
+
 	// ----------------------------
 	
 	void clearTags();
 
 	/**
 	 * 
-	 * @param pyeID
+	 * @param tagID 
 	 * 
 	 * @see #getPayee()
 	 * @see #getPayeeID()
@@ -153,7 +159,7 @@ public interface KMyMoneyWritableTransactionSplit extends KMyMoneyTransactionSpl
 
 	/**
 	 * 
-	 * @param pye
+	 * @param tag
 	 * 
 	 * @see #getPayee()
 	 * @see #getPayeeID()
