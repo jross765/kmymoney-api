@@ -83,7 +83,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		
 		if ( addSpltToPye ) {
 			KMyMoneyPayee pye = getPayee();
-			if (pye == null) {
+			if ( pye == null ) {
 				// Payee is optional --> just debug
 				LOGGER.debug("No such Payee id='" + getPayeeID() + "' for Transaction-Split with id '" + getQualifID() 
 			    	+ "' description '" + getMemo() + "' in transaction with id '" + getTransaction().getID()
@@ -368,6 +368,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public FixedPointNumber getShares() {
 		return new FixedPointNumber(jwsdpPeer.getShares());
 	}
@@ -406,6 +407,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public FixedPointNumber getPrice() {
 		if ( jwsdpPeer.getPrice() == null )
 			return null;
@@ -485,6 +487,7 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+	@Override
 	public List<String> getUserDefinedAttributeKeys() {
 		if ( jwsdpPeer.getKEYVALUEPAIRS() == null) {
 			return null;
@@ -534,10 +537,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		buffer.append("qualif-id=");
 		buffer.append(getQualifID());
 
-		// Part of qualif-id:
-		// buffer.append(" transaction-id=");
-		// buffer.append(getTransaction().getID());
-
 		buffer.append(", action=");
 		try {
 			buffer.append(getAction());
@@ -571,9 +570,6 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		buffer.append(", tag-ids=");
 		buffer.append(getTagIDs());
 
-		buffer.append(", memo='");
-		buffer.append(getMemo() + "'");
-
 		buffer.append(", value=");
 		buffer.append(getValue());
 
@@ -582,6 +578,9 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 
 		buffer.append(", price=");
 		buffer.append(getPrice());
+
+		buffer.append(", memo='");
+		buffer.append(getMemo() + "'");
 
 		buffer.append("]");
 		return buffer.toString();

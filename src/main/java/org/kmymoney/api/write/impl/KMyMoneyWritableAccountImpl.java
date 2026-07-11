@@ -96,6 +96,7 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		if ( addSplits ) {
 			if ( ! acct.isRootAccount() ) {
 				for ( KMyMoneyTransactionSplit splt : ((KMyMoneyFileImpl) acct.getKMyMoneyFile()).getTransactionSplits_readAfresh() ) {
+					// ::TODO There is a performance fee on this check, albeit a moderate one.
 					if ( splt.getAccountID().equals( acct.getID().getStdID() ) ) {
 						super.addTransactionSplit(splt);
 					// NO:
@@ -362,13 +363,13 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 			return; // nothing has changed
 		}
 
-		this.getJwsdpPeer().setName(name);
+		this.getJwsdpPeer().setName(name.trim());
 		setIsModified();
 
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
-			propertyChangeFirer.firePropertyChange("name", oldName, name);
+			propertyChangeFirer.firePropertyChange("name", oldName, name.trim());
 		}
 	}
 
@@ -534,17 +535,17 @@ public class KMyMoneyWritableAccountImpl extends KMyMoneyAccountImpl
 		}
 
 		String oldDescr = getMemo();
-		if ( oldDescr.equals(descr) ) {
+		if ( oldDescr.equals(descr.trim()) ) {
 			return; // nothing has changed
 		}
 
-		getJwsdpPeer().setDescription(descr);
+		getJwsdpPeer().setDescription(descr.trim());
 		setIsModified();
 
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = helper.getPropertyChangeSupport();
 		if ( propertyChangeFirer != null ) {
-			propertyChangeFirer.firePropertyChange("memo", oldDescr, descr);
+			propertyChangeFirer.firePropertyChange("memo", oldDescr, descr.trim());
 		}
 	}
 

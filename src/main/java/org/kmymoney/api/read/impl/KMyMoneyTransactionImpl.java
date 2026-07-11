@@ -161,6 +161,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 	/**
      * {@inheritDoc}
      */
+	@Override
     @Deprecated
     public FixedPointNumber getBalance() {
     	FixedPointNumber fp = new FixedPointNumber();
@@ -175,6 +176,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+	@Override
     public BigFraction getBalanceRat() {
 		BigFraction fp = BigFraction.ZERO;
 
@@ -189,6 +191,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+	@Override
     public String getBalanceFormatted() {
     	return getBalanceFormatted(Locale.getDefault());
     }
@@ -196,6 +199,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+	@Override
     public String getBalanceFormatted(final Locale lcl) {
     	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
     											getBalance(), getQualifSecCurrID(), lcl );    }
@@ -220,6 +224,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getNegatedBalanceFormatted() {
     	return getNegatedBalanceFormatted(Locale.getDefault());
     }
@@ -227,6 +232,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getNegatedBalanceFormatted(final Locale lcl) {
     	return AmountFormatter_FP.formatAmount( getKMyMoneyFile(),
     											getBalance(), getQualifSecCurrID(), lcl );
@@ -235,6 +241,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public KMMTrxID getID() {
     	return new KMMTrxID( jwsdpPeer.getId() );
     }
@@ -242,6 +249,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getMemo() {
 		if (jwsdpPeer.getMemo() == null)
 			return null;
@@ -324,6 +332,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+	@Override
     public List<KMyMoneyTransactionSplit> getSplits() {
     	return getSplits(false, false, false);
     }
@@ -346,9 +355,8 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 	    List<SPLIT> jwsdpSplits = jwsdpPeer.getSPLITS().getSPLIT();
 
 	    mySplits = new ArrayList<KMyMoneyTransactionSplit>();
-	    for (SPLIT jwsdpSplt : jwsdpSplits) {
-		mySplits.add(createSplit(jwsdpSplt,
-								 addToAcct, addToPye, addToTags));
+	    for ( SPLIT jwsdpSplt : jwsdpSplits ) {
+	    	mySplits.add(createSplit(jwsdpSplt, addToAcct, addToPye, addToTags));
 	    }
     }
 
@@ -370,6 +378,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public LocalDate getDateEntered() {
     	if ( entryDate == null ) {
     		XMLGregorianCalendar cal = jwsdpPeer.getEntrydate();
@@ -382,6 +391,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDateEnteredFormatted() {
 		try {
 	    	DateTimeFormatter fmt = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
@@ -394,6 +404,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDatePostedFormatted() {
 		try {
 	    	DateTimeFormatter fmt = DateTimeFormatter.ofPattern(Const.STANDARD_DATE_FORMAT);
@@ -406,6 +417,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
     public LocalDate getDatePosted() {
     	if ( postDate == null ) {
     		XMLGregorianCalendar cal = jwsdpPeer.getPostdate();
@@ -420,6 +432,7 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
     /**
      * {@inheritDoc}
      */
+    @Override
 	public String getUserDefinedAttribute(final String name) {
 		if ( name == null ) {
 			throw new IllegalArgumentException("argument <name> is null");
@@ -462,9 +475,6 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		buffer.append(", balance=");
 		buffer.append(getBalanceFormatted());
 
-		buffer.append(", memo='");
-		buffer.append(getMemo() + "'");
-
 		buffer.append(", #splits=");
 		try {
 			buffer.append(getSplitsCount());
@@ -485,6 +495,9 @@ public class KMyMoneyTransactionImpl extends KMyMoneyObjectImpl
 		} catch (Exception e) {
 			buffer.append(getDateEntered().toString());
 		}
+
+		buffer.append(", memo='");
+		buffer.append(getMemo() + "'");
 
 		buffer.append("]");
 

@@ -111,6 +111,7 @@ public class KMyMoneyTagImpl extends KMyMoneyObjectImpl
 		addTransactionSplit(splt, true);
 	}
 	
+	@Override
     public void addTransactionSplit(final KMyMoneyTransactionSplit splt, boolean withCheck) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("argument <splt> is null");

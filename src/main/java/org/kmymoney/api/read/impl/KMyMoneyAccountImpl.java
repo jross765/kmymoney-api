@@ -85,7 +85,15 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			final KMyMoneyFile kmmFile) {
 		super(kmmFile);
 
-		jwsdpPeer = peer;
+		if ( peer == null ) {
+			throw new IllegalArgumentException("argument <peer> is null");
+		}
+
+		if ( kmmFile == null ) {
+			throw new IllegalArgumentException("argument <kmmFile> is null");
+		}
+
+		this.jwsdpPeer = peer;
 		initRecons();
 	}
 	
@@ -105,6 +113,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		}
 
 		this.jwsdpPeer = peer;
+		initRecons();
 
 		if ( addToInst ) {
 			KMyMoneyInstitution inst = getInstitution();
@@ -318,6 +327,7 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 		addTransactionSplit(splt, true);
 	}
 	
+	@Override
 	public void addTransactionSplit(final KMyMoneyTransactionSplit splt, boolean withCheck) {
 		if ( splt == null ) {
 			throw new IllegalArgumentException("argument <splt> is null");
@@ -334,12 +344,15 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			throw new UnsupportedOperationException("Account has special ID -- this method is only supported for accounts with standard ID");
 		}
 
+		// Cf. comment in same method in sister project.
 		if ( ! splt.getAccountID().equals( getID().getStdID() ) ) {
 			LOGGER.error("addTransactionSplit: Split " + splt.getQualifID() + " does not belong to account " + getID());
 			throw new IllegalArgumentException("Split " + splt.getQualifID() + " does not belong to account " + getID());
 		}
 		
 		// Check on the business logic level (cf. above)
+		// ::TODO There is a performance fee on this check, albeit a moderate one
+		// (as currently implemented in the FileAccountManager).
 		if ( getKMyMoneyFile().getTopAccountIDs().contains( getID() ) ) {
 			LOGGER.error("addTransactionSplit: Adding transaction split is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Adding transaction split is forbidden for top-level accounts");
@@ -402,7 +415,8 @@ public class KMyMoneyAccountImpl extends SimpleAccount
 			throw new IllegalArgumentException("Split " + splt.getQualifID() + " does not belong to account " + getID());
 		}
 
-		// Check on the business logic level (cf. above)
+		// Check on the business logic level (cf. addTransactionSplit())
+		// ::TODO Performance (cf. addTransactionSplit())
 		if ( getKMyMoneyFile().getTopAccountIDs().contains( getID() ) ) {
 			LOGGER.error("removeTransactionSplit: Removing transaction split is forbidden for top-level accounts");
 			throw new UnsupportedOperationException("Removing transaction split is forbidden for top-level accounts");

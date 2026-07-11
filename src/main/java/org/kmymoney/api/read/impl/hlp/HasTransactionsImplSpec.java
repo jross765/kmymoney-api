@@ -9,6 +9,8 @@ public interface HasTransactionsImplSpec
 	
     void addTransactionSplit(KMyMoneyTransactionSplit splt);
 
+    void addTransactionSplit(KMyMoneyTransactionSplit splt, boolean withCheck);
+
     void removeTransactionSplit(KMyMoneyTransactionSplit splt);
 
     void removeTransactionSplit(KMyMoneyTransactionSplit splt, boolean strict);

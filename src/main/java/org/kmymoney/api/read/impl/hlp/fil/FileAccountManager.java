@@ -456,6 +456,8 @@ public class FileAccountManager {
 		}
 	}
 
+	// ::TODO: Run through loop only the first time.
+	// Then, take a cashed array.
 	public List<KMMComplAcctID> getTopAccountIDs() {
 		List<KMMComplAcctID> result = new ArrayList<KMMComplAcctID>();
 

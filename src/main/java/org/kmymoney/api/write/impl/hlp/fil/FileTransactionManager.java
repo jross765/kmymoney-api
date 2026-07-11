@@ -75,8 +75,10 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 		trxMap.put(trx.getID(), trx);
 
 		if ( withSplt ) {
-			for ( KMyMoneyTransactionSplit splt : trx.getSplits() ) {
-				addTransactionSplit(splt, false);
+			if ( trx.getSplits() != null ) {
+				for ( KMyMoneyTransactionSplit splt : trx.getSplits() ) {
+					addTransactionSplit(splt, false);
+				}
 			}
 		}
 
@@ -93,8 +95,10 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 		}
 
 		if ( withSplt ) {
-			for ( KMyMoneyTransactionSplit splt : trx.getSplits() ) {
-				removeTransactionSplit(splt, false);
+			if ( trx.getSplits() != null ) {
+				for ( KMyMoneyTransactionSplit splt : trx.getSplits() ) {
+					removeTransactionSplit(splt, false);
+				}
 			}
 		}
 
@@ -112,7 +116,7 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 			TRANSACTION jwsdpTrx = pRootElement.getTRANSACTIONS().getTRANSACTION().get(i);
 			if ( jwsdpTrx.getId().equals(trxID.toString())) {
 				pRootElement.getTRANSACTIONS().getTRANSACTION().remove(i);
-				i--;
+				break;
 			}
 		}
 	}
@@ -160,7 +164,7 @@ public class FileTransactionManager extends org.kmymoney.api.read.impl.hlp.fil.F
 			SPLIT jwsdpTrxSplt = trxRaw.getSPLITS().getSPLIT().get(i);
 			if ( jwsdpTrxSplt.getId().equals(spltID.toString())) {
 				trxRaw.getSPLITS().getSPLIT().remove(i);
-				i--;
+				break;
 			}
 		}
 	}

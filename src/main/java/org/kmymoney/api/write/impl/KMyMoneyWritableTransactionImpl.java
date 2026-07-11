@@ -404,7 +404,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	// ---------------------------------------------------------------
 
 	/**
-	 * @see KMyMoneyWritableTransaction#setDateEntered(LocalDate)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void setDateEntered(final LocalDate dateEntered) {
@@ -434,7 +434,7 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#setDatePosted(LocalDate)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void setDatePosted(final LocalDate datePosted) {
@@ -464,8 +464,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransaction#setMemo(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setMemo(final String desc) {
 		if ( desc == null ) {
 			throw new IllegalArgumentException("argument <desc> is null. Please use the empty string instead of null for an empty description");
@@ -508,6 +509,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
@@ -537,6 +541,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 			                             name, value);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void removeUserDefinedAttribute(final String name) {
 		if ( name == null ) {
@@ -556,6 +563,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 											name);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setUserDefinedAttribute(final String name, final String value) {
 		if ( name == null ) {
@@ -596,9 +606,6 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		buffer.append(", balance=");
 		buffer.append(getBalanceFormatted());
 
-		buffer.append(", memo='");
-		buffer.append(getMemo() + "'");
-
 		buffer.append(", #splits=");
 		buffer.append(getSplitsCount());
 
@@ -615,6 +622,9 @@ public class KMyMoneyWritableTransactionImpl extends KMyMoneyTransactionImpl
 		} catch (Exception e) {
 			buffer.append(getDateEntered().toString());
 		}
+
+		buffer.append(", memo='");
+		buffer.append(getMemo() + "'");
 
 		buffer.append("]");
 

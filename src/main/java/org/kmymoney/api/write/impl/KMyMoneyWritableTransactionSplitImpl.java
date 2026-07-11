@@ -191,8 +191,8 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		// This is needed because transaction.addSplit() later
 		// must have an already built list of splits.
-		// Otherwise, it will create the list from the JAXB-Data
-		// thus 2 instances of this KMyMoneyWritableTransactionSplitImpl
+		// Otherwise, it will create the list from the JAXB-Data.
+		// Thus, 2 instances of this KMyMoneyWritableTransactionSplitImpl
 		// will exist: One created in getSplits() from this JAXB-Data
 		// the other is this object.
 		trx.getSplits();
@@ -453,7 +453,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	}
 
 	/**
-	 * @see KMyMoneyWritableTransactionSplit#setValue(FixedPointNumber)
+	 * {@inheritDoc}
 	 */
 	@Override
 	@Deprecated
@@ -473,6 +473,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setValue(final BigFraction val) {
 		if ( val == null ) {
@@ -492,6 +495,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	@Deprecated
 	public void setPrice(final FixedPointNumber prc) {
@@ -514,6 +520,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setPrice(final BigFraction prc) {
 		if ( prc == null ) {
@@ -591,6 +600,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setPayeeID(KMMPyeID pyeID) {
 		if ( pyeID == null ) {
@@ -622,6 +634,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setPayee(KMyMoneyPayee pye) {
 		if ( pye == null ) {
@@ -631,6 +646,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		setPayeeID(pye.getID());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void unsetPayeeID() {
 		if ( getPayeeID() == null ) {
@@ -651,6 +669,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 	// ---------------------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void clearTags() {
 		if ( getTagIDs() == null )
@@ -668,6 +689,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addTagID(KMMTagID tagID) {
 		if ( tagID == null ) {
@@ -701,6 +725,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addTag(KMyMoneyTag tag) {
 		if ( tag == null ) {
@@ -713,9 +740,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	// ---------------------------------------------------------------
 
 	/**
-	 * Set the description-text.
-	 *
-	 * @param descr the new description
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void setMemo(final String descr) {
@@ -755,7 +780,7 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 	 * 
 	 * @see #setAction(org.kmymoney.api.read.KMyMoneyTransactionSplit.Action)
 	 */
-	public void setActionStr(final String actStr) throws IllegalTransactionSplitActionException {
+	public void setActionStr(final String actStr) {
 		if ( actStr == null ) {
 			throw new IllegalArgumentException("argument <actStr> is null");
 		}
@@ -771,6 +796,19 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		if ( oldActStr == null || ! oldActStr.equals(actStr) ) {
 			if ( helper.getPropertyChangeSupport() != null ) {
 				helper.getPropertyChangeSupport().firePropertyChange("splitAction", oldActStr, actStr);
+			}
+		}
+	}
+
+	@Override
+	public void unsetAction() {
+		String oldActStr = getActionStr();
+		jwsdpPeer.setAction("");
+		getWritableKMyMoneyFile().setModified(true);
+
+		if ( oldActStr == null || ! oldActStr.equals("") ) {
+			if ( helper.getPropertyChangeSupport() != null ) {
+				helper.getPropertyChangeSupport().firePropertyChange("splitAction", oldActStr, "");
 			}
 		}
 	}
@@ -983,9 +1021,6 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		buffer.append(", tag-ids=");
 		buffer.append(getTagIDs());
 
-		buffer.append(", memo='");
-		buffer.append(getMemo() + "'");
-
 		buffer.append(", value=");
 		buffer.append(getValue());
 
@@ -994,6 +1029,9 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 
 		buffer.append(", price=");
 		buffer.append(getPrice());
+
+		buffer.append(", memo='");
+		buffer.append(getMemo() + "'");
 
 		buffer.append("]");
 
