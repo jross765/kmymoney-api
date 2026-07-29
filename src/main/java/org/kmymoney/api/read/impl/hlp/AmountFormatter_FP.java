@@ -7,6 +7,8 @@ import java.util.Locale;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
+import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,20 @@ public class AmountFormatter_FP
 							amt, secCurrID, lcl);
 	}
 	
+	@Deprecated
+	public static String formatAmount(KMyMoneyFile gcshFile,
+									  FixedPointNumber amt, KMMSecID secID) throws KMMIDNotSetException {
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(secID);
+		return formatAmount(gcshFile, amt, secCurrID);
+	}
+
+	@Deprecated
+	public static String formatAmount(KMyMoneyFile gcshFile,
+									  FixedPointNumber amt, KMMCurrID currID) {
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(currID);
+		return formatAmount(gcshFile, amt, secCurrID);
+	}
+
 	@Deprecated
 	public static String formatAmount(KMyMoneyFile kmmFile,
 									  FixedPointNumber amt, KMMQualifSecCurrID secCurrID, Locale lcl) {

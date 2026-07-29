@@ -8,6 +8,8 @@ import org.apache.commons.numbers.fraction.BigFraction;
 import org.kmymoney.api.read.KMyMoneyFile;
 import org.kmymoney.api.read.KMyMoneySecurity;
 import org.kmymoney.base.basetypes.complex.KMMQualifSecCurrID;
+import org.kmymoney.base.basetypes.simple.KMMCurrID;
+import org.kmymoney.base.basetypes.simple.KMMIDNotSetException;
 import org.kmymoney.base.basetypes.simple.KMMSecID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,18 @@ public class AmountFormatter_BF
 							amt, secCurrID, lcl);
 	}
 	
+	public static String formatAmount(KMyMoneyFile gcshFile,
+									  BigFraction amt, KMMSecID secID) throws KMMIDNotSetException {
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(secID);
+		return formatAmount(gcshFile, amt, secCurrID);
+	}
+
+	public static String formatAmount(KMyMoneyFile gcshFile,
+									  BigFraction amt, KMMCurrID currID) {
+		KMMQualifSecCurrID secCurrID = new KMMQualifSecCurrID(currID);
+		return formatAmount(gcshFile, amt, secCurrID);
+	}
+
 	public static String formatAmount(KMyMoneyFile kmmFile,
 									  BigFraction amt, KMMQualifSecCurrID secCurrID, Locale lcl) {
 		if ( amt == null ) {
