@@ -577,7 +577,11 @@ public class KMyMoneyTransactionSplitImpl extends KMyMoneyObjectImpl
 		buffer.append(getSharesFormatted());
 
 		buffer.append(", price=");
-		buffer.append(getPriceFormatted());
+		if ( getPrice() != null ) {
+			buffer.append(getPriceFormatted());
+		} else {
+			buffer.append("(unset)");
+		}
 
 		buffer.append(", memo='");
 		buffer.append(getMemo() + "'");
