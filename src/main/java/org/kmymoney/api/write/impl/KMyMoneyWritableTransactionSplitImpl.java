@@ -1022,13 +1022,13 @@ public class KMyMoneyWritableTransactionSplitImpl extends KMyMoneyTransactionSpl
 		buffer.append(getTagIDs());
 
 		buffer.append(", value=");
-		buffer.append(getValue());
+		buffer.append(getValueFormatted());
 
 		buffer.append(", shares=");
-		buffer.append(getShares());
+		buffer.append(getSharesFormatted());
 
 		buffer.append(", price=");
-		buffer.append(getPrice());
+		buffer.append(getPriceFormatted());
 
 		buffer.append(", memo='");
 		buffer.append(getMemo() + "'");
